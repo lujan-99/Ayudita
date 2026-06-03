@@ -1,0 +1,1 @@
+<img src="{{ asset('images/logos/logo-horizontal.svg') }}" {{ $attributes }} alt="{{ config('app.name', 'STUDENT_PATTERNS') }} logo">
