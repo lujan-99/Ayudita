@@ -41,6 +41,10 @@
 		box-shadow: 0 0 0 1px #ddb7ff;
 	}
 
+	.auth-submit-btn {
+		@apply flex w-full justify-center rounded-lg border border-transparent bg-primary-container px-4 py-3 font-medium text-on-primary shadow-sm transition-all duration-300 hover:bg-inverse-primary hover:shadow-[0_0_15px_rgba(221,183,255,0.4)];
+	}
+
 	.app-shell::before {
 		content: '';
 		@apply pointer-events-none absolute inset-0;
