@@ -8,4 +8,6 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    // Agrega esto si tienes problemas de rutas
+    base: './', 
 });
