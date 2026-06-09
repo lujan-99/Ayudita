@@ -12,11 +12,11 @@ En la captura de pantalla de los resultados de búsqueda de Google, se observaba
 * **Diagnóstico**: El archivo de icono original `logo-icono.svg` tenía unas dimensiones y un viewBox de `260 x 279` píxeles (no cuadrado, rectangular vertical).
 
 ### La Solución Aplicada
-1. **Creación de un SVG Cuadrado**: Creamos el archivo [logo-favicon.svg](file:///c:/Users/david/Documents/Comercio/Pagina/public/images/logos/logo-favicon.svg) copiando las rutas vectoriales originales del logotipo.
-2. **Ajuste del Canvas**: Rediseñamos las dimensiones a `279 x 279` píxeles e incluimos un viewBox de `-9.5 0 279 279`. Esto añade un espaciador o margen horizontal de `9.5` unidades a cada lado, logrando que el logotipo quede perfectamente centrado dentro de un lienzo cuadrado 1:1 sin deformar las figuras vectoriales.
-3. **Actualización de Enlaces**: Vinculamos el nuevo icono cuadrado en las cabeceras de:
-   - [guest.blade.php](file:///c:/Users/david/Documents/Comercio/Pagina/resources/views/layouts/guest.blade.php) (Layout público y de login/registro).
-   - [dashboard.blade.php](file:///c:/Users/david/Documents/Comercio/Pagina/resources/views/layouts/dashboard.blade.php) (Panel de estudiante).
+1. **SVG Cuadrado en la Misma Ruta**: Para evitar problemas de caché del navegador y evitar enlaces rotos, mantuvimos el nombre de archivo estable y original en la ruta [logo-icono.svg](file:///c:/Users/david/Documents/Comercio/Pagina/public/images/logos/logo-icono.svg), pero reescribimos su contenido vectorial para que sea 100% cuadrado.
+2. **Uso de Contenedor y Transformación de Grupo**:
+   - Ajustamos las dimensiones del elemento `<svg>` a `279 x 279` píxeles con un `viewBox="0 0 279 279"` (relación 1:1 perfecta).
+   - Agrupamos todas las rutas vectoriales originales del logotipo dentro de una etiqueta de grupo `<g transform="translate(9.5, 0)">`. Esto desplaza horizontalmente todo el logotipo por `9.5` píxeles hacia el centro de forma matemáticamente exacta, agregando el margen necesario en los laterales.
+3. **Enlaces Estables**: Mantuvimos las vinculaciones de favicon hacia `logo-icono.svg` en las plantillas Blade de layout ([guest.blade.php](file:///c:/Users/david/Documents/Comercio/Pagina/resources/views/layouts/guest.blade.php) y [dashboard.blade.php](file:///c:/Users/david/Documents/Comercio/Pagina/resources/views/layouts/dashboard.blade.php)), asegurando compatibilidad inmediata tanto en Google Search como en las pestañas del navegador del usuario.
 
 *Nota: Una vez desplegado, Google Search actualizará el logotipo en su próximo rastreo del index (suele tomar de 3 a 10 días dependiendo de la frecuencia de indexación de Google).*
 

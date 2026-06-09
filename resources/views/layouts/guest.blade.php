@@ -27,7 +27,7 @@
         <meta property="twitter:image" content="{{ $ogImage ?? url('images/logos/og-image.png') }}">
 
         <!-- Favicon -->
-        <link rel="icon" type="image/svg+xml" href="{{ asset('images/logos/logo-favicon.svg') }}">
+        <link rel="icon" type="image/svg+xml" href="{{ asset('images/logos/logo-icono.svg') }}">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
