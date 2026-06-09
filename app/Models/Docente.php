@@ -12,7 +12,9 @@ class Docente extends Model
 
     protected $fillable = [
         'nombre_completo',
-        'facultad',
+        'foto',
+        'detalles_basicos',
+        'calificacion',
     ];
 
     public function gruposMateriaDocente(): HasMany

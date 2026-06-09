@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('user_id')->unique()->constrained('users')->cascadeOnDelete();
             $table->foreignId('carrera_id')->constrained('carreras')->restrictOnDelete();
             $table->unsignedTinyInteger('semestre_actual');
+            $table->string('carnet_identidad', 20)->unique();
+            $table->string('carnet_universitario', 30)->unique();
             $table->boolean('formulario_completo')->default(false);
             $table->boolean('tour_visto')->default(false);
             $table->timestamps();

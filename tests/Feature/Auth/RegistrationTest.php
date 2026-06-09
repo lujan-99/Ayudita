@@ -18,9 +18,15 @@ class RegistrationTest extends TestCase
 
     public function test_new_users_can_register(): void
     {
+        $carrera = \App\Models\Carrera::create(['nombre' => 'Ingeniería de Sistemas']);
+
         $response = $this->post('/register', [
             'name' => 'Test User',
             'email' => 'test@example.com',
+            'carrera_id' => $carrera->id,
+            'semestre_actual' => 2,
+            'carnet_identidad' => '12345678',
+            'carnet_universitario' => '20-12345',
             'password' => 'password',
             'password_confirmation' => 'password',
         ]);

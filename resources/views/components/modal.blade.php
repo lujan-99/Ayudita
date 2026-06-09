@@ -1,5 +1,54 @@
-{{-- Deja el bloque superior de @props, @php y el primer contenedor <div> exactamente igual --}}
+@props([
+    'name',
+    'show' => false,
+    'maxWidth' => '2xl'
+])
 
+@php
+$maxWidth = [
+    'sm' => 'sm:max-w-sm',
+    'md' => 'sm:max-w-md',
+    'lg' => 'sm:max-w-lg',
+    'xl' => 'sm:max-w-xl',
+    '2xl' => 'sm:max-w-2xl',
+    '3xl' => 'sm:max-w-3xl',
+][$maxWidth] ?? 'sm:max-w-2xl';
+@endphp
+
+<div
+    x-data="{
+        show: @js($show),
+        focusables() {
+            // All focusable elements
+            let selector = 'a, button, input, textarea, select, details, [tabindex]:not([tabindex=\'-1\'])'
+            return [...$el.querySelectorAll(selector)]
+                // filter out invisible elements
+                .filter(el => ! el.hasAttribute('disabled') && el.offsetParent !== null)
+        },
+        firstFocusable() { return this.focusables()[0] },
+        lastFocusable() { return this.focusables().slice(-1)[0] },
+        nextFocusable() { return this.focusables()[this.focusables().indexOf(document.activeElement) + 1] || (this.firstFocusable() || $el) },
+        prevFocusable() { return this.focusables()[this.focusables().indexOf(document.activeElement) - 1] || (this.lastFocusable() || $el) },
+        showChanged(value) {
+            if (value) {
+                document.body.style.overflow = 'hidden'
+                {{ $attributes->has('focusable') ? 'setTimeout(() => this.firstFocusable().focus(), 100)' : '' }}
+            } else {
+                document.body.style.overflow = null
+            }
+        }
+    }"
+    x-init="$watch('show', value => showChanged(value))"
+    x-on:open-modal.window="$event.detail == '{{ $name }}' ? show = true : null"
+    x-on:close-modal.window="$event.detail == '{{ $name }}' ? show = false : null"
+    x-on:close.stop="show = false"
+    x-on:keydown.escape.window="show = false"
+    x-on:keydown.tab.prevent="$event.shiftKey ? prevFocusable().focus() : nextFocusable().focus()"
+    x-show="show"
+    id="{{ $name }}"
+    class="fixed inset-0 overflow-y-auto px-4 py-6 sm:px-0 z-50"
+    style="display: {{ $show ? 'block' : 'none' }};"
+>
     <div
         x-show="show"
         class="fixed inset-0 transform transition-all"

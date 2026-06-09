@@ -47,6 +47,15 @@ export default {
                 error: '#ffb4ab',
                 'error-container': '#93000a',
             },
+            spacing: {
+                'margin-mobile': '1.25rem',  /* 20px */
+                'margin-desktop': '2.5rem',  /* 40px */
+                'gutter': '1.5rem',          /* 24px */
+                'bento-gap': '1.5rem',       /* 24px */
+            },
+            maxWidth: {
+                'container-max': '1280px',
+            },
             fontFamily: {
                 sans: ['Space Grotesk', ...defaultTheme.fontFamily.sans],
                 'body-lg': ['Geist', ...defaultTheme.fontFamily.sans],

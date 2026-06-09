@@ -79,4 +79,11 @@ class User extends Authenticatable
     {
         return $this->hasOne(PerfilEstudiante::class);
     }
+
+    public function materias(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Materia::class, 'materia_user')
+                    ->withPivot('estado', 'grupo_materia_docente_id')
+                    ->withTimestamps();
+    }
 }

@@ -130,6 +130,8 @@ class DatabaseSeeder extends Seeder
         ], [
             'carrera_id' => $ingenieriaSistemas->id,
             'semestre_actual' => 2,
+            'carnet_identidad' => '12345678',
+            'carnet_universitario' => '20-12345',
             'formulario_completo' => true,
             'tour_visto' => true,
         ]);

@@ -10,114 +10,7 @@
 
 
 <x-guest-layout :compact="false">
-    @push('styles')
-        <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
-        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-        
-        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-        <script>
-            tailwind.config = {
-                darkMode: "class",
-                theme: {
-                    extend: {
-                        colors: {
-                            "on-tertiary-fixed": "#1b1b1e",
-                            "on-primary-container": "#644483",
-                            "on-error": "#690005",
-                            "surface-tint": "#ddb7ff",
-                            "on-surface": "#e8e0e7",
-                            "tertiary-fixed": "#e4e2e5",
-                            "surface-container-highest": "#373438",
-                            "on-primary-fixed-variant": "#583876",
-                            "secondary-fixed": "#e4e2e4",
-                            "primary-fixed": "#f0dbff",
-                            "outline": "#988d9f",
-                            "surface-container": "#211f23",
-                            "on-primary": "#40215e",
-                            "on-primary-fixed": "#2a0848",
-                            "inverse-surface": "#e8e0e7",
-                            "surface-dim": "#151217",
-                            "primary-fixed-dim": "#ddb7ff",
-                            "on-surface-variant": "#cfc2d6",
-                            "primary": "#f0daff",
-                            "primary-container": "#ddb7ff",
-                            "background": "#151217",
-                            "outline-variant": "#4d4354",
-                            "on-tertiary": "#303033",
-                            "surface-container-low": "#1d1b1f",
-                            "surface-container-lowest": "#100d11",
-                            "surface-container-high": "#2c292d",
-                            "surface": "#121414",
-                            "surface-bright": "#3b383d",
-                            "on-tertiary-container": "#525254",
-                            "tertiary": "#e3e1e4",
-                            "error": "#ffb4ab",
-                            "on-error-container": "#ffdad6",
-                            "error-container": "#93000a",
-                            "secondary-container": "#49494b",
-                            "on-secondary-container": "#b9b8ba",
-                            "on-secondary-fixed-variant": "#474648",
-                            "inverse-on-surface": "#332f34",
-                            "tertiary-fixed-dim": "#c8c6c9",
-                            "inverse-primary": "#715090",
-                            "on-tertiary-fixed-variant": "#474649",
-                            "secondary": "#c8c6c8",
-                            "tertiary-container": "#c7c5c8",
-                            "on-secondary": "#303032",
-                            "on-background": "#e8e0e7",
-                            "secondary-fixed-dim": "#c8c6c8",
-                            "surface-variant": "#373438",
-                            "on-secondary-fixed": "#1b1b1d"
-                        },
-                        borderRadius: {
-                            "DEFAULT": "0.25rem",
-                            "lg": "0.5rem",
-                            "xl": "0.75rem",
-                            "full": "9999px",
-                            "bento": "12px"
-                        },
-                        spacing: {
-                            "gutter": "24px",
-                            "margin-desktop": "48px",
-                            "bento-gap": "16px",
-                            "unit": "4px",
-                            "margin-mobile": "16px",
-                            "container-max": "1200px",
-                            "section-padding-desktop": "120px"
-                        },
-                        fontFamily: {
-                            "body-sm": [ "Geist" ],
-                            "label-mono": [ "JetBrains Mono" ],
-                            "body-lg": [ "Geist" ],
-                            "headline-lg": [ "Geist" ],
-                            "headline-lg-mobile": [ "Geist" ],
-                            "headline-md": [ "Geist" ],
-                            "display": [ "Geist" ],
-                            "body-md": [ "Geist" ]
-                        },
-                        fontSize: {
-                            "body-sm": [ "14px", { "lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400" } ],
-                            "label-mono": [ "12px", { "lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "500" } ],
-                            "body-lg": [ "16px", { "lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400" } ],
-                            "body-md": [ "16px", { "lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400" } ],
-                            "headline-lg": [ "32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600" } ],
-                            "headline-lg-mobile": [ "24px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600" } ],
-                            "headline-md": [ "24px", { "lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "500" } ],
-                            "display": [ "56px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "600" } ]
-                        }
-                    },
-                },
-            }
-        </script>
-        <style>
-            .material-symbols-outlined {
-                font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-            }
-            .bento-border { border: 1px solid #27272a; }
-            .glass-morphism { backdrop-filter: blur(12px); background: rgba(18, 20, 20, 0.7); }
-        </style>
-    @endpush
+
 
     <div class="bg-surface text-on-surface font-body-md selection:bg-primary-container selection:text-on-primary-container min-h-screen">
         
@@ -170,7 +63,7 @@
                                 Ir al Dashboard
                             </a>
                         @else
-                            <a href="{{ route('login') }}" class="text-center px-8 py-3 rounded-lg bg-primary-container text-on-primary-container font-label-mono text-label-mono hover:bg-primary transition-colors">
+                            <a href="{{ route('register') }}" class="text-center px-8 py-3 rounded-lg bg-primary-container text-on-primary-container font-label-mono text-label-mono hover:bg-primary transition-colors">
                                 Regístrate Gratis
                             </a>
                             @if (Route::has('register'))

@@ -16,6 +16,7 @@ class Materia extends Model
         'carrera_id',
         'codigo',
         'nombre',
+        'tm',
         'semestre',
     ];
 
@@ -54,5 +55,17 @@ class Materia extends Model
     public function gruposMateriaDocente(): HasMany
     {
         return $this->hasMany(GrupoMateriaDocente::class);
+    }
+
+    public function consejos(): HasMany
+    {
+        return $this->hasMany(Consejo::class);
+    }
+
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'materia_user')
+                    ->withPivot('estado')
+                    ->withTimestamps();
     }
 }

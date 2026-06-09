@@ -16,6 +16,7 @@ class GrupoMateriaDocente extends Model
         'materia_id',
         'docente_id',
         'grupo_codigo',
+        'calificacion',
     ];
 
     public function materia(): BelongsTo
@@ -26,5 +27,10 @@ class GrupoMateriaDocente extends Model
     public function docente(): BelongsTo
     {
         return $this->belongsTo(Docente::class);
+    }
+
+    public function consejos(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Consejo::class, 'grupo_materia_docente_id');
     }
 }

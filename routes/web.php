@@ -9,10 +9,21 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+use App\Http\Controllers\PlanEstudiosController;
+use App\Http\Controllers\DocenteController as StudentDocenteController;
+use App\Http\Controllers\DashboardController;
+
 // 2. Dashboard Principal (Protegido por Autenticación)
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+
+// Ruta del Plan de Estudios Interactivo (Grafo)
+Route::get('/plan-estudios', [PlanEstudiosController::class, 'show'])->middleware(['auth'])->name('plan-estudios');
+
+// Ruta del Listado de Docentes para estudiantes
+Route::get('/docentes', [StudentDocenteController::class, 'index'])->middleware(['auth'])->name('docentes.index');
+
+// Ruta API para obtener materias de una carrera (usada en registro)
+Route::get('/api/carreras/{carrera}/materias', [PlanEstudiosController::class, 'getMateriasJson'])->name('api.carreras.materias');
 
 // 3. Ruta de la Pasarela de Pago (Paywall)
 // Accesible directamente cuando se presiona el botón "Mejorar a Pro"
@@ -24,33 +35,80 @@ Route::get('/premium-paywall', function () {
     return view('auth.premium-paywall');
 })->middleware(['auth'])->name('paywall');
 
-// 4. Ruta real de contenido protegido (Materias/Recursos Avanzados)
+// 4. Ruta real de contenido (Materias/Recursos) - Desbloqueado para todos
+Route::get('/materias', [App\Http\Controllers\MateriaController::class, 'index'])->middleware(['auth'])->name('materias.index');
+
 Route::get('/materias/{id}', function ($id) {
-    $user = Auth::user();
+    $user = auth()->user();
 
-    // Aquí defines qué IDs de materias van a requerir cuenta PRO (2, 3, 4, 5 y 6)
-    $materiasPremium = [2, 3, 4, 5, 6];
+    // 1. Verify student is taking this subject
+    $userMateria = $user->materias()
+        ->where('materia_id', $id)
+        ->wherePivot('estado', 'cursando')
+        ->first();
 
-    // Si la materia es Premium y el usuario es Free (role_id == 1), bloqueamos el acceso directo
-    if (in_array($id, $materiasPremium) && $user->role_id == 1) {
-        return view('auth.premium-paywall', [
-            'title' => 'Contenido Bloqueado 🔒',
-            'heading' => 'Esta asignatura requiere nivel PRO',
-        ]);
+    if (!$userMateria) {
+        abort(403, 'No estás cursando esta asignatura.');
     }
 
-    // ¡AQUÍ ESTÁ EL CAMBIO! Cargamos la vista real pasándole el ID de la materia
-    // Como tu archivo está en 'resources/views/layouts/materias.blade.php', lo llamamos como 'layouts.materias'
-    return view('layouts.materias', [
-        'materia_id' => $id
+    $userGroupId = $userMateria->pivot->grupo_materia_docente_id;
+    if (!$userGroupId) {
+        abort(403, 'No tienes un grupo asignado para esta materia.');
+    }
+
+    // 2. Load subject and filter groups and teacher card info
+    $materia = \App\Models\Materia::with(['carrera', 'gruposMateriaDocente.docente'])->findOrFail($id);
+    
+    // Get only the group the student belongs to
+    $selectedGroup = $materia->gruposMateriaDocente->firstWhere('id', $userGroupId);
+
+    // Get only the consejos belonging to this subject and this student's group
+    $consejos = \App\Models\Consejo::with(['user.perfilEstudiante', 'grupoMateriaDocente.docente'])
+        ->where('materia_id', $id)
+        ->where('grupo_materia_docente_id', $userGroupId)
+        ->latest()
+        ->get();
+
+    return view('materias.show', [
+        'materia' => $materia,
+        'materia_id' => $id,
+        'selectedGroup' => $selectedGroup,
+        'consejos' => $consejos,
+        'userGroupId' => $userGroupId,
     ]);
 })->middleware(['auth'])->name('materias.show');
+
+// Rutas de Consejos y Recursos
+Route::middleware(['auth'])->group(function () {
+    Route::post('/materias/{materia}/consejos', [App\Http\Controllers\ConsejoController::class, 'store'])->name('consejos.store');
+    Route::post('/consejos/{consejo}/like', [App\Http\Controllers\ConsejoController::class, 'like'])->name('consejos.like');
+    Route::post('/consejos/{consejo}/dislike', [App\Http\Controllers\ConsejoController::class, 'dislike'])->name('consejos.dislike');
+});
 
 // 5. Grupo de Rutas del Perfil de Usuario
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\CarreraController;
+use App\Http\Controllers\Admin\DocenteController;
+use App\Http\Controllers\Admin\MateriaController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\GrupoController;
+
+// 6. Grupo de Rutas de Administración
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::get('carreras/{carrera}/import', [CarreraController::class, 'showImport'])->name('carreras.import');
+    Route::post('carreras/{carrera}/import', [CarreraController::class, 'importPlan'])->name('carreras.import.post');
+    Route::resource('carreras', CarreraController::class);
+    Route::resource('docentes', DocenteController::class);
+    Route::resource('materias', MateriaController::class);
+    Route::resource('grupos', GrupoController::class);
+    Route::resource('users', UserController::class)->only(['index', 'edit', 'update', 'destroy']);
 });
 
 require __DIR__.'/auth.php';

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('carrera_id')->constrained('carreras')->restrictOnDelete();
             $table->string('codigo');
             $table->string('nombre');
+            $table->string('tm', 10)->default('N');
             $table->unsignedTinyInteger('semestre');
             $table->timestamps();
 

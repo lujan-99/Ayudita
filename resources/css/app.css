@@ -14,6 +14,11 @@
 	body {
 		@apply bg-surface text-foreground antialiased;
 	}
+
+	select option {
+		background-color: #1a1c1c;
+		color: #e2e2e2;
+	}
 }
 
 @layer components {
@@ -34,6 +39,43 @@
 		-webkit-backdrop-filter: blur(12px);
 		border: 1px solid rgba(221, 183, 255, 0.2);
 		box-shadow: 0 0 40px rgba(221, 183, 255, 0.05);
+	}
+
+	.glass-panel {
+		background: rgba(24, 24, 27, 0.4);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
+		border: 1px solid rgba(221, 183, 255, 0.15);
+	}
+
+	.glass-panel-strong {
+		background: rgba(24, 24, 27, 0.7);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
+		border: 1px solid rgba(221, 183, 255, 0.25);
+	}
+
+	.glow-border {
+		box-shadow: 0 0 25px rgba(168, 85, 247, 0.15);
+	}
+
+	.glow-hover {
+		@apply transition-all duration-300;
+	}
+
+	.glow-hover:hover {
+		box-shadow: 0px 0px 20px rgba(168, 85, 247, 0.15);
+		border-color: rgba(221, 183, 255, 0.3);
+	}
+
+	.bento-border {
+		@apply border border-outline-variant;
+	}
+
+	.glass-morphism {
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
+		background: rgba(18, 20, 20, 0.7);
 	}
 
 	.input-focus-ring:focus-within {
