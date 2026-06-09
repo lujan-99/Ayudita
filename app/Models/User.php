@@ -25,6 +25,8 @@ class User extends Authenticatable
         'email',
         'password',
         'role_id',
+        'premium_until',
+        'paypal_subscription_id',
     ];
 
     /**
@@ -47,6 +49,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'premium_until' => 'datetime',
         ];
     }
 
@@ -85,5 +88,26 @@ class User extends Authenticatable
         return $this->belongsToMany(Materia::class, 'materia_user')
                     ->withPivot('estado', 'grupo_materia_docente_id')
                     ->withTimestamps();
+    }
+
+    public function isPremium(): bool
+    {
+        if ($this->role && $this->role->nombre === 'admin') {
+            return true;
+        }
+
+        if ($this->role && $this->role->nombre === 'premium') {
+            if ($this->premium_until && now()->gt($this->premium_until)) {
+                $freeRoleId = Role::query()->where('nombre', 'free')->value('id');
+                if ($freeRoleId) {
+                    $this->role_id = $freeRoleId;
+                    $this->save();
+                }
+                return false;
+            }
+            return true;
+        }
+
+        return false;
     }
 }

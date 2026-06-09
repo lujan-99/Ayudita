@@ -224,7 +224,7 @@
                             </li>
                         </ul>
                     </div>
-                    <button @click="$dispatch('close-modal', 'premium-paywall'); alert('¡Gracias por elegir el Plan Mensual! Lógica de pago próximamente.')" class="w-full py-2.5 bg-surface-container-high border border-outline-variant text-on-surface hover:border-primary text-xs font-bold rounded-lg transition-all">
+                    <button @click="window.location.href = '{{ route('paywall') }}?plan=mensual'" class="w-full py-2.5 bg-surface-container-high border border-outline-variant text-on-surface hover:border-primary text-xs font-bold rounded-lg transition-all">
                         Elegir Plan
                     </button>
                 </div>
@@ -262,7 +262,7 @@
                             </li>
                         </ul>
                     </div>
-                    <button @click="$dispatch('close-modal', 'premium-paywall'); alert('¡Gracias por elegir el Plan Semestral! Lógica de pago próximamente.')" class="w-full py-2.5 bg-primary text-on-primary hover:brightness-110 text-xs font-bold rounded-lg transition-all shadow-[0_0_12px_rgba(183,109,255,0.3)]">
+                    <button @click="window.location.href = '{{ route('paywall') }}?plan=semestral'" class="w-full py-2.5 bg-primary text-on-primary hover:brightness-110 text-xs font-bold rounded-lg transition-all shadow-[0_0_12px_rgba(183,109,255,0.3)]">
                         Adquirir Plan
                     </button>
                 </div>
@@ -300,14 +300,14 @@
                             </li>
                         </ul>
                     </div>
-                    <button @click="$dispatch('close-modal', 'premium-paywall'); alert('¡Gracias por elegir el Plan Anual! Lógica de pago próximamente.')" class="w-full py-2.5 bg-surface-container-high border border-outline-variant text-on-surface hover:border-primary text-xs font-bold rounded-lg transition-all">
+                    <button @click="window.location.href = '{{ route('paywall') }}?plan=anual'" class="w-full py-2.5 bg-surface-container-high border border-outline-variant text-on-surface hover:border-primary text-xs font-bold rounded-lg transition-all">
                         Elegir Plan
                     </button>
                 </div>
             </div>
 
             <div class="text-center text-[10px] text-on-surface-variant">
-                Lógica de pasarela de pago (QR / Tigo Money) próximamente en producción.
+                Los pagos son procesados de forma instantánea y segura mediante PayPal.
             </div>
         </div>
     </x-modal>

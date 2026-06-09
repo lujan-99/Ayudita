@@ -92,10 +92,14 @@
                     </div>
 
                     <div class="flex flex-col gap-4 mt-4">
-                        <button onclick="checkoutMock()" class="w-full py-3 bg-inverse-primary hover:bg-primary-container text-white font-display text-body-sm font-bold rounded-lg transition-all shadow-[0_0_15px_rgba(183,109,255,0.3)] flex items-center justify-center gap-2 group">
-                            Comprar Plan <span id="btn-plan-name" class="capitalize">Mensual</span>
-                            <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
-                        </button>
+                        <!-- Spinner de carga -->
+                        <div id="loading-spinner" class="hidden flex flex-col items-center justify-center py-4">
+                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-2"></div>
+                            <span class="text-xs text-on-surface-variant font-display text-center">Procesando y verificando tu pago...</span>
+                        </div>
+                        
+                        <!-- Contenedor del Botón de PayPal -->
+                        <div id="paypal-button-container" class="w-full relative z-20"></div>
                     </div>
 
                     <div class="mt-4 text-center">
@@ -109,6 +113,8 @@
         </div>
     </div>
 
+@push('scripts')
+    <script src="https://www.paypal.com/sdk/js?client-id={{ config('services.paypal.client_id') }}&currency=USD"></script>
     <script>
         let selectedPlanId = 'mensual';
 
@@ -118,7 +124,6 @@
             // Update prices
             document.getElementById('display-price').innerText = price;
             document.getElementById('display-period').innerText = '/' + period;
-            document.getElementById('btn-plan-name').innerText = planId;
 
             // Update border styles
             const options = document.getElementsByClassName('plan-option');
@@ -132,13 +137,89 @@
             }
         }
 
-        function checkoutMock() {
-            alert('¡Gracias por elegir el Plan ' + selectedPlanId.toUpperCase() + '! La pasarela de pago (QR / Tigo Money) se habilitará próximamente.');
-        }
+        // Initialize PayPal Smart Buttons
+        paypal.Buttons({
+            createOrder: function(data, actions) {
+                let usdAmount = '1.45'; // fallback / mensual
+                if (selectedPlanId === 'semestral') {
+                    usdAmount = '5.80';
+                } else if (selectedPlanId === 'anual') {
+                    usdAmount = '10.15';
+                }
+                
+                return actions.order.create({
+                    purchase_units: [{
+                        description: 'Suscripcion Ayudita Pro - Plan ' + selectedPlanId.toUpperCase(),
+                        amount: {
+                            currency_code: 'USD',
+                            value: usdAmount
+                        }
+                    }]
+                });
+            },
+            onApprove: function(data, actions) {
+                // Show loading spinner
+                document.getElementById('paypal-button-container').classList.add('hidden');
+                document.getElementById('loading-spinner').classList.remove('hidden');
 
-        // Initialize
+                // Send payment info to backend
+                return fetch("{{ route('paypal.completed') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        orderID: data.orderID,
+                        plan: selectedPlanId
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(err => { throw err; });
+                    }
+                    return response.json();
+                })
+                .then(res => {
+                    if (res.success) {
+                        alert(res.message || '¡Pago verificado y cuenta actualizada a Pro con éxito!');
+                        window.location.href = "{{ route('dashboard') }}";
+                    } else {
+                        throw new Error(res.message || 'No se pudo verificar el pago.');
+                    }
+                })
+                .catch(err => {
+                    console.error('Error verifying payment:', err);
+                    alert('Error de verificacion: ' + (err.message || 'No se pudo verificar la transaccion. Por favor contacta a soporte.'));
+                    
+                    // Hide spinner, show button container again
+                    document.getElementById('loading-spinner').classList.add('hidden');
+                    document.getElementById('paypal-button-container').classList.remove('hidden');
+                });
+            },
+            onError: function(err) {
+                console.error('PayPal checkout error:', err);
+                alert('Ocurrio un error al procesar el pago con la pasarela de PayPal.');
+            }
+        }).render('#paypal-button-container');
+
+        // Initialize from query parameters or default to mensual
         document.addEventListener('DOMContentLoaded', () => {
-            selectPlan('mensual', 10, 'mes');
+            const urlParams = new URLSearchParams(window.location.search);
+            const initialPlan = urlParams.get('plan') || 'mensual';
+            
+            const planPrices = {
+                mensual: { price: 10, period: 'mes' },
+                semestral: { price: 40, period: '6 meses' },
+                anual: { price: 70, period: 'año' }
+            };
+            
+            if (planPrices[initialPlan]) {
+                selectPlan(initialPlan, planPrices[initialPlan].price, planPrices[initialPlan].period);
+            } else {
+                selectPlan('mensual', 10, 'mes');
+            }
         });
     </script>
+@endpush
 </x-guest-layout>

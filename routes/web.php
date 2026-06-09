@@ -24,16 +24,17 @@ Route::get('/docentes', [StudentDocenteController::class, 'index'])->middleware(
 
 // Ruta API para obtener materias de una carrera (usada en registro)
 Route::get('/api/carreras/{carrera}/materias', [PlanEstudiosController::class, 'getMateriasJson'])->name('api.carreras.materias');
-
 // 3. Ruta de la Pasarela de Pago (Paywall)
-// Accesible directamente cuando se presiona el botón "Mejorar a Pro"
 Route::get('/premium-paywall', function () {
-    // Si un usuario ya es Pro por alguna razón, lo redirigimos al dashboard
-    if (Auth::user()->role_id !== 1) {
+    if (Auth::user()->isPremium()) {
         return redirect()->route('dashboard');
     }
     return view('auth.premium-paywall');
 })->middleware(['auth'])->name('paywall');
+
+Route::post('/paypal/checkout/completed', [App\Http\Controllers\PayPalController::class, 'completed'])
+    ->middleware(['auth'])
+    ->name('paypal.completed');
 
 // 4. Ruta real de contenido (Materias/Recursos) - Desbloqueado para todos
 Route::get('/materias', [App\Http\Controllers\MateriaController::class, 'index'])->middleware(['auth'])->name('materias.index');
