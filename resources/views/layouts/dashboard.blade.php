@@ -8,7 +8,7 @@
     <!-- SEO Meta Tags (No Index for Private Dashboard) -->
     <title>@if (isset($title)) {{ $title }} - Ayudita USFX @else Panel de Estudiante - Ayudita USFX @endif</title>
     <meta name="robots" content="noindex, nofollow">
-    <link rel="icon" type="image/svg+xml" href="{{ asset('images/logos/logo-icono.svg') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('images/logos/logo-favicon.svg') }}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
