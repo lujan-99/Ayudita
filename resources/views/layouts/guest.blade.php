@@ -5,13 +5,29 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>
-            @if ($title)
-                {{ $title }} - {{ config('app.name', 'Ayudita') }}
-            @else
-                {{ config('app.name', 'Ayudita') }}
-            @endif
-        </title>
+        <!-- SEO Meta Tags -->
+        <title>@if(isset($title) && $title) {{ $title }} - Ayudita USFX @else Ayudita USFX - Vence tus materias con patrones académicos @endif</title>
+        <meta name="description" content="{{ $description ?? 'Ayudita USFX: La plataforma académica freemium líder para estudiantes de San Francisco Xavier. Encuentra exámenes pasados resueltos, pizarras de auxiliaturas, apuntes y consejos clave organizados por carrera, materia y docente para vencer tu semestre.' }}">
+        <meta name="keywords" content="{{ $keywords ?? 'Ayudita, USFX, San Francisco Xavier, Sucre, exámenes pasados, exámenes resueltos, auxiliaturas, apuntes universidad, plan de estudios, docentes USFX, ingeniería de sistemas' }}">
+        <meta name="robots" content="{{ $robots ?? 'index, follow' }}">
+        <link rel="canonical" href="{{ url()->current() }}">
+
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="{{ url()->current() }}">
+        <meta property="og:title" content="@if(isset($title) && $title) {{ $title }} - Ayudita USFX @else Ayudita USFX - Vence tus materias con patrones académicos @endif">
+        <meta property="og:description" content="{{ $description ?? 'No reinventes la rueda este semestre. Consigue exámenes pasados resueltos, pizarras y consejos específicos de docentes en Ayudita USFX.' }}">
+        <meta property="og:image" content="{{ $ogImage ?? url('images/logos/og-image.png') }}">
+
+        <!-- Twitter -->
+        <meta property="twitter:card" content="summary_large_image">
+        <meta property="twitter:url" content="{{ url()->current() }}">
+        <meta property="twitter:title" content="@if(isset($title) && $title) {{ $title }} - Ayudita USFX @else Ayudita USFX - Vence tus materias con patrones académicos @endif">
+        <meta property="twitter:description" content="{{ $description ?? 'No reinventes la rueda este semestre. Consigue exámenes pasados resueltos, pizarras y consejos específicos de docentes en Ayudita USFX.' }}">
+        <meta property="twitter:image" content="{{ $ogImage ?? url('images/logos/og-image.png') }}">
+
+        <!-- Favicon -->
+        <link rel="icon" type="image/svg+xml" href="{{ asset('images/logos/logo-icono.svg') }}">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

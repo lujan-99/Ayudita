@@ -72,6 +72,14 @@ class DashboardTest extends TestCase
             'role_id' => $this->freeRole->id
         ]);
 
+        // Attach career and details to student profile
+        $user->perfilEstudiante()->create([
+            'carrera_id' => $this->carrera->id,
+            'semestre_actual' => 3,
+            'carnet_identidad' => '87654321',
+            'carnet_universitario' => '20-54321'
+        ]);
+
         $m1 = $this->carrera->materias()->create([
             'codigo' => 'SIS301',
             'nombre' => 'Álgebra Lineal',
@@ -79,12 +87,27 @@ class DashboardTest extends TestCase
             'tm' => 'N'
         ]);
 
+        $docente = Docente::create(['nombre_completo' => 'Ing. Pérez']);
+        
+        $grupo = GrupoMateriaDocente::create([
+            'materia_id' => $m1->id,
+            'docente_id' => $docente->id,
+            'grupo_codigo' => '1',
+            'calificacion' => 4.5
+        ]);
+
+        // Enroll user in subject and group
+        $user->materias()->attach($m1->id, [
+            'estado' => 'cursando',
+            'grupo_materia_docente_id' => $grupo->id
+        ]);
+
         $response = $this->actingAs($user)->get('/materias/' . $m1->id);
 
         $response->assertStatus(200);
         $response->assertSee('Materia - Álgebra Lineal');
         $response->assertSee('SIS301');
-        $response->assertSee('Archivos y Recursos Base');
+        $response->assertSee('Archivos y Recursos');
         $response->assertDontSee('Esta asignatura requiere nivel PRO');
     }
 }

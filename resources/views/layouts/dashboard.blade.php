@@ -5,13 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>
-        @if (isset($title))
-            {{ $title }} - {{ config('app.name', 'Ayudita') }}
-        @else
-            {{ config('app.name', 'Ayudita') }}
-        @endif
-    </title>
+    <!-- SEO Meta Tags (No Index for Private Dashboard) -->
+    <title>@if (isset($title)) {{ $title }} - Ayudita USFX @else Panel de Estudiante - Ayudita USFX @endif</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('images/logos/logo-icono.svg') }}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

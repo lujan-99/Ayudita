@@ -350,8 +350,9 @@
                         <h3 class="font-headline-md text-xl mb-2">Estudiante Pro</h3>
                         <p class="font-body-sm text-on-surface-variant mb-6">Para los que buscan la excelencia y asegurar nota.</p>
                         <div class="mb-8">
-                            <span class="text-4xl font-bold text-primary-container">Bs. 15</span>
+                            <span class="text-4xl font-bold text-primary-container">Bs. 10</span>
                             <span class="font-label-mono text-on-surface-variant">/mes</span>
+                            <div class="text-[10px] text-on-surface-variant mt-1">Bs. 40 semestral · Bs. 70 anual</div>
                         </div>
                         <ul class="space-y-4 mb-8">
                             <li class="flex items-center gap-2">
@@ -508,4 +509,114 @@
         </footer>
 
     </div>
+
+    @push('scripts')
+    <script type="application/ld+json">
+    {!! json_encode([
+        '@context' => 'https://schema.org',
+        '@graph' => [
+            [
+                '@type' => 'Organization',
+                '@id' => 'https://ayudita.up.railway.app/#organization',
+                'name' => 'Ayudita USFX',
+                'url' => 'https://ayudita.up.railway.app',
+                'logo' => [
+                    '@type' => 'ImageObject',
+                    'url' => 'https://ayudita.up.railway.app/images/logos/logo-vertical.svg',
+                    'width' => 512,
+                    'height' => 512
+                ],
+                'sameAs' => [
+                    'https://facebook.com/ayudita.usfx',
+                    'https://instagram.com/ayudita.usfx',
+                    'https://tiktok.com/@ayudita_usfx'
+                ]
+            ],
+            [
+                '@type' => 'WebSite',
+                '@id' => 'https://ayudita.up.railway.app/#website',
+                'url' => 'https://ayudita.up.railway.app',
+                'name' => 'Ayudita USFX',
+                'description' => 'La plataforma académica freemium líder para estudiantes de la Universidad de San Francisco Xavier (USFX).',
+                'publisher' => [
+                    '@id' => 'https://ayudita.up.railway.app/#organization'
+                ]
+            ],
+            [
+                '@type' => 'WebApplication',
+                '@id' => 'https://ayudita.up.railway.app/#webapp',
+                'url' => 'https://ayudita.up.railway.app',
+                'name' => 'Ayudita USFX App',
+                'applicationCategory' => 'EducationalApplication',
+                'operatingSystem' => 'All',
+                'browserRequirements' => 'Requires JavaScript. Requires HTML5.',
+                'offers' => [
+                    '@type' => 'AggregateOffer',
+                    'priceCurrency' => 'BOB',
+                    'lowPrice' => '0',
+                    'highPrice' => '70',
+                    'offerCount' => '3',
+                    'offers' => [
+                        [
+                            '@type' => 'Offer',
+                            'name' => 'Estudiante Base',
+                            'price' => '0',
+                            'priceCurrency' => 'BOB',
+                            'category' => 'Free'
+                        ],
+                        [
+                            '@type' => 'Offer',
+                            'name' => 'Estudiante Pro Mensual',
+                            'price' => '10',
+                            'priceCurrency' => 'BOB'
+                        ],
+                        [
+                            '@type' => 'Offer',
+                            'name' => 'Estudiante Pro Semestral',
+                            'price' => '40',
+                            'priceCurrency' => 'BOB'
+                        ],
+                        [
+                            '@type' => 'Offer',
+                            'name' => 'Estudiante Pro Anual',
+                            'price' => '70',
+                            'priceCurrency' => 'BOB'
+                        ]
+                    ]
+                ]
+            ],
+            [
+                '@type' => 'FAQPage',
+                '@id' => 'https://ayudita.up.railway.app/#faq',
+                'mainEntity' => [
+                    [
+                        '@type' => 'Question',
+                        'name' => '¿Cómo se verifica que las respuestas o guías sean correctas?',
+                        'acceptedAnswer' => [
+                            '@type' => 'Answer',
+                            'text' => 'Todo archivo o consejo subido por la comunidad pasa por un filtro de estudiantes destacados de semestres superiores y auxiliares de docencia que actúan como moderadores para evitar información errónea.'
+                        ]
+                    ],
+                    [
+                        '@type' => 'Question',
+                        'name' => '¿Es legal compartir exámenes pasados de la USFX?',
+                        'acceptedAnswer' => [
+                            '@type' => 'Answer',
+                            'text' => '¡Claro que sí! Los exámenes pasados y las pizarras son recursos de dominio público de los estudiantes. Compartirlos fomenta la democratización de la educación y el estudio colaborativo.'
+                        ]
+                    ],
+                    [
+                        '@type' => 'Question',
+                        'name' => '¿Puedo usar la plataforma gratis para siempre?',
+                        'acceptedAnswer' => [
+                            '@type' => 'Answer',
+                            'text' => 'Sí, el plan base es gratuito por tiempo indefinido. Además, si colaboras activamente subiendo apuntes limpios o códigos funcionales, el mismo sistema te regalará días Pro sin pagar un solo peso.'
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
+    </script>
+    @endpush
 </x-guest-layout>
