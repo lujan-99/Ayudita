@@ -84,7 +84,38 @@
         </div>
     @else
         <!-- Graph Area -->
-        <div class="glass-panel rounded-xl p-0 relative overflow-hidden">
+        <div x-data="{
+            isPremium: {{ Auth::user()->isPremium() ? 'true' : 'false' }},
+            init() {
+                if (!this.isPremium) {
+                    setTimeout(() => {
+                        this.$dispatch('open-modal', 'premium-paywall');
+                    }, 5000);
+                }
+            }
+        }" class="relative w-full">
+
+            @if(!Auth::user()->isPremium())
+                <!-- Premium Overlay -->
+                <div @click="$dispatch('open-modal', 'premium-paywall')" class="absolute inset-0 bg-surface/40 backdrop-blur-md z-30 flex flex-col items-center justify-center text-center p-6 cursor-pointer select-none rounded-2xl border border-outline-variant/30 min-h-[500px]">
+                    <div class="bg-surface-container-high border border-outline-variant/50 p-8 rounded-2xl max-w-md shadow-2xl flex flex-col items-center gap-4 transition-transform hover:scale-[1.02] duration-300">
+                        <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-amber-400 to-amber-600 flex items-center justify-center shadow-lg animate-bounce">
+                            <span class="material-symbols-outlined text-[36px] text-white fill-icon">workspace_premium</span>
+                        </div>
+                        <h3 class="font-display text-xl font-bold text-on-surface">Plan de Estudios Interactivo</h3>
+                        <p class="text-xs text-on-surface-variant leading-relaxed">
+                            Visualiza el mapa de prerrequisitos, materias dependientes, semestres y haz un seguimiento inteligente y dinámico de tu progreso académico actual.
+                        </p>
+                        <button class="px-6 py-2.5 bg-primary text-on-primary font-bold text-xs rounded-lg hover:brightness-110 transition-all flex items-center gap-1.5 shadow-[0_0_15px_rgba(183,109,255,0.4)]">
+                            <span class="material-symbols-outlined text-[16px]">workspace_premium</span>
+                            Obtener Acceso Pro ✨
+                        </button>
+                    </div>
+                </div>
+            @endif
+
+            <div class="{{ !Auth::user()->isPremium() ? 'blur-[8px] pointer-events-none select-none' : '' }} w-full">
+                <div class="glass-panel rounded-xl p-0 relative overflow-hidden">
             <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
             
             <!-- Instructions Legend -->
@@ -481,5 +512,7 @@
                 }
             </script>
         @endpush
+        </div>
+        </div>
     @endif
 </x-dashboard-layout>

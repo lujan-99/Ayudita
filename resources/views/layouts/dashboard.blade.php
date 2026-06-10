@@ -103,14 +103,24 @@
                     <span class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-md"></span>
                 @endif
                 <span class="material-symbols-outlined {{ Request::routeIs('plan-estudios') ? 'fill-icon' : '' }} text-[20px]">map</span>
-                <span x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms>Planes de Estudio</span>
+                <span x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms class="flex items-center justify-between w-full">
+                    <span>Planes de Estudio</span>
+                    @if(!Auth::user()->isPremium())
+                        <span class="material-symbols-outlined text-[16px] text-amber-400 fill-icon animate-pulse" title="Premium">workspace_premium</span>
+                    @endif
+                </span>
             </a>
             <a class="relative flex items-center gap-3 px-3 py-2.5 {{ Request::routeIs('docentes.index') ? 'bg-primary-container text-on-primary-container font-bold shadow-xs' : 'text-on-surface-variant hover:bg-surface-variant/50' }} rounded-lg transition-all" href="{{ route('docentes.index') }}" :class="sidebarCollapsed ? 'justify-center' : ''" title="Docentes">
                 @if(Request::routeIs('docentes.index'))
                     <span class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-md"></span>
                 @endif
                 <span class="material-symbols-outlined {{ Request::routeIs('docentes.index') ? 'fill-icon' : '' }} text-[20px]">shield_person</span>
-                <span x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms>Docentes</span>
+                <span x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms class="flex items-center justify-between w-full">
+                    <span>Docentes</span>
+                    @if(!Auth::user()->isPremium())
+                        <span class="material-symbols-outlined text-[16px] text-amber-400 fill-icon animate-pulse" title="Premium">workspace_premium</span>
+                    @endif
+                </span>
             </a>
         </div>
         <div class="mt-auto mb-6 w-full flex justify-center" :class="sidebarCollapsed ? 'px-0' : 'px-2'">
@@ -153,6 +163,7 @@
                         {{ $headerText }}
                     </div>
                 @endisset
+            </div>
             <div class="flex items-center gap-4">
                 @if(Auth::user()->perfilEstudiante)
                     <div class="hidden md:flex flex-col text-right leading-none select-none pr-2">
@@ -218,7 +229,7 @@
         </main>
 
         <!-- Pie de Página (Footer) con Redes Sociales Unificadas -->
-        <footer class="bg-surface-container-lowest text-on-surface-variant w-full py-12 border-t border-outline-variant max-w-container-max mx-auto px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-6 mt-auto">
+        <footer class="bg-surface-container-lowest text-on-surface-variant w-full py-12 border-t border-outline-variant max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-6 mt-auto">
             <div class="flex flex-col items-center md:items-start gap-2">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-outlined text-primary text-xl">hub</span>
@@ -249,8 +260,8 @@
             <div class="text-center md:text-right font-label-mono text-[11px] opacity-70 flex flex-col items-center md:items-end gap-1">
                 <p>© 2026 Ayudita Inc. Todos los derechos reservados.</p>
                 <div class="flex gap-3 text-[10px]">
-                    <a href="/terminos-condisiones" class="hover:text-primary transition-colors underline">Términos y Condiciones</a>
-                    <a href="/politica-privacidad" class="hover:text-primary transition-colors underline">Política de Privacidad</a>
+                    <a href="{{ route('terminos') }}" class="hover:text-primary transition-colors underline">Términos y Condiciones</a>
+                    <a href="{{ route('privacidad') }}" class="hover:text-primary transition-colors underline">Política de Privacidad</a>
                 </div>
             </div>
         </footer>
@@ -382,11 +393,90 @@
                 </div>
             </div>
 
-            <div class="text-center text-[10px] text-on-surface-variant">
+            <!-- Points Redemption Banner inside Modal -->
+            @if(Auth::check() && Auth::user()->perfilEstudiante)
+                <div class="mt-6 p-5 rounded-xl border border-outline-variant bg-surface-container flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center gap-4 text-left">
+                        <div class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                            <span class="material-symbols-outlined text-[28px]">stars</span>
+                        </div>
+                        <div>
+                            <h4 class="font-display text-body-lg font-bold text-on-surface">¿Tienes puntos acumulados?</h4>
+                            <p class="text-xs text-on-surface-variant max-w-xl">
+                                Tienes <strong class="text-primary">{{ Auth::user()->perfilEstudiante->puntos }} Pts</strong>. Puedes canjear 10 puntos por 1 mes de acceso Pro. Sube apuntes y gana 15 pts por archivo.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="w-full sm:w-auto shrink-0">
+                        @if(Auth::user()->perfilEstudiante->puntos >= 10)
+                            <button onclick="redeemPointsWithFetch()" id="modal-btn-redeem" class="w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-primary to-secondary text-on-primary font-bold text-xs rounded-lg transition-all hover:brightness-110 active:scale-[0.98] flex items-center justify-center gap-1.5 shadow-md cursor-pointer border-0">
+                                <span class="material-symbols-outlined text-[16px]">workspace_premium</span>
+                                Canjear 10 Puntos por 1 Mes Pro
+                            </button>
+                        @else
+                            <div class="flex flex-col items-stretch gap-2">
+                                <button disabled class="w-full sm:w-auto px-6 py-2.5 bg-surface-container-low border border-outline-variant text-on-surface-variant/40 font-bold text-xs rounded-lg cursor-not-allowed flex items-center justify-center gap-1.5">
+                                    <span class="material-symbols-outlined text-[16px]">lock</span>
+                                    Necesitas 10 Puntos
+                                </button>
+                                <a href="{{ route('materias.index') }}" class="text-[10px] text-center text-primary hover:underline">
+                                    Subir apuntes para ganar puntos
+                                </a>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            @endif
+
+            <div class="text-center text-[10px] text-on-surface-variant mt-4">
                 Los pagos son procesados de forma instantánea y segura mediante PayPal.
             </div>
         </div>
     </x-modal>
+
+    <script>
+        function redeemPointsWithFetch() {
+            if (!confirm('¿Estás seguro de que deseas canjear 10 puntos por 1 mes de acceso Pro?')) {
+                return;
+            }
+            
+            const btn = document.getElementById('modal-btn-redeem') || document.getElementById('btn-redeem-points');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<span class="animate-spin inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full mr-2"></span> Procesando...';
+            }
+            
+            fetch("{{ route('premium.redeem_points') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw err; });
+                }
+                return response.json();
+            })
+            .then(res => {
+                if (res.success) {
+                    alert(res.message);
+                    window.location.href = "{{ route('dashboard') }}";
+                } else {
+                    throw new Error(res.message || 'No se pudo canjear los puntos.');
+                }
+            })
+            .catch(err => {
+                console.error('Error redeeming points:', err);
+                alert('Error: ' + (err.message || 'Ocurrió un error al canjear los puntos. Por favor, inténtalo de nuevo.'));
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<span class="material-symbols-outlined text-[16px]">workspace_premium</span> Canjear 10 Puntos por 1 Mes Pro';
+                }
+            });
+        }
+    </script>
 
     @stack('scripts')
 </body>

@@ -62,6 +62,9 @@
             </button>
             <button onclick="switchTab('archivos')" id="tab-btn-archivos" class="px-6 py-2.5 font-display text-body-sm font-semibold text-on-surface-variant hover:text-on-surface transition-all flex items-center gap-2">
                 Archivos y Recursos
+                @if(!Auth::user()->isPremium())
+                    <span class="material-symbols-outlined text-[16px] text-amber-400 fill-icon animate-pulse" title="Contenido Premium">workspace_premium</span>
+                @endif
             </button>
         </div>
 
@@ -209,23 +212,47 @@
 
                     <!-- Render de archivo adjunto si existe -->
                     @if($consejo->archivo_path)
-                        <div class="mt-2 p-3 bg-surface-container-low border border-outline-variant/30 rounded-lg flex flex-col gap-2">
-                            @if($isImage)
-                                <img src="{{ asset($consejo->archivo_path) }}" alt="{{ $consejo->archivo_nombre }}" class="max-h-40 w-full object-cover rounded border border-outline-variant/30 cursor-zoom-in" onclick="window.open(this.src)">
-                            @endif
-                            <div class="flex items-center justify-between gap-3">
-                                <div class="flex items-center gap-2 min-w-0">
-                                    <span class="material-symbols-outlined text-primary text-[20px] shrink-0">
-                                        {{ $isImage ? 'image' : 'picture_as_pdf' }}
+                        @if(!Auth::user()->isPremium())
+                            <!-- Blocked File Preview for Base Users -->
+                            <div onclick="window.dispatchEvent(new CustomEvent('open-modal', 'premium-paywall'))" class="mt-2 p-3 bg-surface-container-low border border-outline-variant/30 rounded-lg flex flex-col gap-2 cursor-pointer relative overflow-hidden group hover:border-primary/50 transition-all duration-300">
+                                <div class="flex items-center justify-between gap-3 filter blur-xs opacity-50 select-none pointer-events-none">
+                                    <div class="flex items-center gap-2 min-w-0">
+                                        <span class="material-symbols-outlined text-primary text-[20px] shrink-0">
+                                            {{ $isImage ? 'image' : 'picture_as_pdf' }}
+                                        </span>
+                                        <span class="text-xs text-on-surface truncate font-medium font-display">{{ $consejo->archivo_nombre }}</span>
+                                    </div>
+                                    <span class="px-2.5 py-1 bg-primary/10 text-primary font-label-mono text-[9px] font-bold rounded flex items-center gap-1 shrink-0">
+                                        <span class="material-symbols-outlined text-xs">download</span>
+                                        Bajar
                                     </span>
-                                    <span class="text-xs text-on-surface truncate font-medium font-display">{{ $consejo->archivo_nombre }}</span>
                                 </div>
-                                <a href="{{ asset($consejo->archivo_path) }}" download class="px-2.5 py-1 bg-primary/10 hover:bg-primary text-primary hover:text-on-primary font-label-mono text-[9px] font-bold rounded transition-colors flex items-center gap-1 shrink-0">
-                                    <span class="material-symbols-outlined text-xs">download</span>
-                                    Bajar
-                                </a>
+                                <!-- Lock overlay -->
+                                <div class="absolute inset-0 bg-surface-container-low/80 backdrop-blur-[2px] flex items-center justify-center gap-2 text-primary font-display text-[11px] font-bold">
+                                    <span class="material-symbols-outlined text-[16px] text-amber-400 fill-icon animate-pulse">workspace_premium</span>
+                                    <span>Ver Archivo Premium</span>
+                                </div>
                             </div>
-                        </div>
+                        @else
+                            <!-- Original file preview for Premium users -->
+                            <div class="mt-2 p-3 bg-surface-container-low border border-outline-variant/30 rounded-lg flex flex-col gap-2">
+                                @if($isImage)
+                                    <img src="{{ asset($consejo->archivo_path) }}" alt="{{ $consejo->archivo_nombre }}" class="max-h-40 w-full object-cover rounded border border-outline-variant/30 cursor-zoom-in" onclick="window.open(this.src)">
+                                @endif
+                                <div class="flex items-center justify-between gap-3">
+                                    <div class="flex items-center gap-2 min-w-0">
+                                        <span class="material-symbols-outlined text-primary text-[20px] shrink-0">
+                                            {{ $isImage ? 'image' : 'picture_as_pdf' }}
+                                        </span>
+                                        <span class="text-xs text-on-surface truncate font-medium font-display">{{ $consejo->archivo_nombre }}</span>
+                                    </div>
+                                    <a href="{{ asset($consejo->archivo_path) }}" download class="px-2.5 py-1 bg-primary/10 hover:bg-primary text-primary hover:text-on-primary font-label-mono text-[9px] font-bold rounded transition-colors flex items-center gap-1 shrink-0">
+                                        <span class="material-symbols-outlined text-xs">download</span>
+                                        Bajar
+                                    </a>
+                                </div>
+                            </div>
+                        @endif
                     @endif
 
                     <!-- Autor y Fecha -->
@@ -263,10 +290,29 @@
     </div>
 
     <!-- CONTENIDO PESTAÑA 2: ARCHIVOS Y RECURSOS (SOLO CONSEJOS CON ARCHIVO) -->
-    <div id="tab-content-archivos" class="hidden space-y-6">
-        
-        <!-- Grid de Archivos -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-bento-gap" id="archivosContainer">
+    <div id="tab-content-archivos" class="hidden space-y-6 relative min-h-[400px]">
+        @if(!Auth::user()->isPremium())
+            <!-- Premium Overlay for Archivos/Documentos -->
+            <div onclick="window.dispatchEvent(new CustomEvent('open-modal', 'premium-paywall'))" class="absolute inset-0 bg-surface/40 backdrop-blur-md z-30 flex flex-col items-center justify-center text-center p-6 cursor-pointer select-none rounded-2xl border border-outline-variant/30 min-h-[350px]">
+                <div class="bg-surface-container-high border border-outline-variant/50 p-8 rounded-2xl max-w-md shadow-2xl flex flex-col items-center gap-4 transition-transform hover:scale-[1.02] duration-300">
+                    <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-amber-400 to-amber-600 flex items-center justify-center shadow-lg animate-bounce">
+                        <span class="material-symbols-outlined text-[36px] text-white fill-icon">workspace_premium</span>
+                    </div>
+                    <h3 class="font-display text-xl font-bold text-on-surface">Exámenes y Apuntes Pro</h3>
+                    <p class="text-xs text-on-surface-variant leading-relaxed">
+                        Desbloquea el acceso ilimitado a exámenes pasados resueltos, pizarras de auxiliaturas, apuntes en PDF y otros recursos compartidos por tus compañeros.
+                    </p>
+                    <button class="px-6 py-2.5 bg-primary text-on-primary font-bold text-xs rounded-lg hover:brightness-110 transition-all flex items-center gap-1.5 shadow-[0_0_15px_rgba(183,109,255,0.4)]">
+                        <span class="material-symbols-outlined text-[16px]">workspace_premium</span>
+                        Obtener Acceso Pro ✨
+                    </button>
+                </div>
+            </div>
+        @endif
+
+        <div class="{{ !Auth::user()->isPremium() ? 'blur-[8px] pointer-events-none select-none' : '' }} space-y-6 w-full">
+            <!-- Grid de Archivos -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-bento-gap" id="archivosContainer">
             @php
                 $archivosCount = 0;
             @endphp
@@ -351,6 +397,7 @@
                 </div>
             @endif
         </div>
+        </div>
 
     </div>
 
@@ -358,6 +405,7 @@
         <script>
             let currentCategoryFilter = 'all';
 
+            let archivosTimer = null;
             function switchTab(tabName) {
                 const consejosContent = document.getElementById('tab-content-consejos');
                 const archivosContent = document.getElementById('tab-content-archivos');
@@ -370,12 +418,25 @@
                     
                     consejosBtn.className = "px-6 py-2.5 font-display text-body-sm font-semibold text-primary border-b-2 border-primary transition-all";
                     archivosBtn.className = "px-6 py-2.5 font-display text-body-sm font-semibold text-on-surface-variant hover:text-on-surface transition-all flex items-center gap-2";
+                    
+                    if (archivosTimer) {
+                        clearTimeout(archivosTimer);
+                        archivosTimer = null;
+                    }
                 } else {
                     consejosContent.classList.add('hidden');
                     archivosContent.classList.remove('hidden');
                     
                     consejosBtn.className = "px-6 py-2.5 font-display text-body-sm font-semibold text-on-surface-variant hover:text-on-surface transition-all";
                     archivosBtn.className = "px-6 py-2.5 font-display text-body-sm font-semibold text-primary border-b-2 border-primary transition-all flex items-center gap-2";
+                    
+                    @if(!Auth::user()->isPremium())
+                        if (!archivosTimer) {
+                            archivosTimer = setTimeout(() => {
+                                window.dispatchEvent(new CustomEvent('open-modal', 'premium-paywall'));
+                            }, 5000);
+                        }
+                    @endif
                 }
             }
 

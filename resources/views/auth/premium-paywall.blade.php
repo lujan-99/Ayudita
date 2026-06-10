@@ -102,6 +102,34 @@
                         <div id="paypal-button-container" class="w-full relative z-20"></div>
                     </div>
 
+                    @if(Auth::check() && Auth::user()->perfilEstudiante)
+                        <div class="mt-4 p-4 rounded-xl border border-outline-variant bg-surface-container flex flex-col gap-2.5">
+                            <div class="flex justify-between items-center">
+                                <span class="text-[11px] font-semibold text-on-surface-variant">Tus Puntos Acumulados</span>
+                                <span class="text-xs font-bold text-primary" id="user-puntos-display">{{ Auth::user()->perfilEstudiante->puntos }} Pts</span>
+                            </div>
+                            <p class="text-[9px] text-on-surface-variant leading-relaxed">
+                                Canjea 10 puntos por 1 mes de acceso Pro. Gana 15 pts subiendo apuntes/exámenes a tus asignaturas.
+                            </p>
+                            @if(Auth::user()->perfilEstudiante->puntos >= 10)
+                                <button onclick="redeemPointsWithFetch()" id="btn-redeem-points" class="w-full py-2 bg-gradient-to-r from-primary to-secondary text-on-primary font-bold text-[11px] rounded-lg transition-all hover:brightness-110 active:scale-[0.98] flex items-center justify-center gap-1.5 shadow-sm cursor-pointer border-0">
+                                    <span class="material-symbols-outlined text-[14px]">workspace_premium</span>
+                                    Canjear 10 Pts por 1 Mes Pro
+                                </button>
+                            @else
+                                <div class="flex flex-col gap-1">
+                                    <button disabled class="w-full py-2 bg-surface-container-low border border-outline-variant text-on-surface-variant/40 font-bold text-[11px] rounded-lg cursor-not-allowed flex items-center justify-center gap-1.5">
+                                        <span class="material-symbols-outlined text-[14px]">lock</span>
+                                        Necesitas 10 Puntos
+                                    </button>
+                                    <a href="{{ route('materias.index') }}" class="text-[9px] text-center text-primary hover:underline">
+                                        Subir apuntes para ganar puntos
+                                    </a>
+                                </div>
+                            @endif
+                        </div>
+                    @endif
+
                     <div class="mt-4 text-center">
                         <a class="font-label-mono text-xs text-on-surface-variant hover:text-primary transition-colors underline underline-offset-4" href="{{ url('/dashboard') }}">
                             Volver al Panel
@@ -220,6 +248,48 @@
                 selectPlan('mensual', 10, 'mes');
             }
         });
+
+        function redeemPointsWithFetch() {
+            if (!confirm('¿Estás seguro de que deseas canjear 10 puntos por 1 mes de acceso Pro?')) {
+                return;
+            }
+            
+            const btn = document.getElementById('btn-redeem-points');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<span class="animate-spin inline-block w-3 h-3 border-2 border-current border-t-transparent rounded-full mr-1"></span> Procesando...';
+            }
+            
+            fetch("{{ route('premium.redeem_points') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw err; });
+                }
+                return response.json();
+            })
+            .then(res => {
+                if (res.success) {
+                    alert(res.message);
+                    window.location.href = "{{ route('dashboard') }}";
+                } else {
+                    throw new Error(res.message || 'No se pudo canjear los puntos.');
+                }
+            })
+            .catch(err => {
+                console.error('Error redeeming points:', err);
+                alert('Error: ' + (err.message || 'Ocurrió un error al canjear los puntos. Por favor, inténtalo de nuevo.'));
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<span class="material-symbols-outlined text-[14px]">workspace_premium</span> Canjear 10 Pts por 1 Mes Pro';
+                }
+            });
+        }
     </script>
 @endpush
 </x-guest-layout>

@@ -543,7 +543,11 @@
                                 <span class="font-body-sm text-on-surface">Acceso a carpetas públicas de fotos</span>
                             </li>
                         </ul>
-                        <button class="w-full py-2 rounded-lg border bento-border text-on-surface font-label-mono text-label-mono hover:bg-surface-container-high transition-colors">Empezar ya</button>
+                        @auth
+                            <a href="{{ route('dashboard') }}" class="w-full inline-block py-2 text-center rounded-lg border bento-border text-on-surface font-label-mono text-label-mono hover:bg-surface-container-high transition-colors">Empezar ya</a>
+                        @else
+                            <a href="{{ route('register') }}" class="w-full inline-block py-2 text-center rounded-lg border bento-border text-on-surface font-label-mono text-label-mono hover:bg-surface-container-high transition-colors">Empezar ya</a>
+                        @endauth
                     </div>
                     <div class="bg-surface-container p-8 rounded-bento border-2 border-primary-container relative md:-my-4 z-10">
                         <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary-container text-on-surface px-3 py-1 rounded-md font-label-mono text-[10px] uppercase">El Más Popular</div>
@@ -572,29 +576,42 @@
                                 <span class="font-body-sm text-on-surface">Soporte directo de tutores superiores</span>
                             </li>
                         </ul>
-                        <button class="w-full py-3 rounded-lg bg-primary-container text-surface-container-lowest font-label-mono text-label-mono hover:opacity-90 transition-opacity">Pasar a Pro</button>
+                        @auth
+                            <a href="{{ route('paywall') }}" class="w-full inline-block py-3 text-center rounded-lg bg-primary-container text-surface-container-lowest font-label-mono text-label-mono hover:opacity-90 transition-opacity">Pasar a Pro</a>
+                        @else
+                            <a href="{{ route('register') }}" class="w-full inline-block py-3 text-center rounded-lg bg-primary-container text-surface-container-lowest font-label-mono text-label-mono hover:opacity-90 transition-opacity">Pasar a Pro</a>
+                        @endauth
                     </div>
                     <div class="bg-surface-container p-8 rounded-bento border bento-border">
-                        <h3 class="font-headline-md text-xl mb-2">Colaborador</h3>
-                        <p class="font-body-sm text-on-surface-variant mb-6">Intercambia tu conocimiento.</p>
+                        <h3 class="font-headline-md text-xl mb-2">Colaborador Pro</h3>
+                        <p class="font-body-sm text-on-surface-variant mb-6">Canjea tu aporte por suscripción gratis.</p>
                         <div class="mb-8">
-                            <span class="text-3xl font-bold text-on-surface">Trueque</span>
+                            <span class="text-3xl font-bold text-on-surface">10 Puntos</span>
+                            <span class="font-label-mono text-on-surface-variant">/ 1 mes Pro</span>
                         </div>
                         <ul class="space-y-4 mb-8">
                             <li class="flex items-center gap-2">
                                 <span class="material-symbols-outlined text-primary-container text-sm">check</span>
-                                <span class="font-body-sm text-on-surface">Sube 3 recursos validados (exámenes/apuntes)</span>
+                                <span class="font-body-sm text-on-surface">Sube archivos y gana 15 pts por documento</span>
                             </li>
                             <li class="flex items-center gap-2">
                                 <span class="material-symbols-outlined text-primary-container text-sm">check</span>
-                                <span class="font-body-sm text-on-surface">Consigue 1 mes de acceso Pro gratis</span>
+                                <span class="font-body-sm text-on-surface">Aporta consejos y gana 5 pts por texto</span>
                             </li>
                             <li class="flex items-center gap-2">
                                 <span class="material-symbols-outlined text-primary-container text-sm">check</span>
-                                <span class="font-body-sm text-on-surface">Insignia especial en tu perfil público</span>
+                                <span class="font-body-sm text-on-surface">Gana 1 pt por cada like en tus aportes</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary-container text-sm">check</span>
+                                <span class="font-body-sm text-on-surface">Canjea 10 pts por 1 mes de acceso Pro</span>
                             </li>
                         </ul>
-                        <button class="w-full py-2 rounded-lg border bento-border text-on-surface font-label-mono text-label-mono hover:bg-surface-container-high transition-colors">Subir Material</button>
+                        @auth
+                            <a href="{{ route('paywall') }}" class="w-full inline-block py-2 text-center rounded-lg border bento-border text-on-surface font-label-mono text-label-mono hover:bg-surface-container-high transition-colors">Canjear Puntos</a>
+                        @else
+                            <a href="{{ route('register') }}" class="w-full inline-block py-2 text-center rounded-lg border bento-border text-on-surface font-label-mono text-label-mono hover:bg-surface-container-high transition-colors">Canjear Puntos</a>
+                        @endauth
                     </div>
                 </div>
             </div>

@@ -21,4 +21,9 @@ class Docente extends Model
     {
         return $this->hasMany(GrupoMateriaDocente::class);
     }
+
+    public function comentarios(): HasMany
+    {
+        return $this->hasMany(DocenteComentario::class);
+    }
 }

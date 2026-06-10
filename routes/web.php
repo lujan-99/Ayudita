@@ -99,7 +99,7 @@ Route::get('/', function () {
 });
 
 // Rutas de Términos y Privacidad
-Route::get('/terminos-condisiones', function () {
+Route::get('/terminos-condiciones', function () {
     return view('terminos');
 })->name('terminos');
 
@@ -119,6 +119,8 @@ Route::get('/plan-estudios', [PlanEstudiosController::class, 'show'])->middlewar
 
 // Ruta del Listado de Docentes para estudiantes
 Route::get('/docentes', [StudentDocenteController::class, 'index'])->middleware(['auth'])->name('docentes.index');
+Route::get('/docentes/{id}', [StudentDocenteController::class, 'show'])->middleware(['auth'])->name('docentes.show');
+Route::post('/docentes/{id}/comentarios', [StudentDocenteController::class, 'storeComentario'])->middleware(['auth'])->name('docentes.comentarios.store');
 
 // Ruta API para obtener materias de una carrera (usada en registro)
 Route::get('/api/carreras/{carrera}/materias', [PlanEstudiosController::class, 'getMateriasJson'])->name('api.carreras.materias');
@@ -133,6 +135,10 @@ Route::get('/premium-paywall', function () {
 Route::post('/paypal/checkout/completed', [App\Http\Controllers\PayPalController::class, 'completed'])
     ->middleware(['auth'])
     ->name('paypal.completed');
+
+Route::post('/premium/redeem-points', [App\Http\Controllers\PayPalController::class, 'redeemPoints'])
+    ->middleware(['auth'])
+    ->name('premium.redeem_points');
 
 // 4. Ruta real de contenido (Materias/Recursos) - Desbloqueado para todos
 Route::get('/materias', [App\Http\Controllers\MateriaController::class, 'index'])->middleware(['auth'])->name('materias.index');

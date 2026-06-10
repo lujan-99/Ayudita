@@ -148,4 +148,53 @@ class PayPalController extends Controller
             'premium_until' => $user->premium_until->toDateString(),
         ]);
     }
+
+    public function redeemPoints(Request $request)
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        
+        $perfil = $user->perfilEstudiante;
+        
+        if (!$perfil) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No tienes un perfil de estudiante configurado.'
+            ], 400);
+        }
+        
+        if ($perfil->puntos < 10) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No tienes suficientes puntos. Necesitas al menos 10 puntos.'
+            ], 400);
+        }
+        
+        // Deduct 10 points
+        $perfil->decrement('puntos', 10);
+        
+        // Activate/extend premium
+        $premiumRoleId = Role::query()->where('nombre', 'premium')->value('id') ?? 2;
+        
+        $baseDate = ($user->premium_until && $user->premium_until->isFuture()) 
+            ? $user->premium_until 
+            : now();
+            
+        $user->role_id = $premiumRoleId;
+        $user->premium_until = $baseDate->addMonth(); // Add 1 month
+        $user->save();
+        
+        Log::info('User redeemed 10 points for 1 month of premium', [
+            'user_id' => $user->id,
+            'remaining_puntos' => $perfil->puntos,
+            'premium_until' => $user->premium_until->toDateTimeString()
+        ]);
+        
+        return response()->json([
+            'success' => true,
+            'message' => '¡Canje exitoso! Se han descontado 10 puntos y tu cuenta ha sido actualizada a Pro por 1 mes.',
+            'puntos' => $perfil->puntos,
+            'premium_until' => $user->premium_until->toDateString()
+        ]);
+    }
 }
