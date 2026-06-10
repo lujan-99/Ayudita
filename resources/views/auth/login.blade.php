@@ -1,4 +1,11 @@
 <x-guest-layout title="Iniciar Sesión">
+    <div class="mb-6 flex justify-start">
+        <a href="/" class="inline-flex items-center gap-2 text-xs font-label-mono text-on-surface-variant hover:text-primary transition-colors">
+            <span class="material-symbols-outlined text-sm">arrow_back</span>
+            Volver a la landing page
+        </a>
+    </div>
+
     <div class="mb-8 text-center">
         <h2 class="mb-2 font-headline-md text-headline-md text-on-surface">Bienvenido de nuevo</h2>
         <p class="font-body-sm text-body-sm text-on-surface-variant">Ingresa tus credenciales para continuar con tus estudios</p>

@@ -3,6 +3,13 @@
         [x-cloak] { display: none !important; }
     </style>
 
+    <div class="mb-6 flex justify-start">
+        <a href="/" class="inline-flex items-center gap-2 text-xs font-label-mono text-on-surface-variant hover:text-primary transition-colors">
+            <span class="material-symbols-outlined text-sm">arrow_back</span>
+            Volver a la landing page
+        </a>
+    </div>
+
     <div class="mb-8 text-center">
         <h2 class="mb-2 font-headline-md text-headline-md text-on-surface">Crea tu Cuenta</h2>
         <p class="font-body-sm text-body-sm text-on-surface-variant">Únete a la comunidad de Ayudita y domina el semestre</p>
@@ -18,6 +25,38 @@
         <template x-for="id in selectedMaterias" :key="'group-'+id">
             <input type="hidden" :name="'grupo_materias[' + id + ']'" :value="grupoSelections[id] || ''">
         </template>
+
+        <!-- Step Indicator (Breadcrumbs) -->
+        <div class="flex items-center justify-between mb-8 px-1 text-xs font-label-mono select-none border-b border-outline-variant/30 pb-4">
+            <div class="flex items-center gap-2">
+                <button type="button" @click="step >= 1 ? step = 1 : null" 
+                        :class="step === 1 ? 'text-primary font-bold' : (step > 1 ? 'text-on-surface-variant hover:text-primary transition-colors cursor-pointer' : 'text-on-surface-variant/40 cursor-default')" 
+                        class="flex items-center gap-1.5 focus:outline-none">
+                    <span class="w-6 h-6 rounded-full flex items-center justify-center border text-[10px] transition-colors" :class="step >= 1 ? 'border-primary bg-primary/10 text-primary font-bold' : 'border-outline-variant text-on-surface-variant/40'">1</span>
+                    <span>Cuenta</span>
+                </button>
+            </div>
+            <div class="flex-1 h-[1px] bg-outline-variant/30 mx-2"></div>
+            <div class="flex items-center gap-2">
+                <button type="button" @click="step >= 2 ? step = 2 : null"
+                        :class="step === 2 ? 'text-primary font-bold' : (step > 2 ? 'text-on-surface-variant hover:text-primary transition-colors cursor-pointer' : 'text-on-surface-variant/40 cursor-default')" 
+                        class="flex items-center gap-1.5 focus:outline-none"
+                        :disabled="step < 2">
+                    <span class="w-6 h-6 rounded-full flex items-center justify-center border text-[10px] transition-colors" :class="step >= 2 ? 'border-primary bg-primary/10 text-primary font-bold' : 'border-outline-variant text-on-surface-variant/40'">2</span>
+                    <span>Materias</span>
+                </button>
+            </div>
+            <div class="flex-1 h-[1px] bg-outline-variant/30 mx-2"></div>
+            <div class="flex items-center gap-2">
+                <button type="button" @click="step >= 3 ? step = 3 : null"
+                        :class="step === 3 ? 'text-primary font-bold' : 'text-on-surface-variant/40 cursor-default'" 
+                        class="flex items-center gap-1.5 focus:outline-none"
+                        :disabled="step < 3">
+                    <span class="w-6 h-6 rounded-full flex items-center justify-center border text-[10px] transition-colors" :class="step >= 3 ? 'border-primary bg-primary/10 text-primary font-bold' : 'border-outline-variant text-on-surface-variant/40'">3</span>
+                    <span>Grupos</span>
+                </button>
+            </div>
+        </div>
 
         <!-- STEP 1: Basic Account Info -->
         <div x-show="step === 1" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-x-4" x-transition:enter-end="opacity-100 transform translate-x-0" class="space-y-4">

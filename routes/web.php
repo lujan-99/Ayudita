@@ -3,10 +3,91 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 
 // 1. Landing Page / Bienvenida
 Route::get('/', function () {
-    return view('welcome');
+    $posts = Cache::remember('social_latest_posts', 3600, function () {
+        $instagramId = config('services.instagram.business_id');
+        $pageId = config('services.instagram.page_id');
+        $accessToken = config('services.instagram.access_token');
+        
+        if (!$accessToken) {
+            return [];
+        }
+
+        $allPosts = [];
+
+        // 1. Fetch Instagram Posts
+        if ($instagramId) {
+            try {
+                $response = Http::timeout(5)->get("https://graph.facebook.com/v20.0/{$instagramId}/media", [
+                    'fields' => 'id,caption,media_type,media_url,permalink,thumbnail_url,timestamp',
+                    'limit' => 3,
+                    'access_token' => $accessToken,
+                ]);
+                
+                if ($response->successful()) {
+                    $igData = $response->json()['data'] ?? [];
+                    foreach ($igData as $post) {
+                        $mediaUrl = $post['media_url'] ?? '';
+                        if (($post['media_type'] ?? '') === 'VIDEO' && isset($post['thumbnail_url'])) {
+                            $mediaUrl = $post['thumbnail_url'];
+                        }
+                        $allPosts[] = [
+                            'source' => 'instagram',
+                            'id' => $post['id'],
+                            'text' => $post['caption'] ?? '',
+                            'image' => $mediaUrl,
+                            'link' => $post['permalink'] ?? 'https://www.instagram.com/ayuditausfx/',
+                            'timestamp' => strtotime($post['timestamp'] ?? 'now'),
+                        ];
+                    }
+                }
+            } catch (\Exception $e) {
+                logger()->error('Error fetching Instagram media: ' . $e->getMessage());
+            }
+        }
+
+        // 2. Fetch Facebook Page Posts
+        if ($pageId) {
+            try {
+                $response = Http::timeout(5)->get("https://graph.facebook.com/v20.0/{$pageId}/feed", [
+                    'fields' => 'id,message,created_time,full_picture,permalink_url',
+                    'limit' => 3,
+                    'access_token' => $accessToken,
+                ]);
+                
+                if ($response->successful()) {
+                    $fbData = $response->json()['data'] ?? [];
+                    foreach ($fbData as $post) {
+                        if (isset($post['message']) || isset($post['full_picture'])) {
+                            $allPosts[] = [
+                                'source' => 'facebook',
+                                'id' => $post['id'],
+                                'text' => $post['message'] ?? '',
+                                'image' => $post['full_picture'] ?? '',
+                                'link' => $post['permalink_url'] ?? "https://www.facebook.com/{$pageId}",
+                                'timestamp' => strtotime($post['created_time'] ?? 'now'),
+                            ];
+                        }
+                    }
+                }
+            } catch (\Exception $e) {
+                logger()->error('Error fetching Facebook feed: ' . $e->getMessage());
+            }
+        }
+
+        // Sort combined posts by timestamp descending
+        usort($allPosts, function ($a, $b) {
+            return $b['timestamp'] <=> $a['timestamp'];
+        });
+
+        return $allPosts;
+    });
+
+    return view('welcome', compact('posts'));
 });
 
 // Rutas de Términos y Privacidad

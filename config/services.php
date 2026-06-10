@@ -41,4 +41,10 @@ return [
         'mode' => env('PAYPAL_MODE', 'sandbox'),
     ],
 
+    'instagram' => [
+        'business_id' => env('INSTAGRAM_BUSINESS_ID'),
+        'page_id' => env('FACEBOOK_PAGE_ID'),
+        'access_token' => env('META_ACCESS_TOKEN'),
+    ],
+
 ];
