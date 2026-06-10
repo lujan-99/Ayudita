@@ -85,7 +85,7 @@ class PayPalSubscriptionTest extends TestCase
                                 [
                                     'amount' => [
                                         'currency_code' => 'USD',
-                                        'value' => '1.45',
+                                        'value' => '1.00',
                                     ]
                                 ]
                             ]
@@ -99,7 +99,7 @@ class PayPalSubscriptionTest extends TestCase
                     [
                         'amount' => [
                             'currency_code' => 'USD',
-                            'value' => '1.45',
+                            'value' => '1.00',
                         ]
                     ]
                 ]
@@ -140,7 +140,7 @@ class PayPalSubscriptionTest extends TestCase
                                 [
                                     'amount' => [
                                         'currency_code' => 'USD',
-                                        'value' => '5.80',
+                                        'value' => '4.00',
                                     ]
                                 ]
                             ]
@@ -154,7 +154,7 @@ class PayPalSubscriptionTest extends TestCase
                     [
                         'amount' => [
                             'currency_code' => 'USD',
-                            'value' => '5.80',
+                            'value' => '4.00',
                         ]
                     ]
                 ]
@@ -187,7 +187,7 @@ class PayPalSubscriptionTest extends TestCase
                     [
                         'amount' => [
                             'currency_code' => 'EUR',
-                            'value' => '1.45',
+                            'value' => '1.00',
                         ]
                     ]
                 ]
@@ -212,7 +212,7 @@ class PayPalSubscriptionTest extends TestCase
                     [
                         'amount' => [
                             'currency_code' => 'USD',
-                            'value' => '1.00', // expected 1.45
+                            'value' => '0.50', // expected 1.00
                         ]
                     ]
                 ]

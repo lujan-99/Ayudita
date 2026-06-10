@@ -23,15 +23,15 @@ class PayPalController extends Controller
 
         $plans = [
             'mensual' => [
-                'price' => 1.45,
+                'price' => 1.00,
                 'months' => 1,
             ],
             'semestral' => [
-                'price' => 5.80,
+                'price' => 4.00,
                 'months' => 6,
             ],
             'anual' => [
-                'price' => 10.15,
+                'price' => 7.00,
                 'months' => 12,
             ],
         ];

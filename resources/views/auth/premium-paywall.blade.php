@@ -140,11 +140,11 @@
         // Initialize PayPal Smart Buttons
         paypal.Buttons({
             createOrder: function(data, actions) {
-                let usdAmount = '1.45'; // fallback / mensual
+                let usdAmount = '1.00'; // fallback / mensual
                 if (selectedPlanId === 'semestral') {
-                    usdAmount = '5.80';
+                    usdAmount = '4.00';
                 } else if (selectedPlanId === 'anual') {
-                    usdAmount = '10.15';
+                    usdAmount = '7.00';
                 }
                 
                 return actions.order.create({
