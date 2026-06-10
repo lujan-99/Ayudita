@@ -1,9 +1,23 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark scroll-smooth">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <!-- Theme Initialization Script -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light' || (!savedTheme && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+                document.documentElement.classList.add('light');
+                document.documentElement.classList.remove('dark');
+            } else {
+                document.documentElement.classList.add('dark');
+                document.documentElement.classList.remove('light');
+            }
+        })();
+    </script>
 
     <!-- SEO Meta Tags (No Index for Private Dashboard) -->
     <title>@if (isset($title)) {{ $title }} - Ayudita USFX @else Panel de Estudiante - Ayudita USFX @endif</title>
@@ -18,52 +32,95 @@
     <!-- CSS & JS Assets (Vite) -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body x-data="{ sidebarCollapsed: localStorage.getItem('sidebarCollapsed') === 'true' }" class="bg-mesh text-on-surface font-body-lg antialiased min-h-screen flex transition-all duration-300">
+<body x-data="{ 
+    sidebarCollapsed: localStorage.getItem('sidebarCollapsed') === 'true',
+    mobileSidebarOpen: false,
+    darkTheme: localStorage.getItem('theme') !== 'light',
+    toggleTheme() {
+        this.darkTheme = !this.darkTheme;
+        localStorage.setItem('theme', this.darkTheme ? 'dark' : 'light');
+        this.applyTheme();
+    },
+    applyTheme() {
+        if (this.darkTheme) {
+            document.documentElement.classList.add('dark');
+            document.documentElement.classList.remove('light');
+        } else {
+            document.documentElement.classList.add('light');
+            document.documentElement.classList.remove('dark');
+        }
+    }
+}" x-init="applyTheme()" class="bg-mesh text-on-surface font-body-lg antialiased min-h-screen flex transition-all duration-300">
+
+    <!-- Backdrop de Mobile Sidebar -->
+    <div x-show="mobileSidebarOpen" @click="mobileSidebarOpen = false" x-transition.opacity class="fixed inset-0 bg-black/40 backdrop-blur-xs z-40 md:hidden" style="display: none;"></div>
 
     <!-- Menú Lateral -->
-    <nav class="hidden md:flex bg-surface-container-low text-primary font-display text-body-sm fixed left-0 top-0 h-full border-r border-outline-variant flex-col p-4 gap-bento-gap z-40 pt-20 transition-all duration-300"
-         :class="sidebarCollapsed ? 'w-20 items-center' : 'w-64'">
+    <nav class="fixed left-0 top-0 h-full border-r border-outline-variant bg-surface-container-low text-primary font-display text-body-sm flex flex-col p-3 pb-4 z-50 transition-all duration-300 transform md:translate-x-0"
+         :class="[
+            sidebarCollapsed ? 'md:w-20 md:items-center' : 'md:w-64',
+            mobileSidebarOpen ? 'w-64 translate-x-0' : 'w-64 -translate-x-full md:translate-x-0'
+         ]">
         
-        <!-- Toggle Button -->
+        <!-- Toggle Button (Desktop Only) -->
         <button @click="sidebarCollapsed = !sidebarCollapsed; localStorage.setItem('sidebarCollapsed', sidebarCollapsed)"
-                class="hidden md:flex items-center justify-center w-8 h-8 rounded-full bg-surface-container border border-outline-variant hover:bg-surface-variant text-on-surface hover:text-primary transition-all absolute top-4 right-[-16px] z-50 shadow-md">
+                class="hidden md:flex items-center justify-center w-8 h-8 rounded-full bg-surface-container border border-outline-variant hover:bg-surface-variant text-on-surface hover:text-primary transition-all absolute top-[72px] -right-4 z-50 shadow-md cursor-pointer"
+                title="Contraer/Expandir menú">
             <span class="material-symbols-outlined text-[18px] transition-transform duration-300" :class="sidebarCollapsed ? 'rotate-180' : ''">chevron_left</span>
         </button>
 
-        <div class="flex items-center gap-3 mb-8 transition-all duration-300" :class="sidebarCollapsed ? 'px-0 justify-center' : 'px-2'">
-            <img alt="Ayudita Logo" class="w-8 h-8 rounded-DEFAULT object-cover border border-outline-variant" src="{{ asset('images/logos/logo-icono.svg') }}"/>
-            <div x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms>
-                <h1 class="font-display text-headline-md font-bold text-primary">Ayudita</h1>
-                <p class="font-body-sm text-on-surface-variant text-[10px] uppercase tracking-widest mt-1">Comunidad USFX</p>
+        <!-- Close Button (Mobile Drawer Only) -->
+        <button @click="mobileSidebarOpen = false" class="md:hidden absolute top-4 right-4 text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full flex items-center justify-center">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+
+        <!-- Logo/Branding Container -->
+        <div class="h-16 flex items-center gap-3 border-b border-outline-variant/30 mb-6 w-full transition-all duration-300 shrink-0" :class="sidebarCollapsed ? 'justify-center px-0' : 'px-3'">
+            <img alt="Ayudita Logo" class="w-12 h-12 rounded-DEFAULT object-cover border border-outline-variant" src="{{ asset('images/logos/logo-icono.svg') }}"/>
+            <div x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms class="flex flex-col overflow-hidden whitespace-nowrap">
+                <h1 class="font-display text-headline-md font-bold text-primary leading-none">Ayudita</h1>
+                <span class="font-body-sm text-on-surface-variant text-[9px] uppercase tracking-widest mt-1">Comunidad USFX</span>
             </div>
         </div>
         <div class="flex-1 flex flex-col gap-2 w-full">
-            <a class="flex items-center gap-3 px-3 py-2 {{ Request::routeIs('dashboard') ? 'bg-primary-container text-on-primary-container font-bold' : 'text-on-surface-variant hover:bg-surface-variant/50' }} rounded-lg transition-all" href="{{ route('dashboard') }}" :class="sidebarCollapsed ? 'justify-center' : ''">
+            <a class="relative flex items-center gap-3 px-3 py-2.5 {{ Request::routeIs('dashboard') ? 'bg-primary-container text-on-primary-container font-bold shadow-xs' : 'text-on-surface-variant hover:bg-surface-variant/50' }} rounded-lg transition-all" href="{{ route('dashboard') }}" :class="sidebarCollapsed ? 'justify-center' : ''" title="Dashboard">
+                @if(Request::routeIs('dashboard'))
+                    <span class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-md"></span>
+                @endif
                 <span class="material-symbols-outlined {{ Request::routeIs('dashboard') ? 'fill-icon' : '' }} text-[20px]">dashboard</span>
                 <span x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms>Dashboard</span>
             </a>
-            <a class="flex items-center gap-3 px-3 py-2 {{ Request::routeIs('materias.index') || Request::routeIs('materias.show') ? 'bg-primary-container text-on-primary-container font-bold' : 'text-on-surface-variant hover:bg-surface-variant/50' }} rounded-lg transition-all" href="{{ route('materias.index') }}" :class="sidebarCollapsed ? 'justify-center' : ''">
+            <a class="relative flex items-center gap-3 px-3 py-2.5 {{ Request::routeIs('materias.index') || Request::routeIs('materias.show') ? 'bg-primary-container text-on-primary-container font-bold shadow-xs' : 'text-on-surface-variant hover:bg-surface-variant/50' }} rounded-lg transition-all" href="{{ route('materias.index') }}" :class="sidebarCollapsed ? 'justify-center' : ''" title="Materias">
+                @if(Request::routeIs('materias.index') || Request::routeIs('materias.show'))
+                    <span class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-md"></span>
+                @endif
                 <span class="material-symbols-outlined {{ Request::routeIs('materias.index') || Request::routeIs('materias.show') ? 'fill-icon' : '' }} text-[20px]">auto_stories</span>
                 <span x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms>Materias</span>
             </a>
             <!-- Botones que abren el Paywall -->
-            <a class="flex items-center gap-3 px-3 py-2 {{ Request::routeIs('plan-estudios') ? 'bg-primary-container text-on-primary-container font-bold' : 'text-on-surface-variant hover:bg-surface-variant/50' }} rounded-lg transition-all" href="{{ route('plan-estudios') }}" :class="sidebarCollapsed ? 'justify-center' : ''">
+            <a class="relative flex items-center gap-3 px-3 py-2.5 {{ Request::routeIs('plan-estudios') ? 'bg-primary-container text-on-primary-container font-bold shadow-xs' : 'text-on-surface-variant hover:bg-surface-variant/50' }} rounded-lg transition-all" href="{{ route('plan-estudios') }}" :class="sidebarCollapsed ? 'justify-center' : ''" title="Planes de Estudio">
+                @if(Request::routeIs('plan-estudios'))
+                    <span class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-md"></span>
+                @endif
                 <span class="material-symbols-outlined {{ Request::routeIs('plan-estudios') ? 'fill-icon' : '' }} text-[20px]">map</span>
                 <span x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms>Planes de Estudio</span>
             </a>
-            <a class="flex items-center gap-3 px-3 py-2 {{ Request::routeIs('docentes.index') ? 'bg-primary-container text-on-primary-container font-bold' : 'text-on-surface-variant hover:bg-surface-variant/50' }} rounded-lg transition-all" href="{{ route('docentes.index') }}" :class="sidebarCollapsed ? 'justify-center' : ''">
+            <a class="relative flex items-center gap-3 px-3 py-2.5 {{ Request::routeIs('docentes.index') ? 'bg-primary-container text-on-primary-container font-bold shadow-xs' : 'text-on-surface-variant hover:bg-surface-variant/50' }} rounded-lg transition-all" href="{{ route('docentes.index') }}" :class="sidebarCollapsed ? 'justify-center' : ''" title="Docentes">
+                @if(Request::routeIs('docentes.index'))
+                    <span class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-md"></span>
+                @endif
                 <span class="material-symbols-outlined {{ Request::routeIs('docentes.index') ? 'fill-icon' : '' }} text-[20px]">shield_person</span>
                 <span x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms>Docentes</span>
             </a>
         </div>
         <div class="mt-auto mb-6 w-full flex justify-center" :class="sidebarCollapsed ? 'px-0' : 'px-2'">
-            <button @click="$dispatch('open-modal', 'premium-paywall')" class="bg-primary text-on-primary font-bold rounded-DEFAULT hover:brightness-110 transition-all text-body-sm" :class="sidebarCollapsed ? 'w-10 h-10 p-0 flex items-center justify-center' : 'w-full py-2 px-4'">
+            <button @click="$dispatch('open-modal', 'premium-paywall')" class="bg-primary text-on-primary font-bold rounded-DEFAULT hover:brightness-110 transition-all text-body-sm" :class="sidebarCollapsed ? 'w-10 h-10 p-0 flex items-center justify-center rounded-xl' : 'w-full py-2 px-4'" title="Ver Mi Plan">
                 <span x-show="sidebarCollapsed" class="material-symbols-outlined text-[20px]">workspace_premium</span>
                 <span x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms>Ver Mi Plan</span>
             </button>
         </div>
         <div class="flex flex-col gap-2 pt-4 border-t border-outline-variant/30 w-full">
-            <a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-variant/30 rounded-lg transition-all" href="#" :class="sidebarCollapsed ? 'justify-center' : ''">
+            <a class="relative flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-variant/30 rounded-lg transition-all" href="#" :class="sidebarCollapsed ? 'justify-center' : ''" title="Ayuda">
                 <span class="material-symbols-outlined text-[18px]">help</span>
                 <span x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms>Ayuda</span>
             </a>
@@ -75,15 +132,21 @@
          :class="sidebarCollapsed ? 'md:ml-20' : 'md:ml-64'">
         
         <!-- Navbar Superior -->
-        <header class="bg-surface text-primary font-display text-body-lg fixed top-0 right-0 z-50 border-b border-outline-variant flex justify-between items-center h-16 px-margin-mobile md:px-margin-desktop transition-all duration-300"
+        <header class="bg-surface text-primary font-display text-body-lg fixed top-0 right-0 z-40 border-b border-outline-variant flex justify-between items-center h-16 px-margin-mobile md:px-margin-desktop transition-all duration-300"
                 :class="sidebarCollapsed ? 'w-full md:w-[calc(100%-5rem)]' : 'w-full md:w-[calc(100%-16rem)]'">
-            <div class="flex items-center gap-4 w-full md:w-auto">
+            <div class="flex items-center gap-2 w-full md:w-auto">
+                <!-- Mobile Menu Toggle -->
+                <button @click="mobileSidebarOpen = !mobileSidebarOpen" class="md:hidden text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full mr-1 flex items-center justify-center cursor-pointer" title="Abrir menú">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+
                 <div class="relative w-full max-w-md hidden md:block">
                     <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
                     <input class="w-full bg-surface-container-low border border-outline-variant rounded-DEFAULT pl-10 pr-4 py-1.5 text-body-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors" placeholder="Buscar materias o patrones..." type="text"/>
                 </div>
-                <div class="md:hidden font-display text-headline-md font-bold text-primary">
-                    Ayudita
+                <div class="md:hidden font-display text-headline-md font-bold text-primary flex items-center gap-2">
+                    <img alt="Ayudita Logo" class="w-10 h-10 rounded-DEFAULT border border-outline-variant" src="{{ asset('images/logos/logo-icono.svg') }}"/>
+                    <span>Ayudita</span>
                 </div>
                 @isset($headerText)
                     <div class="font-display font-bold text-on-surface tracking-wide hidden md:block pl-4">
@@ -104,6 +167,12 @@
                         Mejorar a Pro ✨
                     </button>
                 @endif
+                <!-- Theme Toggle Button -->
+                <button @click="toggleTheme()" class="text-on-surface-variant hover:text-primary hover:bg-surface-variant/50 transition-colors p-2 rounded-full flex items-center justify-center" title="Alternar tema">
+                    <span x-show="darkTheme" class="material-symbols-outlined" style="display: none;">light_mode</span>
+                    <span x-show="!darkTheme" class="material-symbols-outlined" style="display: none;">dark_mode</span>
+                </button>
+
                 <button class="text-on-surface-variant hover:text-primary hover:bg-surface-variant/50 transition-colors p-2 rounded-full">
                     <span class="material-symbols-outlined">notifications</span>
                 </button>
@@ -162,20 +231,27 @@
             <div class="flex flex-col items-center gap-3">
                 <span class="font-label-mono text-[11px] text-on-surface-variant uppercase tracking-wider">Sigue a la Comunidad</span>
                 <div class="flex items-center gap-5 text-on-surface-variant">
-                    <a href="https://www.tiktok.com/@ayuditausfx0?is_from_webapp=1&sender_device=pc" target="_blank" class="hover:text-primary transition-colors duration-200">
+                    <a href="https://www.tiktok.com/@ayuditausfx0" target="_blank" class="hover:text-primary transition-colors duration-200" title="TikTok">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.01 1.62 4.14.94 1.08 2.27 1.81 3.69 2.07v3.89c-1.78-.14-3.48-.89-4.73-2.18-.1-.09-.17-.22-.3-.38v6.82c.02 4.05-2.52 7.77-6.37 9.03-3.85 1.26-8.2-.1-10.45-3.37A9.342 9.342 0 0 1 1.02 13c-.15-4.4 2.89-8.41 7.14-9.55 1.1-.3 2.25-.39 3.38-.27V7.1c-.88-.16-1.8-.07-2.61.31-1.63.75-2.63 2.51-2.43 4.3.2 1.8 1.7 3.23 3.5 3.23 1.63 0 3.03-1.18 3.28-2.79.05-.31.06-.63.06-.94V.02z"/></svg>
                     </a>
-                    <a href="https://youtube.com/@ayudita-w4tf?si=oxi0buOmWOT248Fl" target="_blank" class="hover:text-primary transition-colors duration-200">
+                    <a href="https://www.instagram.com/ayuditausfx/" target="_blank" class="hover:text-primary transition-colors duration-200" title="Instagram">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.062 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+                    </a>
+                    <a href="https://www.facebook.com/share/1KxGd7doF9/" target="_blank" class="hover:text-primary transition-colors duration-200" title="Facebook">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/></svg>
                     </a>
-                    <a href="https://www.instagram.com/ayuditausfx" target="_blank" class="hover:text-primary transition-colors duration-200">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.062 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+                    <a href="https://www.youtube.com/@ayudita-w4tf" target="_blank" class="hover:text-primary transition-colors duration-200" title="YouTube">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.5 12 3.5 12 3.5s-7.518 0-9.388.553a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11C4.482 20.5 12 20.5 12 20.5s7.518 0 9.388-.553a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
                     </a>
                 </div>
             </div>
 
-            <div class="text-center md:text-right font-label-mono text-[11px] opacity-70">
+            <div class="text-center md:text-right font-label-mono text-[11px] opacity-70 flex flex-col items-center md:items-end gap-1">
                 <p>© 2026 Ayudita Inc. Todos los derechos reservados.</p>
+                <div class="flex gap-3 text-[10px]">
+                    <a href="/terminos-condisiones" class="hover:text-primary transition-colors underline">Términos y Condiciones</a>
+                    <a href="/politica-privacidad" class="hover:text-primary transition-colors underline">Política de Privacidad</a>
+                </div>
             </div>
         </footer>
     </div>
@@ -188,8 +264,8 @@
             </button>
 
             <div class="text-center max-w-2xl mx-auto mb-8">
-                <div class="flex items-center justify-center gap-2 mb-3">
-                    <img alt="Ayudita Logo" class="w-8 h-8 rounded-md border border-outline-variant/50" src="{{ asset('images/logos/logo-icono.svg') }}">
+                <div class="flex items-center justify-center gap-2.5 mb-4">
+                    <img alt="Ayudita Logo" class="w-16 h-16 rounded-md border border-outline-variant/50" src="{{ asset('images/logos/logo-icono.svg') }}">
                     <span class="font-display text-headline-sm font-bold text-primary">Ayudita Pro</span>
                 </div>
                 <h2 class="font-display text-headline-md font-bold text-on-surface mb-2">Desbloquea todo el Ecosistema Académico</h2>

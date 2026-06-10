@@ -6,7 +6,7 @@
                 <!-- Logo -->
                 <div class="flex shrink-0 items-center gap-3">
                     <a href="{{ route('dashboard') }}" class="flex items-center gap-3">
-                        <img src="{{ asset('images/logos/logo-horizontal.svg') }}" class="block h-10 w-auto max-w-[180px]" alt="{{ config('app.name', 'STUDENT_PATTERNS') }} logo">
+                        <img src="{{ asset('images/logos/logo-horizontal.svg') }}" class="block h-12 w-auto max-w-[200px]" alt="{{ config('app.name', 'STUDENT_PATTERNS') }} logo">
                         <span class="hidden text-sm font-semibold tracking-[0.28em] text-primary uppercase md:inline">{{ config('app.name', 'STUDENT_PATTERNS') }}</span>
                     </a>
                 </div>

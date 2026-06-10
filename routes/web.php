@@ -9,6 +9,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Rutas de Términos y Privacidad
+Route::get('/terminos-condisiones', function () {
+    return view('terminos');
+})->name('terminos');
+
+Route::get('/politica-privacidad', function () {
+    return view('privacidad');
+})->name('privacidad');
+
 use App\Http\Controllers\PlanEstudiosController;
 use App\Http\Controllers\DocenteController as StudentDocenteController;
 use App\Http\Controllers\DashboardController;

@@ -24,51 +24,71 @@
 <body x-data="{ sidebarCollapsed: localStorage.getItem('sidebarCollapsed') === 'true' }" class="bg-mesh text-on-surface font-body-lg antialiased min-h-screen flex transition-all duration-300">
 
     <!-- Menú Lateral Admin -->
-    <nav class="hidden md:flex bg-surface-container-low text-primary font-display text-body-sm fixed left-0 top-0 h-full border-r border-outline-variant flex-col p-4 gap-bento-gap z-40 pt-20 transition-all duration-300"
+    <nav class="hidden md:flex bg-surface-container-low text-primary font-display text-body-sm fixed left-0 top-0 h-full border-r border-outline-variant flex-col p-3 pb-4 z-50 transition-all duration-300"
          :class="sidebarCollapsed ? 'w-20 items-center' : 'w-64'">
         
         <!-- Toggle Button -->
         <button @click="sidebarCollapsed = !sidebarCollapsed; localStorage.setItem('sidebarCollapsed', sidebarCollapsed)"
-                class="hidden md:flex items-center justify-center w-8 h-8 rounded-full bg-surface-container border border-outline-variant hover:bg-surface-variant text-on-surface hover:text-primary transition-all absolute top-4 right-[-16px] z-50 shadow-md">
+                class="hidden md:flex items-center justify-center w-8 h-8 rounded-full bg-surface-container border border-outline-variant hover:bg-surface-variant text-on-surface hover:text-primary transition-all absolute top-[72px] -right-4 z-50 shadow-md cursor-pointer"
+                title="Contraer/Expandir menú">
             <span class="material-symbols-outlined text-[18px] transition-transform duration-300" :class="sidebarCollapsed ? 'rotate-180' : ''">chevron_left</span>
         </button>
 
-        <div class="flex items-center gap-3 mb-8 transition-all duration-300" :class="sidebarCollapsed ? 'px-0 justify-center' : 'px-2'">
-            <span class="material-symbols-outlined text-primary text-[32px]">admin_panel_settings</span>
-            <div x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms>
-                <h1 class="font-display text-headline-md font-bold text-primary">Admin Panel</h1>
-                <p class="font-body-sm text-on-surface-variant text-[10px] uppercase tracking-widest mt-1">Gestión de Tablas</p>
+        <!-- Logo/Branding Container -->
+        <div class="h-16 flex items-center gap-3 border-b border-outline-variant/30 mb-6 w-full transition-all duration-300 shrink-0" :class="sidebarCollapsed ? 'justify-center px-0' : 'px-3'">
+            <span class="material-symbols-outlined text-primary text-[32px]" :class="sidebarCollapsed ? '' : 'ml-1'">admin_panel_settings</span>
+            <div x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms class="flex flex-col overflow-hidden whitespace-nowrap">
+                <h1 class="font-display text-headline-md font-bold text-primary leading-none">Admin Panel</h1>
+                <span class="font-body-sm text-on-surface-variant text-[9px] uppercase tracking-widest mt-1">Gestión de Tablas</span>
             </div>
         </div>
         <div class="flex-1 flex flex-col gap-2 w-full">
-            <a class="flex items-center gap-3 px-3 py-2 {{ Request::routeIs('admin.dashboard') ? 'bg-inverse-primary text-white font-bold' : 'text-on-surface-variant hover:bg-surface-variant/50' }} rounded-lg transition-all" href="{{ route('admin.dashboard') }}" :class="sidebarCollapsed ? 'justify-center' : ''">
+            <a class="relative flex items-center gap-3 px-3 py-2.5 {{ Request::routeIs('admin.dashboard') ? 'bg-inverse-primary text-white font-bold shadow-xs' : 'text-on-surface-variant hover:bg-surface-variant/50' }} rounded-lg transition-all" href="{{ route('admin.dashboard') }}" :class="sidebarCollapsed ? 'justify-center' : ''" title="Dashboard">
+                @if(Request::routeIs('admin.dashboard'))
+                    <span class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-white rounded-r-md"></span>
+                @endif
                 <span class="material-symbols-outlined {{ Request::routeIs('admin.dashboard') ? 'fill-icon' : '' }} text-[20px]">dashboard</span>
                 <span x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms>Dashboard</span>
             </a>
-            <a class="flex items-center gap-3 px-3 py-2 {{ Request::routeIs('admin.carreras.*') ? 'bg-inverse-primary text-white font-bold' : 'text-on-surface-variant hover:bg-surface-variant/50' }} rounded-lg transition-all" href="{{ route('admin.carreras.index') }}" :class="sidebarCollapsed ? 'justify-center' : ''">
+            <a class="relative flex items-center gap-3 px-3 py-2.5 {{ Request::routeIs('admin.carreras.*') ? 'bg-inverse-primary text-white font-bold shadow-xs' : 'text-on-surface-variant hover:bg-surface-variant/50' }} rounded-lg transition-all" href="{{ route('admin.carreras.index') }}" :class="sidebarCollapsed ? 'justify-center' : ''" title="Carreras">
+                @if(Request::routeIs('admin.carreras.*'))
+                    <span class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-white rounded-r-md"></span>
+                @endif
                 <span class="material-symbols-outlined {{ Request::routeIs('admin.carreras.*') ? 'fill-icon' : '' }} text-[20px]">school</span>
                 <span x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms>Carreras</span>
             </a>
-            <a class="flex items-center gap-3 px-3 py-2 {{ Request::routeIs('admin.docentes.*') ? 'bg-inverse-primary text-white font-bold' : 'text-on-surface-variant hover:bg-surface-variant/50' }} rounded-lg transition-all" href="{{ route('admin.docentes.index') }}" :class="sidebarCollapsed ? 'justify-center' : ''">
+            <a class="relative flex items-center gap-3 px-3 py-2.5 {{ Request::routeIs('admin.docentes.*') ? 'bg-inverse-primary text-white font-bold shadow-xs' : 'text-on-surface-variant hover:bg-surface-variant/50' }} rounded-lg transition-all" href="{{ route('admin.docentes.index') }}" :class="sidebarCollapsed ? 'justify-center' : ''" title="Docentes">
+                @if(Request::routeIs('admin.docentes.*'))
+                    <span class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-white rounded-r-md"></span>
+                @endif
                 <span class="material-symbols-outlined {{ Request::routeIs('admin.docentes.*') ? 'fill-icon' : '' }} text-[20px]">groups</span>
                 <span x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms>Docentes</span>
             </a>
-            <a class="flex items-center gap-3 px-3 py-2 {{ Request::routeIs('admin.materias.*') ? 'bg-inverse-primary text-white font-bold' : 'text-on-surface-variant hover:bg-surface-variant/50' }} rounded-lg transition-all" href="{{ route('admin.materias.index') }}" :class="sidebarCollapsed ? 'justify-center' : ''">
+            <a class="relative flex items-center gap-3 px-3 py-2.5 {{ Request::routeIs('admin.materias.*') ? 'bg-inverse-primary text-white font-bold shadow-xs' : 'text-on-surface-variant hover:bg-surface-variant/50' }} rounded-lg transition-all" href="{{ route('admin.materias.index') }}" :class="sidebarCollapsed ? 'justify-center' : ''" title="Materias">
+                @if(Request::routeIs('admin.materias.*'))
+                    <span class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-white rounded-r-md"></span>
+                @endif
                 <span class="material-symbols-outlined {{ Request::routeIs('admin.materias.*') ? 'fill-icon' : '' }} text-[20px]">menu_book</span>
                 <span x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms>Materias</span>
             </a>
-            <a class="flex items-center gap-3 px-3 py-2 {{ Request::routeIs('admin.grupos.*') ? 'bg-inverse-primary text-white font-bold' : 'text-on-surface-variant hover:bg-surface-variant/50' }} rounded-lg transition-all" href="{{ route('admin.grupos.index') }}" :class="sidebarCollapsed ? 'justify-center' : ''">
+            <a class="relative flex items-center gap-3 px-3 py-2.5 {{ Request::routeIs('admin.grupos.*') ? 'bg-inverse-primary text-white font-bold shadow-xs' : 'text-on-surface-variant hover:bg-surface-variant/50' }} rounded-lg transition-all" href="{{ route('admin.grupos.index') }}" :class="sidebarCollapsed ? 'justify-center' : ''" title="Grupos">
+                @if(Request::routeIs('admin.grupos.*'))
+                    <span class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-white rounded-r-md"></span>
+                @endif
                 <span class="material-symbols-outlined {{ Request::routeIs('admin.grupos.*') ? 'fill-icon' : '' }} text-[20px]">hub</span>
                 <span x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms>Grupos</span>
             </a>
-            <a class="flex items-center gap-3 px-3 py-2 {{ Request::routeIs('admin.users.*') ? 'bg-inverse-primary text-white font-bold' : 'text-on-surface-variant hover:bg-surface-variant/50' }} rounded-lg transition-all" href="{{ route('admin.users.index') }}" :class="sidebarCollapsed ? 'justify-center' : ''">
+            <a class="relative flex items-center gap-3 px-3 py-2.5 {{ Request::routeIs('admin.users.*') ? 'bg-inverse-primary text-white font-bold shadow-xs' : 'text-on-surface-variant hover:bg-surface-variant/50' }} rounded-lg transition-all" href="{{ route('admin.users.index') }}" :class="sidebarCollapsed ? 'justify-center' : ''" title="Usuarios">
+                @if(Request::routeIs('admin.users.*'))
+                    <span class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-white rounded-r-md"></span>
+                @endif
                 <span class="material-symbols-outlined {{ Request::routeIs('admin.users.*') ? 'fill-icon' : '' }} text-[20px]">person_search</span>
                 <span x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms>Usuarios</span>
             </a>
         </div>
         
-        <div class="mt-auto mb-6 w-full flex justify-center">
-            <a class="flex items-center justify-center gap-2 border border-outline-variant text-on-surface-variant hover:text-primary hover:border-primary font-bold rounded-DEFAULT transition-all text-body-sm" href="{{ route('dashboard') }}" :class="sidebarCollapsed ? 'w-10 h-10 p-0 rounded-full' : 'w-full py-2 px-4'">
+        <div class="mt-auto mb-6 w-full flex justify-center" :class="sidebarCollapsed ? 'px-0' : 'px-2'">
+            <a class="flex items-center justify-center gap-2 border border-outline-variant text-on-surface-variant hover:text-primary hover:border-primary font-bold rounded-DEFAULT transition-all text-body-sm" href="{{ route('dashboard') }}" :class="sidebarCollapsed ? 'w-10 h-10 p-0 rounded-xl' : 'w-full py-2 px-4'" title="Volver al Sitio">
                 <span class="material-symbols-outlined text-[18px]">arrow_back</span>
                 <span x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms>Volver al Sitio</span>
             </a>
@@ -80,7 +100,7 @@
          :class="sidebarCollapsed ? 'md:ml-20' : 'md:ml-64'">
         
         <!-- Navbar Superior Admin -->
-        <header class="bg-surface text-primary font-display text-body-lg fixed top-0 right-0 z-50 border-b border-outline-variant flex justify-between items-center h-16 px-margin-mobile md:px-margin-desktop transition-all duration-300"
+        <header class="bg-surface text-primary font-display text-body-lg fixed top-0 right-0 z-40 border-b border-outline-variant flex justify-between items-center h-16 px-margin-mobile md:px-margin-desktop transition-all duration-300"
                 :class="sidebarCollapsed ? 'w-full md:w-[calc(100%-5rem)]' : 'w-full md:w-[calc(100%-16rem)]'">
             <div class="flex items-center gap-4 w-full md:w-auto">
                 <div class="md:hidden font-display text-headline-md font-bold text-primary flex items-center gap-2">

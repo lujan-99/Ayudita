@@ -4,7 +4,97 @@
 
 @layer base {
 	:root {
+		color-scheme: light;
+		--color-background: #fbf8fd;
+		--color-on-background: #1c1b1f;
+		--color-surface: #fbf8fd;
+		--color-on-surface: #1c1b1f;
+		--color-on-surface-variant: #49454f;
+		--color-surface-container: #f3eff7;
+		--color-surface-container-strong: #eae6ee;
+		--color-surface-container-low: #f7f3f9;
+		--color-surface-container-lowest: #ffffff;
+		--color-surface-container-high: #eae5ec;
+		--color-surface-container-highest: #e3dde5;
+		--color-surface-variant: #e7e0ec;
+		--color-outline-variant: #e2dbe6;
+		--color-primary: #7f3bce;
+		--color-on-primary: #ffffff;
+		--color-primary-container: #f0dbff;
+		--color-outline: #79747e;
+		--color-primary-fixed: #f0dbff;
+		--color-primary-fixed-dim: #d3b0ff;
+		--color-inverse-primary: #ddb7ff;
+		--color-surface-tint: #7f3bce;
+		--color-foreground: #1c1b1f;
+		--color-muted: #707070;
+		--color-secondary: #625b71;
+		--color-secondary-container: #e8def8;
+		--color-secondary-fixed: #e8def8;
+		--color-secondary-fixed-dim: #cbc2db;
+		--color-tertiary: #7e5264;
+		--color-tertiary-container: #ffd9e7;
+		--color-tertiary-fixed: #ffd9e7;
+		--color-tertiary-fixed-dim: #f0b8ce;
+		--color-error: #ba1a1a;
+		--color-error-container: #ffdad6;
+
+		/* Glow and Glass parameters for Light Mode */
+		--mesh-glow-color-1: rgba(127, 59, 206, 0.08);
+		--mesh-glow-color-2: rgba(127, 59, 206, 0.08);
+		--glass-bg: rgba(255, 255, 255, 0.65);
+		--glass-bg-strong: rgba(255, 255, 255, 0.88);
+		--glass-border: rgba(127, 59, 206, 0.15);
+		--glass-border-strong: rgba(127, 59, 206, 0.25);
+		--glass-shadow: rgba(127, 59, 206, 0.04);
+		--glow-color: rgba(127, 59, 206, 0.1);
+	}
+
+	.dark {
 		color-scheme: dark;
+		--color-background: #121414;
+		--color-on-background: #e2e2e2;
+		--color-surface: #121414;
+		--color-on-surface: #e2e2e2;
+		--color-on-surface-variant: #cfc2d6;
+		--color-surface-container: #1a1c1c;
+		--color-surface-container-strong: #1e2020;
+		--color-surface-container-low: #1a1c1c;
+		--color-surface-container-lowest: #0c0f0f;
+		--color-surface-container-high: #282a2b;
+		--color-surface-container-highest: #333535;
+		--color-surface-variant: #333535;
+		--color-outline-variant: #27272a;
+		--color-primary: #ddb7ff;
+		--color-on-primary: #490080;
+		--color-primary-container: #b76dff;
+		--color-outline: #988d9f;
+		--color-primary-fixed: #f0dbff;
+		--color-primary-fixed-dim: #ddb7ff;
+		--color-inverse-primary: #842bd2;
+		--color-surface-tint: #ddb7ff;
+		--color-foreground: #e2e2e2;
+		--color-muted: #a6a6a6;
+		--color-secondary: #c8c6c8;
+		--color-secondary-container: #474649;
+		--color-secondary-fixed: #e5e1e4;
+		--color-secondary-fixed-dim: #c8c6c8;
+		--color-tertiary: #c8c6c9;
+		--color-tertiary-container: #919094;
+		--color-tertiary-fixed: #e4e1e5;
+		--color-tertiary-fixed-dim: #c8c6c9;
+		--color-error: #ffb4ab;
+		--color-error-container: #93000a;
+
+		/* Glow and Glass parameters for Dark Mode */
+		--mesh-glow-color-1: rgba(221, 183, 255, 0.15);
+		--mesh-glow-color-2: rgba(221, 183, 255, 0.15);
+		--glass-bg: rgba(24, 24, 27, 0.4);
+		--glass-bg-strong: rgba(24, 24, 27, 0.7);
+		--glass-border: rgba(221, 183, 255, 0.2);
+		--glass-border-strong: rgba(221, 183, 255, 0.25);
+		--glass-shadow: rgba(221, 183, 255, 0.05);
+		--glow-color: rgba(168, 85, 247, 0.15);
 	}
 
 	html {
@@ -13,50 +103,57 @@
 
 	body {
 		@apply bg-surface text-foreground antialiased;
+		transition: background-color 0.3s ease, color 0.3s ease;
 	}
 
 	select option {
-		background-color: #1a1c1c;
-		color: #e2e2e2;
+		background-color: var(--color-surface-container);
+		color: var(--color-on-surface);
 	}
 }
 
 @layer components {
 	.app-shell {
 		@apply relative min-h-screen overflow-hidden bg-surface text-foreground;
+		transition: background-color 0.3s ease, color 0.3s ease;
 	}
 
 	.bg-mesh {
-		background-color: #121414;
+		background-color: var(--color-background);
 		background-image:
-			radial-gradient(at 0% 0%, rgba(221, 183, 255, 0.15) 0px, transparent 50%),
-			radial-gradient(at 100% 100%, rgba(221, 183, 255, 0.15) 0px, transparent 50%);
+			radial-gradient(at 0% 0%, var(--mesh-glow-color-1) 0px, transparent 50%),
+			radial-gradient(at 100% 100%, var(--mesh-glow-color-2) 0px, transparent 50%);
+		transition: background-color 0.3s ease;
 	}
 
 	.glass-card {
-		background: rgba(24, 24, 27, 0.4);
+		background: var(--glass-bg);
 		backdrop-filter: blur(12px);
 		-webkit-backdrop-filter: blur(12px);
-		border: 1px solid rgba(221, 183, 255, 0.2);
-		box-shadow: 0 0 40px rgba(221, 183, 255, 0.05);
+		border: 1px solid var(--glass-border);
+		box-shadow: 0 0 40px var(--glass-shadow);
+		transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 	}
 
 	.glass-panel {
-		background: rgba(24, 24, 27, 0.4);
+		background: var(--glass-bg);
 		backdrop-filter: blur(12px);
 		-webkit-backdrop-filter: blur(12px);
-		border: 1px solid rgba(221, 183, 255, 0.15);
+		border: 1px solid var(--glass-border);
+		transition: background 0.3s ease, border-color 0.3s ease;
 	}
 
 	.glass-panel-strong {
-		background: rgba(24, 24, 27, 0.7);
+		background: var(--glass-bg-strong);
 		backdrop-filter: blur(12px);
 		-webkit-backdrop-filter: blur(12px);
-		border: 1px solid rgba(221, 183, 255, 0.25);
+		border: 1px solid var(--glass-border-strong);
+		transition: background 0.3s ease, border-color 0.3s ease;
 	}
 
 	.glow-border {
-		box-shadow: 0 0 25px rgba(168, 85, 247, 0.15);
+		box-shadow: 0 0 25px var(--glow-color);
+		transition: box-shadow 0.3s ease;
 	}
 
 	.glow-hover {
@@ -64,23 +161,25 @@
 	}
 
 	.glow-hover:hover {
-		box-shadow: 0px 0px 20px rgba(168, 85, 247, 0.15);
-		border-color: rgba(221, 183, 255, 0.3);
+		box-shadow: 0px 0px 20px var(--glow-color);
+		border-color: var(--color-primary);
 	}
 
 	.bento-border {
 		@apply border border-outline-variant;
+		transition: border-color 0.3s ease;
 	}
 
 	.glass-morphism {
 		backdrop-filter: blur(12px);
 		-webkit-backdrop-filter: blur(12px);
-		background: rgba(18, 20, 20, 0.7);
+		background: var(--glass-bg-strong);
+		transition: background 0.3s ease;
 	}
 
 	.input-focus-ring:focus-within {
-		border-color: #ddb7ff;
-		box-shadow: 0 0 0 1px #ddb7ff;
+		border-color: var(--color-primary);
+		box-shadow: 0 0 0 1px var(--color-primary);
 	}
 
 	.auth-submit-btn {
@@ -91,20 +190,32 @@
 		content: '';
 		@apply pointer-events-none absolute inset-0;
 		background-image:
-			radial-gradient(circle at top left, rgba(221, 183, 255, 0.12), transparent 30%),
-			radial-gradient(circle at top right, rgba(221, 183, 255, 0.08), transparent 26%),
+			radial-gradient(circle at top left, var(--mesh-glow-color-1), transparent 30%),
+			radial-gradient(circle at top right, var(--mesh-glow-color-2), transparent 26%),
 			linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 28%);
 	}
 
 	.surface-card {
-		@apply rounded-3xl border border-outline-variant bg-surface-container/95 shadow-[0_20px_60px_rgba(0,0,0,0.35)];
+		@apply rounded-3xl border border-outline-variant shadow-[0_20px_60px_rgba(0,0,0,0.2)];
+		background-color: var(--color-surface-container);
+		transition: background-color 0.3s ease, border-color 0.3s ease;
 	}
 
 	.surface-card-strong {
-		@apply rounded-[1.75rem] border border-outline-variant bg-surface-container-strong/95 shadow-[0_18px_48px_rgba(0,0,0,0.32)];
+		@apply rounded-[1.75rem] border border-outline-variant shadow-[0_18px_48px_rgba(0,0,0,0.18)];
+		background-color: var(--color-surface-container-strong);
+		transition: background-color 0.3s ease, border-color 0.3s ease;
 	}
 
 	.brand-badge {
-		@apply inline-flex items-center gap-2 rounded-full border border-outline-variant bg-black/20 px-3 py-1 text-xs font-medium tracking-[0.24em] text-primary uppercase;
+		@apply inline-flex items-center gap-2 rounded-full border border-outline-variant bg-black/5 px-3 py-1 text-xs font-medium tracking-[0.24em] text-primary uppercase;
+	}
+
+	.fill-icon {
+		font-variation-settings: 'FILL' 1 !important;
+	}
+
+	.rounded-DEFAULT {
+		border-radius: 0.5rem !important;
 	}
 }

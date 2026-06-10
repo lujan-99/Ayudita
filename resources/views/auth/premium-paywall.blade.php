@@ -7,7 +7,7 @@
                 
                 <div class="flex-1 p-8 md:p-12 flex flex-col justify-center">
                     <div class="flex items-center gap-4 mb-8">
-                        <img alt="Ayudita Logo" class="w-10 h-10 rounded-md border border-outline-variant/50" src="{{ asset('images/logos/logo-icono.svg') }}">
+                        <img alt="Ayudita Logo" class="w-20 h-20 rounded-md border border-outline-variant/50" src="{{ asset('images/logos/logo-icono.svg') }}">
                         <div>
                             <h2 class="font-display text-body-sm text-on-surface-variant {{ (isset($title) && $title !== '') ? 'normal-case' : 'uppercase' }} tracking-wider">
                                 {{ (isset($title) && $title !== '') ? $title : 'Ayudita Pro' }}

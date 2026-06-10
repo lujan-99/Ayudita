@@ -1,9 +1,23 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
+
+        <!-- Theme Initialization Script -->
+        <script>
+            (function() {
+                const savedTheme = localStorage.getItem('theme');
+                if (savedTheme === 'light' || (!savedTheme && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+                    document.documentElement.classList.add('light');
+                    document.documentElement.classList.remove('dark');
+                } else {
+                    document.documentElement.classList.add('dark');
+                    document.documentElement.classList.remove('light');
+                }
+            })();
+        </script>
 
         <!-- SEO Meta Tags -->
         <title>@if(isset($title) && $title) {{ $title }} - Ayudita USFX @else Ayudita USFX - Vence tus materias con patrones académicos @endif</title>
@@ -48,7 +62,7 @@
                         <a href="/" class="inline-flex flex-col items-center">
                             <img
                                 src="{{ asset('images/logos/logo-icono.svg') }}"
-                                class="mb-4 h-16 w-16 rounded-xl shadow-lg"
+                                class="mb-4 h-24 w-24 rounded-xl shadow-lg"
                                 alt="{{ config('app.name', 'Ayudita') }}"
                             >
                             <h1 class="font-headline-lg text-headline-lg tracking-tight text-primary">{{ config('app.name', 'Ayudita') }}</h1>

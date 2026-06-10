@@ -3,6 +3,7 @@ import forms from '@tailwindcss/forms';
 
 /** @type {import('tailwindcss').Config} */
 export default {
+    darkMode: 'class',
     content: [
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './storage/framework/views/*.php',
@@ -13,45 +14,49 @@ export default {
     theme: {
         extend: {
             colors: {
-                background: '#121414',
-                'on-background': '#e2e2e2',
-                'on-surface': '#e2e2e2',
-                'on-surface-variant': '#cfc2d6',
-                surface: '#121414',
-                'surface-container': '#1a1c1c',
-                'surface-container-strong': '#1e2020',
-                'surface-container-low': '#1a1c1c',
-                'surface-container-lowest': '#0c0f0f',
-                'surface-container-high': '#282a2b',
-                'surface-container-highest': '#333535',
-                'surface-variant': '#333535',
-                'outline-variant': '#27272a',
-                primary: '#ddb7ff',
-                'on-primary': '#490080',
-                'primary-container': '#b76dff',
-                outline: '#988d9f',
-                'primary-fixed': '#f0dbff',
-                'primary-fixed-dim': '#ddb7ff',
-                'inverse-primary': '#842bd2',
-                'surface-tint': '#ddb7ff',
-                foreground: '#e2e2e2',
-                muted: '#a6a6a6',
-                secondary: '#c8c6c8',
-                'secondary-container': '#474649',
-                'secondary-fixed': '#e5e1e4',
-                'secondary-fixed-dim': '#c8c6c8',
-                tertiary: '#c8c6c9',
-                'tertiary-container': '#919094',
-                'tertiary-fixed': '#e4e1e5',
-                'tertiary-fixed-dim': '#c8c6c9',
-                error: '#ffb4ab',
-                'error-container': '#93000a',
+                background: 'var(--color-background)',
+                'on-background': 'var(--color-on-background)',
+                'on-surface': 'var(--color-on-surface)',
+                'on-surface-variant': 'var(--color-on-surface-variant)',
+                surface: 'var(--color-surface)',
+                'surface-container': 'var(--color-surface-container)',
+                'surface-container-strong': 'var(--color-surface-container-strong)',
+                'surface-container-low': 'var(--color-surface-container-low)',
+                'surface-container-lowest': 'var(--color-surface-container-lowest)',
+                'surface-container-high': 'var(--color-surface-container-high)',
+                'surface-container-highest': 'var(--color-surface-container-highest)',
+                'surface-variant': 'var(--color-surface-variant)',
+                'outline-variant': 'var(--color-outline-variant)',
+                primary: 'var(--color-primary)',
+                'on-primary': 'var(--color-on-primary)',
+                'primary-container': 'var(--color-primary-container)',
+                outline: 'var(--color-outline)',
+                'primary-fixed': 'var(--color-primary-fixed)',
+                'primary-fixed-dim': 'var(--color-primary-fixed-dim)',
+                'inverse-primary': 'var(--color-inverse-primary)',
+                'surface-tint': 'var(--color-surface-tint)',
+                foreground: 'var(--color-foreground)',
+                muted: 'var(--color-muted)',
+                secondary: 'var(--color-secondary)',
+                'secondary-container': 'var(--color-secondary-container)',
+                'secondary-fixed': 'var(--color-secondary-fixed)',
+                'secondary-fixed-dim': 'var(--color-secondary-fixed-dim)',
+                tertiary: 'var(--color-tertiary)',
+                'tertiary-container': 'var(--color-tertiary-container)',
+                'tertiary-fixed': 'var(--color-tertiary-fixed)',
+                'tertiary-fixed-dim': 'var(--color-tertiary-fixed-dim)',
+                error: 'var(--color-error)',
+                'error-container': 'var(--color-error-container)',
             },
             spacing: {
                 'margin-mobile': '1.25rem',  /* 20px */
                 'margin-desktop': '2.5rem',  /* 40px */
                 'gutter': '1.5rem',          /* 24px */
                 'bento-gap': '1.5rem',       /* 24px */
+                'section-padding-desktop': '7.5rem', /* 120px */
+            },
+            borderRadius: {
+                'DEFAULT': '0.5rem',         /* 8px */
             },
             maxWidth: {
                 'container-max': '1280px',
