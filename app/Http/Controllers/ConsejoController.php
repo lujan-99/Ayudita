@@ -36,6 +36,7 @@ class ConsejoController extends Controller
             'contenido' => ['required', 'string', 'max:2000'],
             'tipo' => ['required', 'string', 'in:consejo,examen,apunte,otro'],
             'archivo' => ['nullable', 'file', 'max:10240', 'mimes:pdf,png,jpg,jpeg,gif'],
+            'etiqueta' => ['required_with:archivo', 'nullable', 'string', 'in:Primer Parcial,Segundo Parcial,Examen Final,Laboratorio,Práctica,Otro / Apuntes'],
         ]);
 
         // 3. Handle File Upload (directly to public directory)
@@ -69,10 +70,20 @@ class ConsejoController extends Controller
             'likes_count' => 0,
             'dislikes_count' => 0,
             'validado' => false,
+            'etiqueta' => $filePath ? $request->etiqueta : null,
         ]);
 
-        // 5. Award Points (5 for text, 15 for files)
-        $puntos = $filePath ? 15 : 5;
+        // 5. Award Points (Dynamic depending on file and category)
+        $puntos = 5;
+        if ($filePath) {
+            $puntos = match ($request->etiqueta) {
+                'Examen Final', 'Segundo Parcial' => 25,
+                'Primer Parcial' => 20,
+                'Laboratorio', 'Práctica' => 15,
+                default => 10,
+            };
+        }
+
         if ($user->perfilEstudiante) {
             $user->perfilEstudiante->increment('puntos', $puntos);
         }

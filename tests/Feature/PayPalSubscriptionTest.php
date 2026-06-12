@@ -283,13 +283,14 @@ class PayPalSubscriptionTest extends TestCase
         
         $response->assertStatus(200);
         $response->assertJsonPath('success', true);
-        $response->assertJsonPath('puntos', 5);
+        $response->assertJsonPath('puntos', 0); // Consumes ALL points
 
         $user->refresh();
         $profile->refresh();
         $this->assertEquals($this->premiumRole->id, $user->role_id);
-        $this->assertEquals(5, $profile->puntos);
+        $this->assertEquals(0, $profile->puntos);
         $this->assertNotNull($user->premium_until);
-        $this->assertTrue($user->premium_until->isAfter(now()->addDays(28)));
+        // Consuming 15 points adds 45 days of Pro
+        $this->assertTrue($user->premium_until->isAfter(now()->addDays(44)));
     }
 }

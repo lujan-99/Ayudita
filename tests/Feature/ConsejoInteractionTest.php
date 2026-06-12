@@ -142,6 +142,7 @@ class ConsejoInteractionTest extends TestCase
             'contenido' => 'Examen resuelto del periodo anterior.',
             'tipo' => 'examen',
             'archivo' => $file,
+            'etiqueta' => 'Laboratorio',
         ]);
 
         $response->assertRedirect();
@@ -152,6 +153,7 @@ class ConsejoInteractionTest extends TestCase
         $this->assertEquals('examen', $consejo->tipo);
         $this->assertNotNull($consejo->archivo_path);
         $this->assertEquals('examen_2025.pdf', $consejo->archivo_nombre);
+        $this->assertEquals('Laboratorio', $consejo->etiqueta);
 
         // Assert file exists in public/uploads/consejos
         $this->assertFileExists(public_path($consejo->archivo_path));
@@ -160,6 +162,131 @@ class ConsejoInteractionTest extends TestCase
         @unlink(public_path($consejo->archivo_path));
 
         // Assert points increased by 15
+        $this->student->perfilEstudiante->refresh();
+        $this->assertEquals(15, $this->student->perfilEstudiante->puntos);
+    }
+
+    public function test_student_earns_25_points_for_final_exam_upload(): void
+    {
+        $this->assertEquals(0, $this->student->perfilEstudiante->puntos);
+
+        $file = UploadedFile::fake()->create('final_exam.pdf', 500, 'application/pdf');
+
+        $response = $this->actingAs($this->student)->post("/materias/{$this->materia1->id}/consejos", [
+            'contenido' => 'Examen Final de la materia.',
+            'tipo' => 'examen',
+            'archivo' => $file,
+            'etiqueta' => 'Examen Final',
+        ]);
+
+        $response->assertRedirect();
+
+        $consejo = \App\Models\Consejo::where('user_id', $this->student->id)->first();
+        $this->assertNotNull($consejo);
+        $this->assertEquals('Examen Final', $consejo->etiqueta);
+
+        @unlink(public_path($consejo->archivo_path));
+
+        $this->student->perfilEstudiante->refresh();
+        $this->assertEquals(25, $this->student->perfilEstudiante->puntos);
+    }
+
+    public function test_student_earns_20_points_for_first_parcial_upload(): void
+    {
+        $this->assertEquals(0, $this->student->perfilEstudiante->puntos);
+
+        $file = UploadedFile::fake()->create('primer_parcial.pdf', 500, 'application/pdf');
+
+        $response = $this->actingAs($this->student)->post("/materias/{$this->materia1->id}/consejos", [
+            'contenido' => 'Primer Parcial de la materia.',
+            'tipo' => 'examen',
+            'archivo' => $file,
+            'etiqueta' => 'Primer Parcial',
+        ]);
+
+        $response->assertRedirect();
+
+        $consejo = \App\Models\Consejo::where('user_id', $this->student->id)->first();
+        $this->assertNotNull($consejo);
+        $this->assertEquals('Primer Parcial', $consejo->etiqueta);
+
+        @unlink(public_path($consejo->archivo_path));
+
+        $this->student->perfilEstudiante->refresh();
+        $this->assertEquals(20, $this->student->perfilEstudiante->puntos);
+    }
+
+    public function test_student_earns_10_points_for_other_notes_upload(): void
+    {
+        $this->assertEquals(0, $this->student->perfilEstudiante->puntos);
+
+        $file = UploadedFile::fake()->create('apuntes.pdf', 500, 'application/pdf');
+
+        $response = $this->actingAs($this->student)->post("/materias/{$this->materia1->id}/consejos", [
+            'contenido' => 'Apuntes extras de la materia.',
+            'tipo' => 'apunte',
+            'archivo' => $file,
+            'etiqueta' => 'Otro / Apuntes',
+        ]);
+
+        $response->assertRedirect();
+
+        $consejo = \App\Models\Consejo::where('user_id', $this->student->id)->first();
+        $this->assertNotNull($consejo);
+        $this->assertEquals('Otro / Apuntes', $consejo->etiqueta);
+
+        @unlink(public_path($consejo->archivo_path));
+
+        $this->student->perfilEstudiante->refresh();
+        $this->assertEquals(10, $this->student->perfilEstudiante->puntos);
+    }
+
+    public function test_student_earns_25_points_for_segundo_parcial_upload(): void
+    {
+        $this->assertEquals(0, $this->student->perfilEstudiante->puntos);
+
+        $file = UploadedFile::fake()->create('segundo_parcial.pdf', 500, 'application/pdf');
+
+        $response = $this->actingAs($this->student)->post("/materias/{$this->materia1->id}/consejos", [
+            'contenido' => 'Segundo Parcial de la materia.',
+            'tipo' => 'examen',
+            'archivo' => $file,
+            'etiqueta' => 'Segundo Parcial',
+        ]);
+
+        $response->assertRedirect();
+
+        $consejo = \App\Models\Consejo::where('user_id', $this->student->id)->first();
+        $this->assertNotNull($consejo);
+        $this->assertEquals('Segundo Parcial', $consejo->etiqueta);
+
+        @unlink(public_path($consejo->archivo_path));
+
+        $this->student->perfilEstudiante->refresh();
+        $this->assertEquals(25, $this->student->perfilEstudiante->puntos);
+    }
+
+    public function test_student_earns_15_points_for_practica_upload(): void
+    {
+        $this->assertEquals(0, $this->student->perfilEstudiante->puntos);
+
+        $file = UploadedFile::fake()->create('practica_1.pdf', 500, 'application/pdf');
+
+        $response = $this->actingAs($this->student)->post("/materias/{$this->materia1->id}/consejos", [
+            'contenido' => 'Resolución de la práctica 1.',
+            'tipo' => 'otro',
+            'archivo' => $file,
+            'etiqueta' => 'Práctica',
+        ]);
+
+        $response->assertRedirect();
+
+        $consejo = \App\Models\Consejo::where('user_id', $this->student->id)->first();
+        $this->assertNotNull($consejo);
+        $this->assertEquals('Práctica', $consejo->etiqueta);
+
+        @unlink(public_path($consejo->archivo_path));
+
         $this->student->perfilEstudiante->refresh();
         $this->assertEquals(15, $this->student->perfilEstudiante->puntos);
     }

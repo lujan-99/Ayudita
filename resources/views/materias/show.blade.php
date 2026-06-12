@@ -84,7 +84,7 @@
                 Compartir Aporte para el Grupo {{ $selectedGroup?->grupo_codigo ?? '' }}
             </h3>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <!-- Tipo de Recurso -->
                 <div>
                     <label for="tipo" class="block text-xs font-semibold text-on-surface-variant uppercase tracking-wider mb-2">Tipo de Contenido:</label>
@@ -99,7 +99,21 @@
                 <!-- Archivo Adjunto (Opcional) -->
                 <div>
                     <label for="archivo" class="block text-xs font-semibold text-on-surface-variant uppercase tracking-wider mb-2">Archivo Adjunto (Opcional - Imagen o PDF, máx. 10MB):</label>
-                    <input type="file" id="archivo" name="archivo" accept="application/pdf,image/*" class="w-full text-body-sm text-on-surface border border-outline-variant/60 rounded-DEFAULT bg-surface-container/30 px-3 py-1.5 focus:outline-none">
+                    <input type="file" id="archivo" name="archivo" accept="application/pdf,image/*" onchange="toggleEtiquetaRequired()" class="w-full text-body-sm text-on-surface border border-outline-variant/60 rounded-DEFAULT bg-surface-container/30 px-3 py-1.5 focus:outline-none">
+                </div>
+
+                <!-- Etiqueta Académica (Requerida si hay archivo) -->
+                <div id="etiqueta-container" class="hidden">
+                    <label for="etiqueta" class="block text-xs font-semibold text-on-surface-variant uppercase tracking-wider mb-2">Etiqueta Académica:</label>
+                    <select id="etiqueta" name="etiqueta" class="w-full bg-surface-container border border-outline-variant rounded-DEFAULT py-2.5 px-3 font-body-sm text-body-sm text-on-surface focus:ring-0">
+                        <option value="" disabled selected>Selecciona una etiqueta...</option>
+                        <option value="Primer Parcial">Primer Parcial (20 pts)</option>
+                        <option value="Segundo Parcial">Segundo Parcial (25 pts)</option>
+                        <option value="Examen Final">Examen Final (25 pts)</option>
+                        <option value="Laboratorio">Laboratorio (15 pts)</option>
+                        <option value="Práctica">Práctica (15 pts)</option>
+                        <option value="Otro / Apuntes">Otro / Apuntes (10 pts)</option>
+                    </select>
                 </div>
             </div>
 
@@ -194,17 +208,25 @@
                      data-tipo="{{ $consejo->tipo }}">
                     
                     <!-- Cabecera de la tarjeta: Categoría y Validación -->
-                    <div class="flex justify-between items-center">
+                    <div class="flex justify-between items-start gap-4">
                         <div class="flex flex-wrap gap-2">
                             <span class="font-label-mono text-[9px] px-2 py-0.5 rounded font-bold uppercase tracking-wider {{ $badgeClass }} tag-tipo">{{ $tipoLabel }}</span>
+                            @if($consejo->etiqueta)
+                                <span class="font-label-mono text-[9px] px-2 py-0.5 rounded font-bold uppercase tracking-wider bg-primary/10 text-primary border border-primary/20">{{ $consejo->etiqueta }}</span>
+                            @endif
                             <span class="font-label-mono text-[9px] px-2 py-0.5 rounded bg-surface-variant text-on-surface-variant uppercase tracking-wider">Grupo {{ $consejo->grupoMateriaDocente?->grupo_codigo }}</span>
+                            @if($consejo->validado)
+                                <span class="text-primary flex items-center gap-0.5 font-label-mono text-[9px] font-bold">
+                                    <span class="material-symbols-outlined text-[12px] fill-icon">verified</span>
+                                    Verificado
+                                </span>
+                            @endif
                         </div>
-                        @if($consejo->validado)
-                            <span class="text-primary flex items-center gap-1 font-label-mono text-[10px] font-bold">
-                                <span class="material-symbols-outlined text-[14px] fill-icon">verified</span>
-                                Verificado
-                            </span>
-                        @endif
+                        <!-- Prominent Date Badge -->
+                        <div class="flex items-center gap-1 text-[10px] font-label-mono text-on-surface-variant bg-surface-variant/30 px-2.5 py-0.5 rounded-full border border-outline-variant/30 shrink-0" title="{{ $consejo->created_at->format('d/m/Y H:i') }}">
+                            <span class="material-symbols-outlined text-[12px] text-primary">calendar_today</span>
+                            <span class="font-bold">{{ $consejo->created_at->format('d/m/Y') }}</span>
+                        </div>
                     </div>
 
                     <!-- Contenido -->
@@ -262,7 +284,10 @@
                             <span class="font-bold text-primary">{{ $consejo->user->perfilEstudiante?->nickname ?? 'Anónimo' }}</span>
                             <span class="text-[9px] opacity-75">({{ $consejo->user->perfilEstudiante?->puntos ?? 0 }} pts)</span>
                         </div>
-                        <span class="text-on-surface-variant/80">{{ $consejo->created_at->diffForHumans() }}</span>
+                        <div class="flex items-center gap-1 text-on-surface-variant/80">
+                            <span class="material-symbols-outlined text-[12px]">schedule</span>
+                            <span>{{ $consejo->created_at->diffForHumans() }}</span>
+                        </div>
                     </div>
 
                     <!-- Botones de Reacción (Likes/Dislikes) -->
@@ -341,18 +366,26 @@
                          data-timestamp="{{ $consejo->created_at->timestamp }}"
                          data-tipo="{{ $consejo->tipo }}">
                         
-                        <!-- Categoría -->
-                        <div class="flex justify-between items-center">
+                        <!-- Categoría y Fecha -->
+                        <div class="flex justify-between items-start gap-4">
                             <div class="flex flex-wrap gap-2">
                                 <span class="font-label-mono text-[9px] px-2 py-0.5 rounded font-bold uppercase tracking-wider {{ $badgeClass }}">{{ $tipoLabel }}</span>
+                                @if($consejo->etiqueta)
+                                    <span class="font-label-mono text-[9px] px-2 py-0.5 rounded font-bold uppercase tracking-wider bg-primary/10 text-primary border border-primary/20">{{ $consejo->etiqueta }}</span>
+                                @endif
                                 <span class="font-label-mono text-[9px] px-2 py-0.5 rounded bg-surface-variant text-on-surface-variant uppercase tracking-wider font-bold">Grupo {{ $consejo->grupoMateriaDocente?->grupo_codigo }}</span>
+                                @if($consejo->validado)
+                                    <span class="text-primary flex items-center gap-0.5 font-label-mono text-[9px] font-bold">
+                                        <span class="material-symbols-outlined text-[12px] fill-icon">verified</span>
+                                        Verificado
+                                    </span>
+                                @endif
                             </div>
-                            @if($consejo->validado)
-                                <span class="text-primary flex items-center gap-1 font-label-mono text-[10px] font-bold">
-                                    <span class="material-symbols-outlined text-[14px] fill-icon">verified</span>
-                                    Verificado
-                                </span>
-                            @endif
+                            <!-- Prominent Date Badge -->
+                            <div class="flex items-center gap-1 text-[10px] font-label-mono text-on-surface-variant bg-surface-variant/30 px-2.5 py-0.5 rounded-full border border-outline-variant/30 shrink-0" title="{{ $consejo->created_at->format('d/m/Y H:i') }}">
+                                <span class="material-symbols-outlined text-[12px] text-primary">calendar_today</span>
+                                <span class="font-bold">{{ $consejo->created_at->format('d/m/Y') }}</span>
+                            </div>
                         </div>
 
                         <!-- Descripción -->
@@ -383,7 +416,10 @@
                                 <span>Subido por: </span>
                                 <span class="font-bold text-primary">{{ $consejo->user->perfilEstudiante?->nickname ?? 'Anónimo' }}</span>
                             </div>
-                            <span>{{ $consejo->created_at->diffForHumans() }}</span>
+                            <div class="flex items-center gap-1 text-on-surface-variant/80">
+                                <span class="material-symbols-outlined text-[12px]">schedule</span>
+                                <span>{{ $consejo->created_at->diffForHumans() }}</span>
+                            </div>
                         </div>
                     </div>
                 @endif
@@ -546,6 +582,21 @@
                     }
                 })
                 .catch(err => console.error(err));
+            }
+
+            function toggleEtiquetaRequired() {
+                const archivoInput = document.getElementById('archivo');
+                const etiquetaContainer = document.getElementById('etiqueta-container');
+                const etiquetaSelect = document.getElementById('etiqueta');
+                
+                if (archivoInput.files && archivoInput.files.length > 0) {
+                    etiquetaContainer.classList.remove('hidden');
+                    etiquetaSelect.required = true;
+                } else {
+                    etiquetaContainer.classList.add('hidden');
+                    etiquetaSelect.required = false;
+                    etiquetaSelect.value = "";
+                }
             }
         </script>
     @endpush

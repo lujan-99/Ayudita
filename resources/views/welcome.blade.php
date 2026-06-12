@@ -32,15 +32,19 @@
         
         <header class="sticky top-0 w-full z-50 glass-morphism border-b bento-border">
             <div class="flex justify-between items-center max-w-container-max mx-auto px-gutter py-4">
-                <div class="flex items-center gap-3">
+                <a href="/" class="flex items-center gap-3 hover:opacity-95 transition-opacity">
                     <img src="{{ asset('images/logos/logo-icono.svg') }}" alt="Ayudita Icono" class="h-12 w-auto">
                     <span class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">Ayudita</span>
-                </div>
+                </a>
                 <nav class="hidden md:flex items-center gap-8">
-                    <a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#historia">Nuestra Historia</a>
-                    <a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#features">Patrones Académicos</a>
-                    <a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="{{ route('plan-estudios') }}">Plan de Estudios</a>
-                    <a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#pricing">Planes Freemium</a>
+                    <a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="{{ url('/') }}#historia">Nuestra Historia</a>
+                    <a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="{{ url('/') }}#features">Patrones Académicos</a>
+                    @auth
+                        <a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="{{ route('plan-estudios') }}">Plan de Estudios</a>
+                    @else
+                        <a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="{{ url('/') }}#plan-estudios-section">Plan de Estudios</a>
+                    @endauth
+                    <a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="{{ url('/') }}#pricing">Planes Freemium</a>
                 </nav>                <div class="flex items-center gap-6">
                     <div class="hidden sm:flex items-center gap-3 text-on-surface-variant">
                         <a href="https://www.tiktok.com/@ayuditausfx0" target="_blank" class="hover:text-primary transition-colors flex items-center" title="TikTok"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.01 1.62 4.14.94 1.08 2.27 1.81 3.69 2.07v3.89c-1.78-.14-3.48-.89-4.73-2.18-.1-.09-.17-.22-.3-.38v6.82c.02 4.05-2.52 7.77-6.37 9.03-3.85 1.26-8.2-.1-10.45-3.37A9.342 9.342 0 0 1 1.02 13c-.15-4.4 2.89-8.41 7.14-9.55 1.1-.3 2.25-.39 3.38-.27V7.1c-.88-.16-1.8-.07-2.61.31-1.63.75-2.63 2.51-2.43 4.3.2 1.8 1.7 3.23 3.5 3.23 1.63 0 3.03-1.18 3.28-2.79.05-.31.06-.63.06-.94V.02z"/></svg></a>
@@ -189,7 +193,7 @@
             </div>
         </section>
 
-        <section class="py-section-padding-desktop bg-surface overflow-hidden border-t bento-border">
+        <section class="py-section-padding-desktop bg-surface overflow-hidden border-t bento-border" id="plan-estudios-section">
             <div class="max-w-container-max mx-auto px-gutter space-y-24">
                 <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-24">
                     <div class="flex-1 order-2 lg:order-1">
@@ -209,10 +213,17 @@
                             </li>
                         </ul>
                         <div class="mt-8">
-                            <a href="{{ route('plan-estudios') }}" class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-primary-container text-on-primary-container font-label-mono text-xs font-bold hover:bg-primary transition-all">
-                                <span>Ver mi Plan de Estudios</span>
-                                <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                            </a>
+                            @auth
+                                <a href="{{ route('plan-estudios') }}" class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-primary-container text-on-primary-container font-label-mono text-xs font-bold hover:bg-primary transition-all">
+                                    <span>Ver mi Plan de Estudios</span>
+                                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                                </a>
+                            @else
+                                <a href="{{ route('login') }}" class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-primary-container text-on-primary-container font-label-mono text-xs font-bold hover:bg-primary transition-all">
+                                    <span>Ver mi Plan de Estudios</span>
+                                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                                </a>
+                            @endauth
                         </div>
                     </div>
                     <div class="flex-1 order-1 lg:order-2">
@@ -546,7 +557,7 @@
                         @auth
                             <a href="{{ route('dashboard') }}" class="w-full inline-block py-2 text-center rounded-lg border bento-border text-on-surface font-label-mono text-label-mono hover:bg-surface-container-high transition-colors">Empezar ya</a>
                         @else
-                            <a href="{{ route('register') }}" class="w-full inline-block py-2 text-center rounded-lg border bento-border text-on-surface font-label-mono text-label-mono hover:bg-surface-container-high transition-colors">Empezar ya</a>
+                            <a href="{{ route('login') }}" class="w-full inline-block py-2 text-center rounded-lg border bento-border text-on-surface font-label-mono text-label-mono hover:bg-surface-container-high transition-colors">Empezar ya</a>
                         @endauth
                     </div>
                     <div class="bg-surface-container p-8 rounded-bento border-2 border-primary-container relative md:-my-4 z-10">
@@ -579,7 +590,7 @@
                         @auth
                             <a href="{{ route('paywall') }}" class="w-full inline-block py-3 text-center rounded-lg bg-primary-container text-surface-container-lowest font-label-mono text-label-mono hover:opacity-90 transition-opacity">Pasar a Pro</a>
                         @else
-                            <a href="{{ route('register') }}" class="w-full inline-block py-3 text-center rounded-lg bg-primary-container text-surface-container-lowest font-label-mono text-label-mono hover:opacity-90 transition-opacity">Pasar a Pro</a>
+                            <a href="{{ route('login') }}" class="w-full inline-block py-3 text-center rounded-lg bg-primary-container text-surface-container-lowest font-label-mono text-label-mono hover:opacity-90 transition-opacity">Pasar a Pro</a>
                         @endauth
                     </div>
                     <div class="bg-surface-container p-8 rounded-bento border bento-border">
@@ -610,7 +621,7 @@
                         @auth
                             <a href="{{ route('paywall') }}" class="w-full inline-block py-2 text-center rounded-lg border bento-border text-on-surface font-label-mono text-label-mono hover:bg-surface-container-high transition-colors">Canjear Puntos</a>
                         @else
-                            <a href="{{ route('register') }}" class="w-full inline-block py-2 text-center rounded-lg border bento-border text-on-surface font-label-mono text-label-mono hover:bg-surface-container-high transition-colors">Canjear Puntos</a>
+                            <a href="{{ route('login') }}" class="w-full inline-block py-2 text-center rounded-lg border bento-border text-on-surface font-label-mono text-label-mono hover:bg-surface-container-high transition-colors">Canjear Puntos</a>
                         @endauth
                     </div>
                 </div>
@@ -686,9 +697,9 @@
                         <span class="font-headline-md text-lg font-bold text-on-surface tracking-tight">Ayudita</span>
                     </div>
                     <div class="flex flex-wrap justify-center gap-8 font-label-mono text-xs text-on-surface-variant">
-                        <a class="hover:text-primary transition-colors" href="/terminos-condisiones">Términos y Condiciones</a>
+                        <a class="hover:text-primary transition-colors" href="{{ route('terminos') }}">Términos y Condiciones</a>
                         <span class="text-outline-variant/50 hidden md:inline">•</span>
-                        <a class="hover:text-primary transition-colors" href="/politica-privacidad">Política de Privacidad</a>
+                        <a class="hover:text-primary transition-colors" href="{{ route('privacidad') }}">Política de Privacidad</a>
                     </div>
                     <div class="flex items-center gap-4 text-on-surface-variant">
                         <a href="https://www.facebook.com/share/1KxGd7doF9/" target="_blank" class="hover:text-[#1877F2] hover:scale-110 active:scale-95 transition-all duration-300" title="Facebook">

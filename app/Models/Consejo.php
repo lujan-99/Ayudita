@@ -23,6 +23,7 @@ class Consejo extends Model
         'likes_count',
         'dislikes_count',
         'validado',
+        'etiqueta',
     ];
 
     protected function casts(): array

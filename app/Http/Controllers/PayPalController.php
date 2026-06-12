@@ -163,15 +163,20 @@ class PayPalController extends Controller
             ], 400);
         }
         
-        if ($perfil->puntos < 10) {
+        $pointsToRedeem = $perfil->puntos;
+        
+        if ($pointsToRedeem < 10) {
             return response()->json([
                 'success' => false,
                 'message' => 'No tienes suficientes puntos. Necesitas al menos 10 puntos.'
             ], 400);
         }
         
-        // Deduct 10 points
-        $perfil->decrement('puntos', 10);
+        // Deduct ALL points
+        $perfil->decrement('puntos', $pointsToRedeem);
+        
+        // Calculate days to add: 10 points = 30 days, so 1 point = 3 days
+        $daysToAdd = $pointsToRedeem * 3;
         
         // Activate/extend premium
         $premiumRoleId = Role::query()->where('nombre', 'premium')->value('id') ?? 2;
@@ -181,18 +186,19 @@ class PayPalController extends Controller
             : now();
             
         $user->role_id = $premiumRoleId;
-        $user->premium_until = $baseDate->addMonth(); // Add 1 month
+        $user->premium_until = $baseDate->addDays($daysToAdd);
         $user->save();
         
-        Log::info('User redeemed 10 points for 1 month of premium', [
+        Log::info('User redeemed all points for Pro access', [
             'user_id' => $user->id,
+            'points_redeemed' => $pointsToRedeem,
             'remaining_puntos' => $perfil->puntos,
             'premium_until' => $user->premium_until->toDateTimeString()
         ]);
         
         return response()->json([
             'success' => true,
-            'message' => '¡Canje exitoso! Se han descontado 10 puntos y tu cuenta ha sido actualizada a Pro por 1 mes.',
+            'message' => "¡Canje exitoso! Se han descontado {$pointsToRedeem} puntos y tu cuenta ha sido actualizada a Pro por {$daysToAdd} días.",
             'puntos' => $perfil->puntos,
             'premium_until' => $user->premium_until->toDateString()
         ]);

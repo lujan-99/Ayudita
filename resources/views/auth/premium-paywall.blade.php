@@ -109,18 +109,18 @@
                                 <span class="text-xs font-bold text-primary" id="user-puntos-display">{{ Auth::user()->perfilEstudiante->puntos }} Pts</span>
                             </div>
                             <p class="text-[9px] text-on-surface-variant leading-relaxed">
-                                Canjea 10 puntos por 1 mes de acceso Pro. Gana 15 pts subiendo apuntes/exámenes a tus asignaturas.
+                                Canjea todos tus puntos por acceso Pro (Cada punto equivale a 3 días Pro, mínimo 10 puntos). Gana puntos aportando guías, exámenes y apuntes.
                             </p>
                             @if(Auth::user()->perfilEstudiante->puntos >= 10)
                                 <button onclick="redeemPointsWithFetch()" id="btn-redeem-points" class="w-full py-2 bg-gradient-to-r from-primary to-secondary text-on-primary font-bold text-[11px] rounded-lg transition-all hover:brightness-110 active:scale-[0.98] flex items-center justify-center gap-1.5 shadow-sm cursor-pointer border-0">
                                     <span class="material-symbols-outlined text-[14px]">workspace_premium</span>
-                                    Canjear 10 Pts por 1 Mes Pro
+                                    Canjear {{ Auth::user()->perfilEstudiante->puntos }} Pts por {{ Auth::user()->perfilEstudiante->puntos * 3 }} días Pro
                                 </button>
                             @else
                                 <div class="flex flex-col gap-1">
                                     <button disabled class="w-full py-2 bg-surface-container-low border border-outline-variant text-on-surface-variant/40 font-bold text-[11px] rounded-lg cursor-not-allowed flex items-center justify-center gap-1.5">
                                         <span class="material-symbols-outlined text-[14px]">lock</span>
-                                        Necesitas 10 Puntos
+                                        Necesitas al menos 10 Puntos
                                     </button>
                                     <a href="{{ route('materias.index') }}" class="text-[9px] text-center text-primary hover:underline">
                                         Subir apuntes para ganar puntos
@@ -250,7 +250,9 @@
         });
 
         function redeemPointsWithFetch() {
-            if (!confirm('¿Estás seguro de que deseas canjear 10 puntos por 1 mes de acceso Pro?')) {
+            const userPuntos = {{ Auth::user()->perfilEstudiante->puntos ?? 0 }};
+            const days = userPuntos * 3;
+            if (!confirm(`¿Estás seguro de que deseas canjear todos tus ${userPuntos} puntos por ${days} días de acceso Pro?`)) {
                 return;
             }
             
@@ -286,7 +288,7 @@
                 alert('Error: ' + (err.message || 'Ocurrió un error al canjear los puntos. Por favor, inténtalo de nuevo.'));
                 if (btn) {
                     btn.disabled = false;
-                    btn.innerHTML = '<span class="material-symbols-outlined text-[14px]">workspace_premium</span> Canjear 10 Pts por 1 Mes Pro';
+                    btn.innerHTML = `<span class="material-symbols-outlined text-[14px]">workspace_premium</span> Canjear ${userPuntos} Pts por ${days} días Pro`;
                 }
             });
         }
