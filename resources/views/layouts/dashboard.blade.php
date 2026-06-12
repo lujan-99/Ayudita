@@ -105,9 +105,6 @@
                 <span class="material-symbols-outlined {{ Request::routeIs('plan-estudios') ? 'fill-icon' : '' }} text-[20px]">map</span>
                 <span x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms class="flex items-center justify-between w-full">
                     <span>Planes de Estudio</span>
-                    @if(!Auth::user()->isPremium())
-                        <span class="material-symbols-outlined text-[16px] text-amber-400 fill-icon animate-pulse" title="Premium">workspace_premium</span>
-                    @endif
                 </span>
             </a>
             <a class="relative flex items-center gap-3 px-3 py-2.5 {{ Request::routeIs('docentes.index') ? 'bg-primary-container text-on-primary-container font-bold shadow-xs' : 'text-on-surface-variant hover:bg-surface-variant/50' }} rounded-lg transition-all" href="{{ route('docentes.index') }}" :class="sidebarCollapsed ? 'justify-center' : ''" title="Docentes">

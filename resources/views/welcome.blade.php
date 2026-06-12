@@ -718,7 +718,7 @@
         </footer>
 
         <!-- Floating Messenger Support Bubble -->
-        <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2 group" x-data="{ openWelcome: true }">
+        <div class="fixed bottom-6 left-6 z-50 flex flex-col items-start gap-2 group" x-data="{ openWelcome: true }">
             <!-- Tooltip/Welcome Bubble -->
             <div x-show="openWelcome" 
                  x-transition:enter="transition ease-out duration-300"
@@ -727,15 +727,15 @@
                  x-transition:leave="transition ease-in duration-200"
                  x-transition:leave-start="opacity-100 translate-y-0"
                  x-transition:leave-end="opacity-0 translate-y-2"
-                 class="bg-surface-container border bento-border px-4 py-3 rounded-2xl shadow-xl max-w-xs text-right flex flex-col gap-1 items-end relative select-none">
-                <button @click="openWelcome = false" class="absolute top-1 right-1 text-on-surface-variant hover:text-on-surface text-[14px] p-1 leading-none font-bold">
+                 class="bg-surface-container border bento-border px-4 py-3 rounded-2xl shadow-xl max-w-xs text-left flex flex-col gap-1 items-start relative select-none">
+                <button @click="openWelcome = false" class="absolute top-1 right-2 text-on-surface-variant hover:text-on-surface text-[14px] p-1 leading-none font-bold">
                     &times;
                 </button>
-                <span class="font-label-mono text-[9px] text-primary uppercase tracking-wider font-bold">Soporte Técnico</span>
+                <span class="font-label-mono text-[9px] text-secondary uppercase tracking-wider font-bold">Contáctanos</span>
                 <p class="text-[12px] text-on-surface leading-normal mt-1">
-                    ¿Tienes dudas o problemas con la plataforma? ¡Escríbenos aquí!
+                    ¿Tienes alguna consulta comercial o duda general? Escríbenos en Facebook.
                 </p>
-                <div class="w-3 h-3 bg-surface-container border-r border-b border-outline-variant/30 rotate-45 absolute -bottom-1.5 right-6"></div>
+                <div class="w-3 h-3 bg-surface-container border-l border-b border-outline-variant/30 rotate-45 absolute -bottom-1.5 left-6"></div>
             </div>
             
             <!-- Floating Bubble Button -->
