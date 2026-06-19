@@ -115,10 +115,13 @@
 
         <!-- Conexiones con Docentes -->
         <div id="tour-connections" class="col-span-1 md:col-span-6 glass-panel rounded-lg p-5 flex flex-col min-h-[250px]">
-            <h3 class="font-display text-body-lg font-semibold text-on-surface mb-4 flex items-center gap-2 select-none">
-                <span class="material-symbols-outlined text-[20px] text-primary">groups</span>
-                Mis Conexiones con Docentes
-            </h3>
+            <div class="mb-4">
+                <h3 class="font-display text-body-lg font-semibold text-on-surface flex items-center gap-2 select-none">
+                    <span class="material-symbols-outlined text-[20px] text-primary">groups</span>
+                    Mis Conexiones con Docentes
+                </h3>
+                <p class="text-[10px] text-on-surface-variant mt-1 leading-normal">Docentes activos que dictan tus asignaturas este semestre.</p>
+            </div>
             <div class="flex-1 flex flex-col divide-y divide-outline-variant/30 overflow-y-auto max-h-[300px]">
                 @forelse($misDocentes as $docente)
                     <div class="flex items-center justify-between py-3">
@@ -158,10 +161,13 @@
 
         <!-- Últimas Publicaciones de Materias -->
         <div class="col-span-1 md:col-span-6 glass-panel rounded-lg p-5 flex flex-col min-h-[250px]">
-            <h3 class="font-display text-body-lg font-semibold text-on-surface mb-4 flex items-center gap-2 select-none">
-                <span class="material-symbols-outlined text-[20px] text-primary">feed</span>
-                Últimas Publicaciones de mis Materias
-            </h3>
+            <div class="mb-4">
+                <h3 class="font-display text-body-lg font-semibold text-on-surface flex items-center gap-2 select-none">
+                    <span class="material-symbols-outlined text-[20px] text-primary">feed</span>
+                    Últimas Publicaciones de mis Materias
+                </h3>
+                <p class="text-[10px] text-on-surface-variant mt-1 leading-normal">Últimos exámenes resueltos, pizarras y apuntes cargados por la comunidad.</p>
+            </div>
             <div class="flex-1 flex flex-col divide-y divide-outline-variant/30 overflow-y-auto max-h-[300px]">
                 @forelse($ultimasPublicaciones as $publicacion)
                     <div class="py-3 flex flex-col gap-1.5 text-left">
@@ -212,28 +218,33 @@
         steps: [
             {
                 targetId: 'tour-welcome',
-                title: 'Progreso de tu Carrera 📈',
-                content: 'Aquí puedes ver el avance de tu plan de estudios y el tipo de tu membresía (Base o Pro).'
+                title: 'Progreso de tu Carrera',
+                content: 'Aquí puedes ver el avance de tu plan de estudios y el tipo de tu membresía (Base o Pro).',
+                image: 'saludo.png'
             },
             {
                 targetId: 'tour-subjects',
-                title: 'Materias del Semestre 📚',
-                content: 'Estas son las materias que estás cursando. Haz clic en cualquiera para ver apuntes, pizarras y descargar exámenes pasados.'
+                title: 'Materias del Semestre',
+                content: 'Estas son las materias que estás cursando. Haz clic en cualquiera para ver apuntes, pizarras y descargar exámenes pasados.',
+                image: 'sentado.png'
             },
             {
                 targetId: 'tour-plan-link',
-                title: 'Mapa de Asignaturas 🗺️',
-                content: 'Explora tu plan de estudios en un lienzo interactivo infinito estilo Figma. Los usuarios Pro tienen acceso ilimitado.'
+                title: 'Mapa de Asignaturas',
+                content: 'Explora tu plan de estudios en un lienzo interactivo infinito estilo Figma. Los usuarios Pro tienen acceso ilimitado.',
+                image: 'corriendo.png'
             },
             {
                 targetId: 'tour-docentes-link',
-                title: 'Directorio de Docentes 👨‍🏫',
-                content: 'Consulta la lista de profesores de tus materias, lee valoraciones reales de compañeros y deja tus propias opiniones.'
+                title: 'Directorio de Docentes',
+                content: 'Consulta la lista de profesores de tus materias, lee valoraciones reales de compañeros y deja tus propias opiniones.',
+                image: 'oculto.png'
             },
             {
                 targetId: 'tour-connections',
-                title: 'Ecosistema Académico 🌐',
-                content: 'Aquí verás un listado rápido de tus docentes del semestre y las últimas guías subidas en tiempo real por la comunidad.'
+                title: 'Ecosistema Académico',
+                content: 'Aquí verás un listado rápido de tus docentes del semestre y las últimas guías subidas en tiempo real por la comunidad.',
+                image: 'feliz.png'
             }
         ],
         init() {
@@ -344,35 +355,40 @@
     }" 
     @start-tour.window="startTour()"
     x-show="tourActive" 
-    class="fixed inset-0 z-[9998] pointer-events-none" 
+    class="fixed inset-0 pointer-events-none" 
     style="display: none;">
         <!-- Backdrop -->
-        <div class="fixed inset-0 bg-black/45 backdrop-blur-xs transition-opacity duration-300 pointer-events-auto" @click="endTour()"></div>
+        <div class="fixed inset-0 bg-black/45 backdrop-blur-xs transition-opacity duration-300 pointer-events-auto z-[9995]" @click="endTour()"></div>
         
         <!-- Floating Tooltip Card -->
-        <div x-ref="tourTooltip" class="absolute z-[9999] w-[320px] bg-surface-container border border-primary/40 rounded-xl p-5 shadow-2xl transition-all duration-300 pointer-events-auto text-left opacity-0 select-none">
+        <div x-ref="tourTooltip" class="absolute z-[99999] w-[290px] bg-surface-container-high rounded-xl p-4 shadow-2xl transition-all duration-300 pointer-events-auto text-left opacity-0 select-none border-0">
             <!-- Arrow up marker -->
-            <div x-show="arrowDirection === 'up'" class="absolute -top-2 left-6 w-3 h-3 bg-surface-container border-t border-l border-primary/40 rotate-45"></div>
+            <div x-show="arrowDirection === 'up'" class="absolute -top-2 left-6 w-3 h-3 bg-surface-container-high rotate-45 pointer-events-none"></div>
             <!-- Arrow down marker -->
-            <div x-show="arrowDirection === 'down'" class="absolute -bottom-2 left-6 w-3 h-3 bg-surface-container border-b border-r border-primary/40 rotate-45"></div>
+            <div x-show="arrowDirection === 'down'" class="absolute -bottom-2 left-6 w-3 h-3 bg-surface-container-high rotate-45 pointer-events-none"></div>
             
-            <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-bold text-primary font-label-mono uppercase tracking-wider">Paso <span x-text="currentStep + 1"></span> de <span x-text="steps.length"></span></span>
+            <div class="flex items-center justify-between mb-2.5">
+                <span class="text-[9px] font-bold text-primary font-label-mono uppercase tracking-wider">Paso <span x-text="currentStep + 1"></span> de <span x-text="steps.length"></span></span>
                 <button @click="endTour()" class="text-on-surface-variant hover:text-error transition-colors p-1 rounded-full flex items-center justify-center">
-                    <span class="material-symbols-outlined text-[18px]">close</span>
+                    <span class="material-symbols-outlined text-[16px]">close</span>
                 </button>
             </div>
             
-            <h3 class="font-display text-body-lg font-bold text-on-surface mb-2" x-text="steps[currentStep].title"></h3>
-            <p class="text-xs text-on-surface-variant leading-relaxed mb-4" x-text="steps[currentStep].content"></p>
+            <div class="flex gap-3 items-start mb-3 select-none">
+                <img :src="'/images/character/' + steps[currentStep].image" class="w-12 h-12 object-contain shrink-0" alt="Mapache Ayudita">
+                <div class="flex-1 min-w-0">
+                    <h3 class="font-display text-body-sm font-bold text-on-surface leading-tight mb-1" x-text="steps[currentStep].title"></h3>
+                    <p class="text-[10px] text-on-surface-variant leading-relaxed" x-text="steps[currentStep].content"></p>
+                </div>
+            </div>
             
-            <div class="flex justify-between items-center pt-3 border-t border-outline-variant/30">
-                <button @click="endTour()" class="text-[11px] text-on-surface-variant hover:text-primary transition-all font-bold">Omitir</button>
+            <div class="flex justify-between items-center pt-2.5 border-t border-outline-variant/30">
+                <button @click="endTour()" class="text-[10px] text-on-surface-variant hover:text-primary transition-all font-bold">Omitir</button>
                 <div class="flex gap-2">
-                    <button @click="prevStep()" x-show="currentStep > 0" class="px-2.5 py-1.5 border border-outline-variant text-[11px] font-bold rounded-DEFAULT text-on-surface hover:bg-surface-variant/50 transition-all cursor-pointer">
+                    <button @click="prevStep()" x-show="currentStep > 0" class="px-2 py-1 border border-outline-variant text-[10px] font-bold rounded-DEFAULT text-on-surface hover:bg-surface-variant/50 transition-all cursor-pointer">
                         Atrás
                     </button>
-                    <button @click="nextStep()" class="px-3 py-1.5 bg-primary text-on-primary text-[11px] font-bold rounded-DEFAULT hover:brightness-110 active:scale-[0.98] transition-all cursor-pointer border-0">
+                    <button @click="nextStep()" class="px-2.5 py-1 bg-primary text-on-primary text-[10px] font-bold rounded-DEFAULT hover:brightness-110 active:scale-[0.98] transition-all cursor-pointer border-0">
                         <span x-text="currentStep === steps.length - 1 ? 'Finalizar' : 'Siguiente'"></span>
                     </button>
                 </div>
@@ -384,8 +400,8 @@
     <style>
         .tour-highlight {
             position: relative !important;
-            z-index: 9999 !important;
-            box-shadow: 0 0 0 4px var(--color-primary), 0 0 0 9999px rgba(0, 0, 0, 0.5) !important;
+            z-index: 9998 !important;
+            box-shadow: 0 0 0 4px var(--color-primary), 0 0 0 9999px rgba(0, 0, 0, 0.45) !important;
             pointer-events: none !important;
             transition: all 0.3s ease;
         }
