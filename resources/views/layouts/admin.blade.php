@@ -38,7 +38,7 @@
         <div class="h-16 flex items-center gap-3 border-b border-outline-variant/30 mb-6 w-full transition-all duration-300 shrink-0" :class="sidebarCollapsed ? 'justify-center px-0' : 'px-3'">
             <span class="material-symbols-outlined text-primary text-[32px]" :class="sidebarCollapsed ? '' : 'ml-1'">admin_panel_settings</span>
             <div x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms class="flex flex-col overflow-hidden whitespace-nowrap">
-                <h1 class="font-display text-headline-md font-bold text-primary leading-none">Admin Panel</h1>
+                <span class="font-display text-headline-md font-bold text-primary leading-none">Admin Panel</span>
                 <span class="font-body-sm text-on-surface-variant text-[9px] uppercase tracking-widest mt-1">Gestión de Tablas</span>
             </div>
         </div>
@@ -109,10 +109,10 @@
         <!-- Navbar Superior Admin -->
         <header class="bg-surface text-primary font-display text-body-lg fixed top-0 right-0 z-40 border-b border-outline-variant flex justify-between items-center h-16 px-margin-mobile md:px-margin-desktop transition-all duration-300"
                 :class="sidebarCollapsed ? 'w-full md:w-[calc(100%-5rem)]' : 'w-full md:w-[calc(100%-16rem)]'">
-            <div class="flex items-center gap-4 w-full md:w-auto">
-                <div class="md:hidden font-display text-headline-md font-bold text-primary flex items-center gap-2">
-                    <span class="material-symbols-outlined text-primary">admin_panel_settings</span>
-                    Admin
+            <div class="flex items-center gap-2 w-full md:w-auto overflow-hidden">
+                <div class="md:hidden font-display text-headline-md font-bold text-primary flex items-center gap-2 shrink-0 pr-1">
+                    <span class="material-symbols-outlined text-primary text-[24px]">admin_panel_settings</span>
+                    <span class="hidden sm:inline">Admin</span>
                 </div>
                 @isset($headerText)
                     @php
@@ -133,33 +133,33 @@
                             $secondIcon = 'hub';
                         }
                     @endphp
-                    <div class="flex items-center gap-2 font-display text-body-sm hidden md:flex select-none">
+                    <div class="flex items-center gap-1.5 font-display text-[10px] md:text-body-sm pl-1 md:pl-4 select-none overflow-x-auto scrollbar-none whitespace-nowrap">
                         @if(count($parts) > 1)
-                            <span class="flex items-center gap-1.5 text-on-surface-variant/80 hover:text-primary transition-colors font-medium">
-                                <span class="material-symbols-outlined text-[16px] text-primary">account_balance</span>
+                            <span class="flex items-center gap-1 text-on-surface-variant/80 hover:text-primary transition-colors font-medium whitespace-nowrap">
+                                <span class="material-symbols-outlined text-[14px] md:text-[16px] text-primary">account_balance</span>
                                 {{ $parts[0] }}
                             </span>
-                            <span class="material-symbols-outlined text-outline-variant text-[14px] leading-none">chevron_right</span>
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-container/20 border border-primary-container/30 text-primary font-bold text-xs shadow-xs">
-                                <span class="material-symbols-outlined text-[14px] fill-icon">{{ $secondIcon }}</span>
+                            <span class="material-symbols-outlined text-outline-variant text-[12px] md:text-[14px] flex items-center justify-center shrink-0">chevron_right</span>
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 md:px-3 md:py-1 rounded-full bg-primary-container/20 border border-primary-container/30 text-primary font-bold text-[9px] md:text-xs shadow-xs whitespace-nowrap">
+                                <span class="material-symbols-outlined text-[12px] md:text-[14px] fill-icon">{{ $secondIcon }}</span>
                                 {{ $secondPart }}
                             </span>
                         @else
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-container/20 border border-primary-container/30 text-primary font-bold text-xs shadow-xs">
-                                <span class="material-symbols-outlined text-[14px] fill-icon">{{ $secondIcon }}</span>
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 md:px-3 md:py-1 rounded-full bg-primary-container/20 border border-primary-container/30 text-primary font-bold text-[9px] md:text-xs shadow-xs whitespace-nowrap">
+                                <span class="material-symbols-outlined text-[12px] md:text-[14px] fill-icon">{{ $secondIcon }}</span>
                                 {{ $headerText }}
                             </span>
                         @endif
                     </div>
                 @else
-                    <div class="flex items-center gap-2 font-display text-body-sm hidden md:flex select-none">
-                        <span class="flex items-center gap-1.5 text-on-surface-variant/80 hover:text-primary transition-colors font-medium">
-                            <span class="material-symbols-outlined text-[16px] text-primary">account_balance</span>
+                    <div class="flex items-center gap-1.5 font-display text-[10px] md:text-body-sm pl-1 md:pl-4 select-none overflow-x-auto scrollbar-none whitespace-nowrap">
+                        <span class="flex items-center gap-1 text-on-surface-variant/80 hover:text-primary transition-colors font-medium whitespace-nowrap">
+                            <span class="material-symbols-outlined text-[14px] md:text-[16px] text-primary">account_balance</span>
                             Ayudita
                         </span>
-                        <span class="material-symbols-outlined text-outline-variant text-[14px] leading-none">chevron_right</span>
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-container/20 border border-primary-container/30 text-primary font-bold text-xs shadow-xs">
-                            <span class="material-symbols-outlined text-[14px] fill-icon">admin_panel_settings</span>
+                        <span class="material-symbols-outlined text-outline-variant text-[12px] md:text-[14px] flex items-center justify-center shrink-0">chevron_right</span>
+                        <span class="inline-flex items-center gap-1 px-2 py-0.5 md:px-3 md:py-1 rounded-full bg-primary-container/20 border border-primary-container/30 text-primary font-bold text-[9px] md:text-xs shadow-xs whitespace-nowrap">
+                            <span class="material-symbols-outlined text-[12px] md:text-[14px] fill-icon">admin_panel_settings</span>
                             Panel de Administración
                         </span>
                     </div>

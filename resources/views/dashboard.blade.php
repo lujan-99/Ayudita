@@ -171,10 +171,17 @@
                             <span class="text-[9px] text-on-surface-variant">Por: {{ explode(' ', $publicacion->user->name)[0] }}</span>
                             
                             @if($publicacion->archivo_path)
-                                <a href="{{ asset('storage/' . $publicacion->archivo_path) }}" download class="inline-flex items-center gap-1 text-[10px] text-primary hover:underline font-bold">
-                                    <span class="material-symbols-outlined text-[12px]">download</span>
-                                    Descargar recurso
-                                </a>
+                                @if(Auth::user()->isPremium())
+                                    <a href="{{ asset('storage/' . $publicacion->archivo_path) }}" download class="inline-flex items-center gap-1 text-[10px] text-primary hover:underline font-bold">
+                                        <span class="material-symbols-outlined text-[12px]">download</span>
+                                        Descargar recurso
+                                    </a>
+                                @else
+                                    <a href="{{ route('paywall') }}" class="inline-flex items-center gap-1 text-[10px] text-on-surface-variant/75 hover:text-primary hover:underline font-bold">
+                                        <span class="material-symbols-outlined text-[12px]">lock</span>
+                                        Descargar (Pro)
+                                    </a>
+                                @endif
                             @endif
                         </div>
                     </div>

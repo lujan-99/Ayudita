@@ -83,7 +83,7 @@
         <div class="h-16 flex items-center gap-3 border-b border-outline-variant/30 mb-6 w-full transition-all duration-300 shrink-0" :class="sidebarCollapsed ? 'justify-center px-0' : 'px-3'">
             <img alt="Ayudita Logo" class="w-12 h-12 rounded-DEFAULT object-cover border border-outline-variant" src="{{ asset('images/logos/logo-icono.svg') }}"/>
             <div x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms class="flex flex-col overflow-hidden whitespace-nowrap">
-                <h1 class="font-display text-headline-md font-bold text-primary leading-none">Ayudita</h1>
+                <span class="font-display text-headline-md font-bold text-primary leading-none">Ayudita</span>
                 <span class="font-body-sm text-on-surface-variant text-[9px] uppercase tracking-widest mt-1">Comunidad USFX</span>
             </div>
         </div>
@@ -146,9 +146,9 @@
         <!-- Navbar Superior -->
         <header class="bg-surface text-primary font-display text-body-lg fixed top-0 right-0 z-40 border-b border-outline-variant flex justify-between items-center h-16 px-margin-mobile md:px-margin-desktop transition-all duration-300"
                 :class="sidebarCollapsed ? 'w-full md:w-[calc(100%-5rem)]' : 'w-full md:w-[calc(100%-16rem)]'">
-            <div class="flex items-center gap-2 w-full md:w-auto">
+            <div class="flex items-center gap-2 w-full md:w-auto overflow-hidden">
                 <!-- Mobile Menu Toggle -->
-                <button @click="mobileSidebarOpen = !mobileSidebarOpen" class="md:hidden text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full mr-1 flex items-center justify-center cursor-pointer" title="Abrir menú">
+                <button @click="mobileSidebarOpen = !mobileSidebarOpen" class="md:hidden text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full mr-1 flex items-center justify-center cursor-pointer shrink-0" title="Abrir menú">
                     <span class="material-symbols-outlined">menu</span>
                 </button>
 
@@ -156,9 +156,9 @@
                     <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
                     <input class="w-full bg-surface-container-low border border-outline-variant rounded-DEFAULT pl-10 pr-4 py-1.5 text-body-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors" placeholder="Buscar materias o patrones..." type="text"/>
                 </div>
-                <div class="md:hidden font-display text-headline-md font-bold text-primary flex items-center gap-2">
-                    <img alt="Ayudita Logo" class="w-10 h-10 rounded-DEFAULT border border-outline-variant" src="{{ asset('images/logos/logo-icono.svg') }}"/>
-                    <span>Ayudita</span>
+                <div class="md:hidden font-display text-headline-md font-bold text-primary flex items-center gap-2 shrink-0">
+                    <img alt="Ayudita Logo" class="w-8 h-8 rounded-DEFAULT border border-outline-variant" src="{{ asset('images/logos/logo-icono.svg') }}"/>
+                    <span class="hidden sm:inline">Ayudita</span>
                 </div>
                 @isset($headerText)
                     @php
@@ -175,20 +175,20 @@
                             $secondIcon = 'psychology';
                         }
                     @endphp
-                    <div class="flex items-center gap-2 font-display text-body-sm hidden md:flex pl-4 select-none whitespace-nowrap">
+                    <div class="flex items-center gap-1.5 font-display text-[10px] md:text-body-sm pl-2 md:pl-4 select-none overflow-x-auto scrollbar-none whitespace-nowrap">
                         @if(count($parts) > 1)
-                            <span class="flex items-center gap-1.5 text-on-surface-variant/80 hover:text-primary transition-colors font-medium whitespace-nowrap">
-                                <span class="material-symbols-outlined text-[16px] text-primary">account_balance</span>
+                            <span class="flex items-center gap-1 text-on-surface-variant/80 hover:text-primary transition-colors font-medium whitespace-nowrap">
+                                <span class="material-symbols-outlined text-[14px] md:text-[16px] text-primary">account_balance</span>
                                 {{ $parts[0] }}
                             </span>
-                            <span class="material-symbols-outlined text-outline-variant text-[14px] flex items-center justify-center">chevron_right</span>
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-container/20 border border-primary-container/30 text-primary font-bold text-xs shadow-xs whitespace-nowrap">
-                                <span class="material-symbols-outlined text-[14px] fill-icon">{{ $secondIcon }}</span>
+                            <span class="material-symbols-outlined text-outline-variant text-[12px] md:text-[14px] flex items-center justify-center shrink-0">chevron_right</span>
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 md:px-3 md:py-1 rounded-full bg-primary-container/20 border border-primary-container/30 text-primary font-bold text-[9px] md:text-xs shadow-xs whitespace-nowrap">
+                                <span class="material-symbols-outlined text-[12px] md:text-[14px] fill-icon">{{ $secondIcon }}</span>
                                 {{ $secondPart }}
                             </span>
                         @else
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-container/20 border border-primary-container/30 text-primary font-bold text-xs shadow-xs whitespace-nowrap">
-                                <span class="material-symbols-outlined text-[14px] fill-icon">{{ $secondIcon }}</span>
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 md:px-3 md:py-1 rounded-full bg-primary-container/20 border border-primary-container/30 text-primary font-bold text-[9px] md:text-xs shadow-xs whitespace-nowrap">
+                                <span class="material-symbols-outlined text-[12px] md:text-[14px] fill-icon">{{ $secondIcon }}</span>
                                 {{ $headerText }}
                             </span>
                         @endif
@@ -215,10 +215,6 @@
                     <span x-show="!darkTheme" class="material-symbols-outlined" style="display: none;">dark_mode</span>
                 </button>
 
-                <button class="text-on-surface-variant hover:text-primary hover:bg-surface-variant/50 transition-colors p-2 rounded-full">
-                    <span class="material-symbols-outlined">notifications</span>
-                </button>
-                
                 <!-- Menú Desplegable de Usuario -->
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
