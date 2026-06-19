@@ -345,4 +345,76 @@ class ConsejoInteractionTest extends TestCase
         $this->assertCount(1, $responseMaterias);
         $this->assertEquals($this->materia1->id, $responseMaterias->first()->id);
     }
+
+    public function test_file_upload_stores_base64_in_database(): void
+    {
+        $file = UploadedFile::fake()->create('guia.pdf', 100, 'application/pdf');
+
+        $response = $this->actingAs($this->student)->post("/materias/{$this->materia1->id}/consejos", [
+            'contenido' => 'Guía de estudio para el parcial.',
+            'tipo' => 'apunte',
+            'archivo' => $file,
+            'etiqueta' => 'Laboratorio',
+        ]);
+
+        $response->assertRedirect();
+
+        $consejo = \App\Models\Consejo::where('user_id', $this->student->id)->first();
+        $this->assertNotNull($consejo);
+        $this->assertNotNull($consejo->archivo_base64);
+        $this->assertEquals('application/pdf', $consejo->archivo_mime);
+        
+        @unlink(public_path($consejo->archivo_path));
+    }
+
+    public function test_download_file_requires_premium_or_ownership(): void
+    {
+        // 1. Create a Premium User and a Free User
+        $premiumRole = \App\Models\Role::query()->firstOrCreate(['nombre' => 'premium']);
+        $freeRole = \App\Models\Role::query()->firstOrCreate(['nombre' => 'free']);
+
+        $premiumUser = \App\Models\User::create([
+            'name' => 'Premium Student',
+            'email' => 'premstudent@example.com',
+            'password' => bcrypt('password123'),
+            'role_id' => $premiumRole->id,
+            'premium_until' => now()->addDay(),
+        ]);
+        
+        $freeUser = \App\Models\User::create([
+            'name' => 'Free Student',
+            'email' => 'freestudent@example.com',
+            'password' => bcrypt('password123'),
+            'role_id' => $freeRole->id,
+        ]);
+
+        // 2. Create Consejo with file base64 data
+        $fileContent = 'Test file content';
+        $consejo = \App\Models\Consejo::create([
+            'materia_id' => $this->materia1->id,
+            'grupo_materia_docente_id' => $this->grupoA->id,
+            'user_id' => $this->student->id, // Created by original test student
+            'contenido' => 'Guia resuelta',
+            'tipo' => 'apunte',
+            'archivo_nombre' => 'guia.txt',
+            'archivo_base64' => base64_encode($fileContent),
+            'archivo_mime' => 'text/plain',
+        ]);
+
+        // 3. Free user tries to download -> 403
+        $response = $this->actingAs($freeUser)->get("/consejos/{$consejo->id}/download");
+        $response->assertStatus(403);
+
+        // 4. Premium user tries to download -> 200 and matches content
+        $response = $this->actingAs($premiumUser)->get("/consejos/{$consejo->id}/download");
+        $response->assertStatus(200);
+        $this->assertEquals($fileContent, $response->getContent());
+        $response->assertHeader('Content-Disposition', 'attachment; filename="guia.txt"');
+        $response->assertHeader('Content-Type', 'text/plain; charset=UTF-8');
+
+        // 5. Owner (free but is author) tries to download -> 200
+        $response = $this->actingAs($this->student)->get("/consejos/{$consejo->id}/download");
+        $response->assertStatus(200);
+        $this->assertEquals($fileContent, $response->getContent());
+    }
 }

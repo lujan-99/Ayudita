@@ -20,6 +20,8 @@ class Consejo extends Model
         'tipo',
         'archivo_path',
         'archivo_nombre',
+        'archivo_base64',
+        'archivo_mime',
         'likes_count',
         'dislikes_count',
         'validado',

@@ -195,6 +195,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/materias/{materia}/consejos', [App\Http\Controllers\ConsejoController::class, 'store'])->name('consejos.store');
     Route::post('/consejos/{consejo}/like', [App\Http\Controllers\ConsejoController::class, 'like'])->name('consejos.like');
     Route::post('/consejos/{consejo}/dislike', [App\Http\Controllers\ConsejoController::class, 'dislike'])->name('consejos.dislike');
+    Route::get('/consejos/{consejo}/archivo', [App\Http\Controllers\ConsejoController::class, 'showArchivo'])->name('consejos.archivo');
+    Route::get('/consejos/{consejo}/download', [App\Http\Controllers\ConsejoController::class, 'download'])->name('consejos.download');
 });
 
 // 5. Grupo de Rutas del Perfil de Usuario

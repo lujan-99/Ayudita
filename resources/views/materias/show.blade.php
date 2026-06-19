@@ -245,7 +245,7 @@
                     <p class="text-body-sm text-on-surface leading-relaxed content-text">{{ $consejo->contenido }}</p>
 
                     <!-- Render de archivo adjunto si existe -->
-                    @if($consejo->archivo_path)
+                    @if($consejo->archivo_path || $consejo->archivo_base64)
                         @if(!Auth::user()->isPremium())
                             <!-- Blocked File Preview for Base Users -->
                             <div onclick="window.dispatchEvent(new CustomEvent('open-modal', 'premium-paywall'))" class="mt-2 p-3 bg-surface-container-low border border-outline-variant/30 rounded-lg flex flex-col gap-2 cursor-pointer relative overflow-hidden group hover:border-primary/50 transition-all duration-300">
@@ -271,7 +271,7 @@
                             <!-- Original file preview for Premium users -->
                             <div class="mt-2 p-3 bg-surface-container-low border border-outline-variant/30 rounded-lg flex flex-col gap-2">
                                 @if($isImage)
-                                    <img src="{{ asset($consejo->archivo_path) }}" alt="{{ $consejo->archivo_nombre }}" class="max-h-40 w-full object-cover rounded border border-outline-variant/30 cursor-zoom-in" onclick="window.open(this.src)">
+                                    <img src="{{ route('consejos.archivo', $consejo->id) }}" alt="{{ $consejo->archivo_nombre }}" class="max-h-40 w-full object-cover rounded border border-outline-variant/30 cursor-zoom-in" onclick="window.open(this.src)">
                                 @endif
                                 <div class="flex items-center justify-between gap-3">
                                     <div class="flex items-center gap-2 min-w-0">
@@ -280,7 +280,7 @@
                                         </span>
                                         <span class="text-xs text-on-surface truncate font-medium font-display">{{ $consejo->archivo_nombre }}</span>
                                     </div>
-                                    <a href="{{ asset($consejo->archivo_path) }}" download class="px-2.5 py-1 bg-primary/10 hover:bg-primary text-primary hover:text-on-primary font-label-mono text-[9px] font-bold rounded transition-colors flex items-center gap-1 shrink-0">
+                                    <a href="{{ route('consejos.download', $consejo->id) }}" download class="px-2.5 py-1 bg-primary/10 hover:bg-primary text-primary hover:text-on-primary font-label-mono text-[9px] font-bold rounded transition-colors flex items-center gap-1 shrink-0">
                                         <span class="material-symbols-outlined text-xs">download</span>
                                         Bajar
                                     </a>
@@ -354,12 +354,14 @@
                 $archivosCount = 0;
             @endphp
             @foreach($consejos as $consejo)
-                @if($consejo->archivo_path)
+                @if($consejo->archivo_path || $consejo->archivo_base64)
                     @php
                         $archivosCount++;
                         $isImage = false;
-                        $ext = strtolower(pathinfo($consejo->archivo_path, PATHINFO_EXTENSION));
-                        $isImage = in_array($ext, ['png', 'jpg', 'jpeg', 'gif', 'webp']);
+                        if ($consejo->archivo_path) {
+                            $ext = strtolower(pathinfo($consejo->archivo_path, PATHINFO_EXTENSION));
+                            $isImage = in_array($ext, ['png', 'jpg', 'jpeg', 'gif', 'webp']);
+                        }
                         
                         $badgeClass = match($consejo->tipo) {
                             'consejo' => 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20',
@@ -406,7 +408,7 @@
                         <!-- Box de Archivo -->
                         <div class="mt-2 p-3 bg-background border border-outline-variant/20 rounded-lg flex flex-col gap-2">
                             @if($isImage)
-                                <img src="{{ asset($consejo->archivo_path) }}" alt="{{ $consejo->archivo_nombre }}" class="max-h-40 w-full object-cover rounded border border-outline-variant/30 cursor-zoom-in" onclick="window.open(this.src)">
+                                <img src="{{ route('consejos.archivo', $consejo->id) }}" alt="{{ $consejo->archivo_nombre }}" class="max-h-40 w-full object-cover rounded border border-outline-variant/30 cursor-zoom-in" onclick="window.open(this.src)">
                             @endif
                             <div class="flex items-center justify-between gap-3">
                                 <div class="flex items-center gap-2 min-w-0">
@@ -415,7 +417,7 @@
                                     </span>
                                     <span class="text-xs text-on-surface truncate font-semibold font-display">{{ $consejo->archivo_nombre }}</span>
                                 </div>
-                                <a href="{{ asset($consejo->archivo_path) }}" download class="px-2.5 py-1.5 bg-primary/10 hover:bg-primary text-primary hover:text-on-primary font-label-mono text-[10px] font-bold rounded transition-colors flex items-center gap-1 shrink-0">
+                                <a href="{{ route('consejos.download', $consejo->id) }}" download class="px-2.5 py-1.5 bg-primary/10 hover:bg-primary text-primary hover:text-on-primary font-label-mono text-[10px] font-bold rounded transition-colors flex items-center gap-1 shrink-0">
                                     <span class="material-symbols-outlined text-xs">download</span>
                                     Bajar
                                 </a>

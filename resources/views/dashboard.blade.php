@@ -182,9 +182,9 @@
                         <div class="flex items-center justify-between mt-0.5">
                             <span class="text-[9px] text-on-surface-variant">Por: {{ explode(' ', $publicacion->user->name)[0] }}</span>
                             
-                            @if($publicacion->archivo_path)
+                            @if($publicacion->archivo_path || $publicacion->archivo_base64)
                                 @if(Auth::user()->isPremium())
-                                    <a href="{{ asset('storage/' . $publicacion->archivo_path) }}" download class="inline-flex items-center gap-1 text-[10px] text-primary hover:underline font-bold">
+                                    <a href="{{ route('consejos.download', $publicacion->id) }}" download class="inline-flex items-center gap-1 text-[10px] text-primary hover:underline font-bold">
                                         <span class="material-symbols-outlined text-[12px]">download</span>
                                         Descargar recurso
                                     </a>
