@@ -129,12 +129,19 @@ Route::get('/premium-paywall', function () {
     if (Auth::user()->isPremium()) {
         return redirect()->route('dashboard');
     }
-    return view('auth.premium-paywall');
+    $latestPayment = \App\Models\QrPayment::where('user_id', Auth::id())
+        ->latest()
+        ->first();
+    return view('auth.premium-paywall', compact('latestPayment'));
 })->middleware(['auth'])->name('paywall');
 
 Route::post('/paypal/checkout/completed', [App\Http\Controllers\PayPalController::class, 'completed'])
     ->middleware(['auth'])
     ->name('paypal.completed');
+
+Route::post('/premium/qr-payment', [App\Http\Controllers\QrPaymentController::class, 'store'])
+    ->middleware(['auth'])
+    ->name('premium.qr_payment.store');
 
 Route::post('/premium/redeem-points', [App\Http\Controllers\PayPalController::class, 'redeemPoints'])
     ->middleware(['auth'])
@@ -214,6 +221,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('materias', MateriaController::class);
     Route::resource('grupos', GrupoController::class);
     Route::resource('users', UserController::class)->only(['index', 'edit', 'update', 'destroy']);
+    
+    // Rutas para validar pagos QR
+    Route::get('qr-payments', [App\Http\Controllers\Admin\QrPaymentController::class, 'index'])->name('qr_payments.index');
+    Route::post('qr-payments/{id}/approve', [App\Http\Controllers\Admin\QrPaymentController::class, 'approve'])->name('qr_payments.approve');
+    Route::post('qr-payments/{id}/reject', [App\Http\Controllers\Admin\QrPaymentController::class, 'reject'])->name('qr_payments.reject');
 });
 
 require __DIR__.'/auth.php';

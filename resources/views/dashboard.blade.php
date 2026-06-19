@@ -107,42 +107,83 @@
             </div>
         @endforelse
 
-        <div class="col-span-1 md:col-span-6 glass-panel rounded-lg p-5">
-            <h3 class="font-display text-body-lg font-semibold text-on-surface mb-4 flex items-center gap-2">
-                <span class="material-symbols-outlined text-[20px]">event</span>
-                Mapeo Relacional de Bloqueos
+        <!-- Conexiones con Docentes -->
+        <div class="col-span-1 md:col-span-6 glass-panel rounded-lg p-5 flex flex-col min-h-[250px]">
+            <h3 class="font-display text-body-lg font-semibold text-on-surface mb-4 flex items-center gap-2 select-none">
+                <span class="material-symbols-outlined text-[20px] text-primary">groups</span>
+                Mis Conexiones con Docentes
             </h3>
-            <div class="flex flex-col">
-                <div class="flex items-center justify-between py-3 border-b border-outline-variant/30 hover:bg-surface-container/50 transition-colors -mx-5 px-5">
-                    <div>
-                        <p class="text-body-sm font-medium text-on-surface">Si repruebas Álgebra Lineal</p>
-                        <p class="text-label-mono text-error uppercase mt-1 text-[10px]">Bloqueas automáticamente la rama de Modelos</p>
+            <div class="flex-1 flex flex-col divide-y divide-outline-variant/30 overflow-y-auto max-h-[300px]">
+                @forelse($misDocentes as $docente)
+                    <div class="flex items-center justify-between py-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-primary-container/20 border border-primary/20 flex items-center justify-center text-primary font-bold text-sm overflow-hidden select-none">
+                                @if($docente->foto)
+                                    <img src="{{ asset('storage/' . $docente->foto) }}" alt="{{ $docente->nombre_completo }}" class="w-full h-full object-cover">
+                                @else
+                                    {{ collect(explode(' ', $docente->nombre_completo))->map(fn($n) => mb_substr($n, 0, 1))->take(2)->implode('') }}
+                                @endif
+                            </div>
+                            <div>
+                                <h4 class="text-body-sm font-semibold text-on-surface">{{ $docente->nombre_completo }}</h4>
+                                <p class="text-[10px] text-on-surface-variant flex items-center gap-1">
+                                    <span class="font-bold text-primary">{{ $docente->materia_codigo }}</span>
+                                    <span>•</span>
+                                    <span class="truncate max-w-[150px]" title="{{ $docente->materia_nombre }}">{{ $docente->materia_nombre }}</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-end gap-1">
+                            <div class="flex items-center gap-0.5 text-xs text-primary font-bold">
+                                <span class="material-symbols-outlined text-[14px] fill-icon">star</span>
+                                <span>{{ number_format($docente->calificacion ?? 5.0, 1) }}</span>
+                            </div>
+                            <a href="{{ route('docentes.show', $docente->id) }}" class="text-[10px] text-primary hover:underline font-bold">Ver Perfil</a>
+                        </div>
                     </div>
-                    <div class="text-right">
-                        <p class="text-body-sm text-error font-medium">Crítico</p>
+                @empty
+                    <div class="flex-1 flex flex-col justify-center items-center text-center p-6 text-on-surface-variant select-none">
+                        <span class="material-symbols-outlined text-[32px] text-outline mb-2">person_off</span>
+                        <p class="text-xs">No tienes docentes asignados aún.</p>
                     </div>
-                </div>
-                <div class="flex items-center justify-between py-3 hover:bg-surface-container/50 transition-colors -mx-5 px-5">
-                    <div>
-                        <p class="text-body-sm font-medium text-on-surface">Si repruebas Estructuras de Datos I</p>
-                        <p class="text-label-mono text-on-surface-variant uppercase mt-1 text-[10px]">Bloqueas: Estructuras II y Sistemas Operativos</p>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-body-sm text-on-surface-variant font-medium">Troncal</p>
-                    </div>
-                </div>
+                @endforelse
             </div>
         </div>
 
-        <div class="col-span-1 md:col-span-6 bg-surface-container border border-outline-variant rounded-lg p-5 flex flex-col justify-center items-center text-center relative overflow-hidden min-h-[250px]">
-            <div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, rgba(221, 183, 255, 1) 1px, transparent 0); background-size: 20px 20px;"></div>
-            <div class="relative z-10 max-w-sm">
-                <span class="material-symbols-outlined text-[40px] text-primary mb-3">psychology</span>
-                <h3 class="font-display text-headline-md font-semibold text-on-surface mb-2">Consejos del Ecosistema</h3>
-                <p class="text-body-sm text-on-surface-variant mb-6">Evita los hilos caóticos de mensajería. Accede a las guías limpias organizadas por carrera y docente.</p>
-                <button class="px-6 py-2 bg-primary text-on-primary font-bold rounded-DEFAULT hover:brightness-110 transition-all text-body-sm shadow-[0_0_15px_rgba(183,109,255,0.4)]">
-                    Explorar Repositorio General
-                </button>
+        <!-- Últimas Publicaciones de Materias -->
+        <div class="col-span-1 md:col-span-6 glass-panel rounded-lg p-5 flex flex-col min-h-[250px]">
+            <h3 class="font-display text-body-lg font-semibold text-on-surface mb-4 flex items-center gap-2 select-none">
+                <span class="material-symbols-outlined text-[20px] text-primary">feed</span>
+                Últimas Publicaciones de mis Materias
+            </h3>
+            <div class="flex-1 flex flex-col divide-y divide-outline-variant/30 overflow-y-auto max-h-[300px]">
+                @forelse($ultimasPublicaciones as $publicacion)
+                    <div class="py-3 flex flex-col gap-1.5 text-left">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-[9px] font-label-mono bg-primary/10 text-primary px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">{{ $publicacion->tipo }}</span>
+                                <span class="text-[10px] text-on-surface-variant font-bold truncate max-w-[120px]">{{ $publicacion->materia->nombre }}</span>
+                            </div>
+                            <span class="text-[9px] text-on-surface-variant select-none">{{ $publicacion->created_at->diffForHumans() }}</span>
+                        </div>
+                        <p class="text-xs text-on-surface leading-snug line-clamp-2">{{ $publicacion->contenido }}</p>
+                        <div class="flex items-center justify-between mt-0.5">
+                            <span class="text-[9px] text-on-surface-variant">Por: {{ explode(' ', $publicacion->user->name)[0] }}</span>
+                            
+                            @if($publicacion->archivo_path)
+                                <a href="{{ asset('storage/' . $publicacion->archivo_path) }}" download class="inline-flex items-center gap-1 text-[10px] text-primary hover:underline font-bold">
+                                    <span class="material-symbols-outlined text-[12px]">download</span>
+                                    Descargar recurso
+                                </a>
+                            @endif
+                        </div>
+                    </div>
+                @empty
+                    <div class="flex-1 flex flex-col justify-center items-center text-center p-6 text-on-surface-variant select-none">
+                        <span class="material-symbols-outlined text-[32px] text-outline mb-2">article</span>
+                        <p class="text-xs">No hay publicaciones recientes en tus materias.</p>
+                    </div>
+                @endforelse
             </div>
         </div>
 

@@ -5,7 +5,7 @@
     </div>
 
     <!-- Stats Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-bento-gap">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-bento-gap">
         
         <!-- Carreras Card -->
         <div class="glass-panel rounded-lg p-6 flex flex-col justify-between hover:border-primary/40 transition-all duration-300">
@@ -79,6 +79,26 @@
             </div>
             <a href="{{ route('admin.users.index') }}" class="w-full py-2 bg-surface-container border border-outline-variant hover:bg-surface-variant/40 hover:border-primary transition-all text-center rounded-DEFAULT text-body-sm font-bold text-primary block mt-auto">
                 Gestionar Usuarios
+            </a>
+        </div>
+
+        <!-- Pagos QR Card -->
+        <div class="glass-panel rounded-lg p-6 flex flex-col justify-between hover:border-primary/40 transition-all duration-300 relative">
+            @if($pendingQrPaymentsCount > 0)
+                <span class="absolute top-2 right-2 bg-error text-on-error font-bold text-[9px] px-2 py-0.5 rounded-full animate-bounce">
+                    {{ $pendingQrPaymentsCount }} Pendientes
+                </span>
+            @endif
+            <div>
+                <div class="flex items-center justify-between mb-4">
+                    <span class="material-symbols-outlined text-[32px] text-primary">qr_code_scanner</span>
+                    <span class="font-label-mono text-label-mono text-on-surface-variant uppercase">Pagos QR</span>
+                </div>
+                <div class="font-display text-[40px] font-bold text-on-surface leading-none mb-2">{{ $pendingQrPaymentsCount }}</div>
+                <p class="text-xs text-on-surface-variant mb-4">Comprobantes de pago cargados por QR.</p>
+            </div>
+            <a href="{{ route('admin.qr_payments.index') }}" class="w-full py-2 bg-surface-container border border-outline-variant hover:bg-surface-variant/40 hover:border-primary transition-all text-center rounded-DEFAULT text-body-sm font-bold text-primary block mt-auto">
+                Validar Pagos
             </a>
         </div>
         

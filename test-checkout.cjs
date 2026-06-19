@@ -1,11 +1,15 @@
 const puppeteer = require('puppeteer-core');
+const fs = require('fs');
 
 (async () => {
-    const screenshotDir = 'C:/Users/david/.gemini/antigravity/brain/93656c5a-34d9-452d-b02e-a2692444d768/scratch';
+    const screenshotDir = 'C:/Users/david/.gemini/antigravity/brain/8e74d1cd-3e8a-4d2d-944a-e0099b6e4c9c/scratch';
+    if (!fs.existsSync(screenshotDir)) {
+        fs.mkdirSync(screenshotDir, { recursive: true });
+    }
     
     console.log('Launching browser...');
     const browser = await puppeteer.launch({
-        headless: true,
+        headless: false,
         executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
         args: ['--no-sandbox', '--disable-setuid-sandbox']
     });

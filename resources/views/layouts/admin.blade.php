@@ -85,6 +85,13 @@
                 <span class="material-symbols-outlined {{ Request::routeIs('admin.users.*') ? 'fill-icon' : '' }} text-[20px]">person_search</span>
                 <span x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms>Usuarios</span>
             </a>
+            <a class="relative flex items-center gap-3 px-3 py-2.5 {{ Request::routeIs('admin.qr_payments.*') ? 'bg-inverse-primary text-white font-bold shadow-xs' : 'text-on-surface-variant hover:bg-surface-variant/50' }} rounded-lg transition-all" href="{{ route('admin.qr_payments.index') }}" :class="sidebarCollapsed ? 'justify-center' : ''" title="Pagos QR">
+                @if(Request::routeIs('admin.qr_payments.*'))
+                    <span class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-white rounded-r-md"></span>
+                @endif
+                <span class="material-symbols-outlined {{ Request::routeIs('admin.qr_payments.*') ? 'fill-icon' : '' }} text-[20px]">qr_code_scanner</span>
+                <span x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms>Pagos QR</span>
+            </a>
         </div>
         
         <div class="mt-auto mb-6 w-full flex justify-center" :class="sidebarCollapsed ? 'px-0' : 'px-2'">

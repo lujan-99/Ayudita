@@ -18,7 +18,15 @@ class AdminDashboardController extends Controller
         $materiasCount = Materia::count();
         $usersCount = User::count();
         $gruposCount = \App\Models\GrupoMateriaDocente::count();
+        $pendingQrPaymentsCount = \App\Models\QrPayment::where('status', 'pending')->count();
 
-        return view('admin.dashboard', compact('carrerasCount', 'docentesCount', 'materiasCount', 'usersCount', 'gruposCount'));
+        return view('admin.dashboard', compact(
+            'carrerasCount', 
+            'docentesCount', 
+            'materiasCount', 
+            'usersCount', 
+            'gruposCount',
+            'pendingQrPaymentsCount'
+        ));
     }
 }

@@ -19,6 +19,8 @@ class DashboardController extends Controller
 
         $progreso = 0;
         $cursandoMaterias = collect();
+        $misDocentes = collect();
+        $ultimasPublicaciones = collect();
 
         if ($carrera) {
             // Calculate progress:
@@ -40,8 +42,43 @@ class DashboardController extends Controller
                 ->wherePivot('estado', 'cursando')
                 ->with(['gruposMateriaDocente.docente'])
                 ->get();
+
+            // Load active group IDs and subject IDs
+            $userMateriaGroups = [];
+            foreach ($cursandoMaterias as $materia) {
+                $groupId = $materia->pivot->grupo_materia_docente_id;
+                if ($groupId) {
+                    $userMateriaGroups[$materia->id] = $groupId;
+                }
+            }
+
+            $subjectIds = $cursandoMaterias->pluck('id')->toArray();
+            $groupIds = array_values($userMateriaGroups);
+
+            // Fetch latest 5 publications for enrolled subjects and groups
+            $ultimasPublicaciones = \App\Models\Consejo::with(['user.perfilEstudiante', 'materia', 'grupoMateriaDocente.docente'])
+                ->whereIn('materia_id', $subjectIds)
+                ->whereIn('grupo_materia_docente_id', $groupIds)
+                ->latest()
+                ->take(5)
+                ->get();
+
+            // Fetch unique teachers dictionary
+            $teachers = [];
+            foreach ($cursandoMaterias as $materia) {
+                $groupId = $materia->pivot->grupo_materia_docente_id;
+                $group = $materia->gruposMateriaDocente->firstWhere('id', $groupId);
+                if ($group && $group->docente) {
+                    $docente = $group->docente;
+                    // Tag subject info
+                    $docente->materia_nombre = $materia->nombre;
+                    $docente->materia_codigo = $materia->codigo;
+                    $teachers[$docente->id] = $docente;
+                }
+            }
+            $misDocentes = collect(array_values($teachers));
         }
 
-        return view('dashboard', compact('progreso', 'cursandoMaterias', 'carrera'));
+        return view('dashboard', compact('progreso', 'cursandoMaterias', 'carrera', 'misDocentes', 'ultimasPublicaciones'));
     }
 }
