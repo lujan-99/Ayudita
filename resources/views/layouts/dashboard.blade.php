@@ -1,3 +1,8 @@
+@props([
+    'title' => null,
+    'headerText' => null,
+    'hideFooter' => false,
+])
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
 <head>
@@ -170,19 +175,19 @@
                             $secondIcon = 'psychology';
                         }
                     @endphp
-                    <div class="flex items-center gap-2 font-display text-body-sm hidden md:flex pl-4 select-none">
+                    <div class="flex items-center gap-2 font-display text-body-sm hidden md:flex pl-4 select-none whitespace-nowrap">
                         @if(count($parts) > 1)
-                            <span class="flex items-center gap-1.5 text-on-surface-variant/80 hover:text-primary transition-colors font-medium">
+                            <span class="flex items-center gap-1.5 text-on-surface-variant/80 hover:text-primary transition-colors font-medium whitespace-nowrap">
                                 <span class="material-symbols-outlined text-[16px] text-primary">account_balance</span>
                                 {{ $parts[0] }}
                             </span>
-                            <span class="material-symbols-outlined text-outline-variant text-[14px] leading-none">chevron_right</span>
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-container/20 border border-primary-container/30 text-primary font-bold text-xs shadow-xs">
+                            <span class="material-symbols-outlined text-outline-variant text-[14px] flex items-center justify-center">chevron_right</span>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-container/20 border border-primary-container/30 text-primary font-bold text-xs shadow-xs whitespace-nowrap">
                                 <span class="material-symbols-outlined text-[14px] fill-icon">{{ $secondIcon }}</span>
                                 {{ $secondPart }}
                             </span>
                         @else
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-container/20 border border-primary-container/30 text-primary font-bold text-xs shadow-xs">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-container/20 border border-primary-container/30 text-primary font-bold text-xs shadow-xs whitespace-nowrap">
                                 <span class="material-symbols-outlined text-[14px] fill-icon">{{ $secondIcon }}</span>
                                 {{ $headerText }}
                             </span>
@@ -254,6 +259,7 @@
             {{ $slot }}
         </main>
 
+        @if(!$hideFooter)
         <!-- Pie de Página (Footer) con Redes Sociales Unificadas -->
         <footer class="bg-surface-container-lowest text-on-surface-variant w-full py-12 border-t border-outline-variant mt-auto">
             <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-6 w-full">
@@ -293,6 +299,7 @@
                 </div>
             </div>
         </footer>
+        @endif
     </div>
 
     <!-- MODAL DEL PAYWALL PREMIUM COMPARTIDO -->

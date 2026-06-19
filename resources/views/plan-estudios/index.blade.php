@@ -1,4 +1,4 @@
-<x-dashboard-layout title="Plan de Estudios" headerText="Visualización del Plan Curricular">
+<x-dashboard-layout title="Plan de Estudios" headerText="Visualización del Plan Curricular" :hideFooter="true">
     
     <style>
         /* Hide scrollbar for Figma-like canvas */
@@ -296,10 +296,23 @@
                         initConnections();
                     });
 
-                    // Soft premium paywall after 5 seconds
+                    // Hard premium paywall after 5 seconds
                     @if(!Auth::user()->isPremium())
+                        let paywallShown = false;
                         setTimeout(() => {
                             window.dispatchEvent(new CustomEvent('open-modal', { detail: 'premium-paywall' }));
+                            paywallShown = true;
+                            
+                            // Observe if modal gets closed (Escape, background click, close button) and redirect
+                            const modal = document.getElementById('premium-paywall');
+                            if (modal) {
+                                const checkInterval = setInterval(() => {
+                                    if (paywallShown && modal.style.display === 'none') {
+                                        clearInterval(checkInterval);
+                                        window.location.href = "{{ route('dashboard') }}";
+                                    }
+                                }, 300);
+                            }
                         }, 5000);
                     @endif
                 });
