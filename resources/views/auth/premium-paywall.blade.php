@@ -156,6 +156,8 @@
                                     <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-2"></div>
                                     <span class="text-xs text-on-surface-variant font-display text-center">Procesando tu pago...</span>
                                 </div>
+                                <!-- Mensaje de Error de PayPal -->
+                                <div id="paypal-error-message" class="hidden p-3 bg-error/10 border border-error/20 rounded-xl text-error text-[10px] text-center font-display leading-normal"></div>
                                 <div id="paypal-button-container" class="w-full relative z-20"></div>
                             </div>
 
@@ -174,10 +176,62 @@
                                     <input type="hidden" name="plan" id="qr-plan-input" value="mensual">
                                     <input type="hidden" name="monto" id="qr-monto-input" value="10">
                                     
-                                    <div>
+                                    <div x-data="{ 
+                                        dragging: false, 
+                                        previewUrl: null,
+                                        fileName: '',
+                                        handleDrop(e) {
+                                            let files = e.dataTransfer.files;
+                                            if (files.length > 0) {
+                                                this.$refs.fileInput.files = files;
+                                                this.updatePreview(files[0]);
+                                            }
+                                        },
+                                        handleSelect(e) {
+                                            let files = e.target.files;
+                                            if (files.length > 0) {
+                                                this.updatePreview(files[0]);
+                                            }
+                                        },
+                                        updatePreview(file) {
+                                            this.fileName = file.name;
+                                            if (file.type.startsWith('image/')) {
+                                                let reader = new FileReader();
+                                                reader.onload = (e) => {
+                                                    this.previewUrl = e.target.result;
+                                                };
+                                                reader.readAsDataURL(file);
+                                            } else {
+                                                this.previewUrl = null;
+                                            }
+                                        }
+                                    }" class="space-y-2 text-left">
                                         <label class="block text-[10px] font-semibold text-on-surface-variant uppercase tracking-wider mb-1">Subir Comprobante</label>
-                                        <input type="file" name="comprobante" required accept="image/*" class="w-full bg-surface text-on-surface text-xs border border-outline-variant rounded-lg file:mr-3 file:py-1.5 file:px-3 file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary file:hover:bg-primary/20 file:cursor-pointer cursor-pointer">
-                                        <span class="block text-[8px] text-on-surface-variant mt-1">Formatos JPG, JPEG, PNG. Max 2MB.</span>
+                                        
+                                        <div 
+                                            @dragover.prevent="dragging = true"
+                                            @dragleave.prevent="dragging = false"
+                                            @drop.prevent="dragging = false; handleDrop($event)"
+                                            @click="$refs.fileInput.click()"
+                                            :class="dragging ? 'border-primary bg-primary/5' : 'border-outline-variant/60 hover:border-primary/50'"
+                                            class="border-2 border-dashed rounded-xl p-4 text-center cursor-pointer transition-all duration-200 bg-surface-container-low hover:bg-surface-container flex flex-col items-center justify-center min-h-[110px]"
+                                        >
+                                            <input type="file" x-ref="fileInput" name="comprobante" required accept="image/*" class="hidden" @change="handleSelect">
+                                            
+                                            <div x-show="!previewUrl && !fileName" class="space-y-1.5 flex flex-col items-center">
+                                                <span class="material-symbols-outlined text-[28px] text-on-surface-variant">cloud_upload</span>
+                                                <p class="text-[11px] text-on-surface text-center">Arrastra tu comprobante aquí o <span class="text-primary font-bold">búscalo en tu equipo</span></p>
+                                                <span class="block text-[8px] text-on-surface-variant">Formatos JPG, JPEG, PNG. Máx 2MB.</span>
+                                            </div>
+                                            
+                                            <div x-show="previewUrl || fileName" class="space-y-2 flex flex-col items-center">
+                                                <template x-if="previewUrl">
+                                                    <img :src="previewUrl" alt="Vista previa del comprobante" class="max-h-24 rounded border border-outline-variant/30 object-contain shadow-sm">
+                                                </template>
+                                                <p class="text-[10px] text-on-surface truncate max-w-[200px]" x-text="fileName"></p>
+                                                <span class="text-[8px] text-primary underline">Hacer clic para cambiar imagen</span>
+                                            </div>
+                                        </div>
                                     </div>
                                     
                                     <button type="submit" class="w-full py-2.5 bg-primary text-on-primary font-bold text-xs rounded-lg transition-all hover:brightness-110 active:scale-[0.98] shadow-sm cursor-pointer border-0">
@@ -259,71 +313,83 @@
             if (qrMontoLabel) qrMontoLabel.innerText = price;
         }
 
-        // Initialize PayPal Smart Buttons
-        paypal.Buttons({
-            createOrder: function(data, actions) {
-                let usdAmount = '1.00'; // fallback / mensual
-                if (selectedPlanId === 'semestral') {
-                    usdAmount = '4.00';
-                } else if (selectedPlanId === 'anual') {
-                    usdAmount = '7.00';
-                }
-                
-                return actions.order.create({
-                    purchase_units: [{
-                        description: 'Suscripcion Ayudita Pro - Plan ' + selectedPlanId.toUpperCase(),
-                        amount: {
-                            currency_code: 'USD',
-                            value: usdAmount
-                        }
-                    }]
-                });
-            },
-            onApprove: function(data, actions) {
-                // Show loading spinner
-                document.getElementById('paypal-button-container').classList.add('hidden');
-                document.getElementById('loading-spinner').classList.remove('hidden');
-
-                // Send payment info to backend
-                return fetch("{{ route('paypal.completed') }}", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        orderID: data.orderID,
-                        plan: selectedPlanId
-                    })
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        return response.json().then(err => { throw err; });
+        // Initialize PayPal Smart Buttons Safely
+        if (typeof paypal !== 'undefined') {
+            paypal.Buttons({
+                createOrder: function(data, actions) {
+                    let usdAmount = '1.00'; // fallback / mensual
+                    if (selectedPlanId === 'semestral') {
+                        usdAmount = '4.00';
+                    } else if (selectedPlanId === 'anual') {
+                        usdAmount = '7.00';
                     }
-                    return response.json();
-                })
-                .then(res => {
-                    if (res.success) {
-                        alert(res.message || '¡Pago verificado y cuenta actualizada a Pro con éxito!');
-                        window.location.href = "{{ route('dashboard') }}";
-                    } else {
-                        throw new Error(res.message || 'No se pudo verificar el pago.');
-                    }
-                })
-                .catch(err => {
-                    console.error('Error verifying payment:', err);
-                    alert('Error de verificacion: ' + (err.message || 'No se pudo verificar la transaccion. Por favor contacta a soporte.'));
                     
-                    // Hide spinner, show button container again
-                    document.getElementById('loading-spinner').classList.add('hidden');
-                    document.getElementById('paypal-button-container').classList.remove('hidden');
-                });
-            },
-            onError: function(err) {
-                console.error('PayPal checkout error:', err);
-                alert('Ocurrio un error al procesar el pago con la pasarela de PayPal.');
+                    return actions.order.create({
+                        purchase_units: [{
+                            description: 'Suscripcion Ayudita Pro - Plan ' + selectedPlanId.toUpperCase(),
+                            amount: {
+                                currency_code: 'USD',
+                                value: usdAmount
+                            }
+                        }]
+                    });
+                },
+                onApprove: function(data, actions) {
+                    // Show loading spinner
+                    document.getElementById('paypal-button-container').classList.add('hidden');
+                    document.getElementById('loading-spinner').classList.remove('hidden');
+
+                    // Send payment info to backend
+                    return fetch("{{ route('paypal.completed') }}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            orderID: data.orderID,
+                            plan: selectedPlanId
+                        })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(err => { throw err; });
+                        }
+                        return response.json();
+                    })
+                    .then(res => {
+                        if (res.success) {
+                            alert(res.message || '¡Pago verificado y cuenta actualizada a Pro con éxito!');
+                            window.location.href = "{{ route('dashboard') }}";
+                        } else {
+                            throw new Error(res.message || 'No se pudo verificar el pago.');
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Error verifying payment:', err);
+                        alert('Error de verificacion: ' + (err.message || 'No se pudo verificar la transaccion. Por favor contacta a soporte.'));
+                        
+                        // Hide spinner, show button container again
+                        document.getElementById('loading-spinner').classList.add('hidden');
+                        document.getElementById('paypal-button-container').classList.remove('hidden');
+                    });
+                },
+                onError: function(err) {
+                    console.error('PayPal checkout error:', err);
+                    const errContainer = document.getElementById('paypal-error-message');
+                    if (errContainer) {
+                        errContainer.innerText = 'Error de PayPal: ' + (err.message || 'No se pudo iniciar la pasarela de pagos.');
+                        errContainer.classList.remove('hidden');
+                    }
+                }
+            }).render('#paypal-button-container');
+        } else {
+            console.error('PayPal SDK is not loaded.');
+            const container = document.getElementById('paypal-button-container');
+            if (container) {
+                container.innerHTML = '<div class="p-3 bg-error/10 border border-error/20 rounded-xl text-error text-[10px] text-center font-display leading-normal">No se pudo cargar la pasarela de PayPal. Puedes realizar el pago mediante Código QR.</div>';
             }
-        }).render('#paypal-button-container');
+        }
 
         // Initialize from query parameters or default to mensual
         document.addEventListener('DOMContentLoaded', () => {
