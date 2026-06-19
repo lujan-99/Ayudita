@@ -295,6 +295,13 @@
                     window.addEventListener('resize', () => {
                         initConnections();
                     });
+
+                    // Soft premium paywall after 5 seconds
+                    @if(!Auth::user()->isPremium())
+                        setTimeout(() => {
+                            window.dispatchEvent(new CustomEvent('open-modal', { detail: 'premium-paywall' }));
+                        }, 5000);
+                    @endif
                 });
 
                 window.addEventListener('beforeunload', () => {
