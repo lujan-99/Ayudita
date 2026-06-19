@@ -509,6 +509,7 @@
         }
     </script>
 
+    @stack('modals')
     @stack('scripts')
     <!--Start of Tawk.to Script-->
     <script type="text/javascript">

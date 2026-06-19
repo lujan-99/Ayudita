@@ -208,6 +208,7 @@
 
     </section>
 
+    @push('modals')
     <!-- Alpine Onboarding Tour Component -->
     <div x-data="{
         tourActive: false,
@@ -247,6 +248,14 @@
                 image: 'feliz.png'
             }
         ],
+        spotlight: {
+            top: 0,
+            left: 0,
+            width: 0,
+            height: 0,
+            active: false,
+            transition: false
+        },
         init() {
             const userId = {{ Auth::id() }};
             // Only start the tour if it hasn't been completed yet for this user
@@ -291,8 +300,15 @@
             // Restore sidebar states
             sidebarCollapsed = this.origCollapsed;
             mobileSidebarOpen = this.origMobileOpen;
+            this.spotlight.active = false;
         },
         showStep() {
+            // Hide spotlight and tooltip opacity during transit
+            this.spotlight.active = false;
+            if (this.$refs.tourTooltip) {
+                this.$refs.tourTooltip.style.opacity = '0';
+            }
+
             const step = this.steps[this.currentStep];
             
             // Restore baseline sidebar settings before making changes
@@ -314,7 +330,7 @@
                     return;
                 }
                 
-                // Highlight target and dim others
+                // Highlight target (semantically)
                 this.steps.forEach(s => {
                     const el = document.getElementById(s.targetId);
                     if (el) el.classList.remove('tour-highlight');
@@ -324,46 +340,77 @@
                 // Scroll target into view
                 target.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 
-                // Position tooltip
+                // Position spotlight and tooltip after scroll settles
                 setTimeout(() => {
-                    const rect = target.getBoundingClientRect();
-                    const tooltip = this.$refs.tourTooltip;
-                    if (!tooltip) return;
-                    
-                    const tooltipRect = tooltip.getBoundingClientRect();
-                    let top = rect.bottom + window.scrollY + 12;
-                    let left = rect.left + window.scrollX;
-                    
-                    // Prevent right side overflow
-                    if (left + tooltipRect.width > window.innerWidth) {
-                        left = window.innerWidth - tooltipRect.width - 16;
-                    }
-                    if (left < 16) left = 16;
-                    
-                    // Position tooltip above target if it overflows viewport bottom
-                    if (rect.bottom + tooltipRect.height > window.innerHeight) {
-                        top = rect.top + window.scrollY - tooltipRect.height - 12;
-                        this.arrowDirection = 'down';
-                    } else {
-                        this.arrowDirection = 'up';
-                    }
-                    
-                    tooltip.style.top = top + 'px';
-                    tooltip.style.left = left + 'px';
-                    tooltip.style.opacity = '1';
-                }, 300);
+                    this.updateLayout(true);
+                }, 350);
             });
+        },
+        updateLayout(useTransition = false) {
+            if (!this.tourActive) return;
+            const step = this.steps[this.currentStep];
+            const target = document.getElementById(step.targetId);
+            if (!target) return;
+            
+            const rect = target.getBoundingClientRect();
+            
+            // Set spotlight geometry
+            this.spotlight.transition = useTransition;
+            this.spotlight.top = rect.top;
+            this.spotlight.left = rect.left;
+            this.spotlight.width = rect.width;
+            this.spotlight.height = rect.height;
+            this.spotlight.active = true;
+            
+            // Position tooltip
+            const tooltip = this.$refs.tourTooltip;
+            if (!tooltip) return;
+            
+            const tooltipRect = tooltip.getBoundingClientRect();
+            let top = rect.bottom + 12;
+            let left = rect.left;
+            
+            // Prevent right side overflow
+            if (left + tooltipRect.width > window.innerWidth) {
+                left = window.innerWidth - tooltipRect.width - 16;
+            }
+            if (left < 16) left = 16;
+            
+            // Position tooltip above target if it overflows viewport bottom
+            if (rect.bottom + tooltipRect.height > window.innerHeight) {
+                top = rect.top - tooltipRect.height - 12;
+                this.arrowDirection = 'down';
+            } else {
+                this.arrowDirection = 'up';
+            }
+            
+            tooltip.style.top = top + 'px';
+            tooltip.style.left = left + 'px';
+            tooltip.style.opacity = '1';
         }
     }" 
     @start-tour.window="startTour()"
+    @scroll.window.passive="if (tourActive) updateLayout(false)"
+    @resize.window.passive="if (tourActive) updateLayout(false)"
     x-show="tourActive" 
-    class="fixed inset-0 pointer-events-none" 
+    class="fixed inset-0 pointer-events-none z-[100000]" 
     style="display: none;">
-        <!-- Backdrop -->
-        <div class="fixed inset-0 bg-black/45 backdrop-blur-xs transition-opacity duration-300 pointer-events-auto z-[9995]" @click="endTour()"></div>
+        <!-- Backdrop (transparent layer to catch click outside) -->
+        <div class="fixed inset-0 bg-transparent transition-opacity duration-300 pointer-events-auto z-[99990]" @click="endTour()"></div>
         
-        <!-- Floating Tooltip Card -->
-        <div x-ref="tourTooltip" class="absolute z-[99999] w-[290px] bg-surface-container-high rounded-xl p-4 shadow-2xl transition-all duration-300 pointer-events-auto text-left opacity-0 select-none border-0">
+        <!-- Spotlight visual highlight layer (z-99995) -->
+        <div 
+            x-show="spotlight.active" 
+            class="fixed rounded-lg pointer-events-none z-[99995]"
+            :class="spotlight.transition ? 'transition-all duration-300' : ''"
+            :style="`top: ${spotlight.top}px; left: ${spotlight.left}px; width: ${spotlight.width}px; height: ${spotlight.height}px; box-shadow: 0 0 0 4px var(--color-primary), 0 0 0 9999px rgba(0, 0, 0, 0.45);`"
+        ></div>
+
+        <!-- Floating Tooltip Card (z-99999) -->
+        <div x-ref="tourTooltip" 
+             class="fixed z-[99999] w-[290px] bg-surface-container-high rounded-xl p-4 shadow-2xl pointer-events-auto text-left opacity-0 select-none border-0"
+             :class="spotlight.transition ? 'transition-all duration-300' : 'transition-opacity duration-300'">
+            
             <!-- Arrow up marker -->
             <div x-show="arrowDirection === 'up'" class="absolute -top-2 left-6 w-3 h-3 bg-surface-container-high rotate-45 pointer-events-none"></div>
             <!-- Arrow down marker -->
@@ -397,16 +444,6 @@
             </div>
         </div>
     </div>
-    
-    <!-- Inline styles for Spotlight Highlight -->
-    <style>
-        .tour-highlight {
-            position: relative !important;
-            z-index: 9998 !important;
-            box-shadow: 0 0 0 4px var(--color-primary), 0 0 0 9999px rgba(0, 0, 0, 0.45) !important;
-            pointer-events: none !important;
-            transition: all 0.3s ease;
-        }
-    </style>
+    @endpush
 
 </x-dashboard-layout>
