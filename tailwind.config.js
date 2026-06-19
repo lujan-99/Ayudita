@@ -30,6 +30,7 @@ export default {
                 primary: 'var(--color-primary)',
                 'on-primary': 'var(--color-on-primary)',
                 'primary-container': 'var(--color-primary-container)',
+                'on-primary-container': 'var(--color-on-primary-container)',
                 outline: 'var(--color-outline)',
                 'primary-fixed': 'var(--color-primary-fixed)',
                 'primary-fixed-dim': 'var(--color-primary-fixed-dim)',

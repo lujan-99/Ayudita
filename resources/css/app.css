@@ -18,9 +18,10 @@
 		--color-surface-container-highest: #e3dde5;
 		--color-surface-variant: #e7e0ec;
 		--color-outline-variant: #e2dbe6;
-		--color-primary: #7f3bce;
+		--color-primary: #6d28d9;
 		--color-on-primary: #ffffff;
-		--color-primary-container: #f0dbff;
+		--color-primary-container: #ede9fe;
+		--color-on-primary-container: #2e0064;
 		--color-outline: #79747e;
 		--color-primary-fixed: #f0dbff;
 		--color-primary-fixed-dim: #d3b0ff;
@@ -68,6 +69,7 @@
 		--color-primary: #ddb7ff;
 		--color-on-primary: #490080;
 		--color-primary-container: #b76dff;
+		--color-on-primary-container: #ffffff;
 		--color-outline: #988d9f;
 		--color-primary-fixed: #f0dbff;
 		--color-primary-fixed-dim: #ddb7ff;

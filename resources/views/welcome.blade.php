@@ -79,7 +79,7 @@
                         Exclusivo para la comunidad USFX
                     </span>
                     <h1 class="font-headline-lg-mobile text-headline-lg-mobile md:font-display md:text-display text-on-surface mb-6 leading-tight">
-                        Vence tus materias <span class="text-primary-container">con patrones de diseño académico</span>
+                        Vence tus materias <span class="text-primary">con patrones de diseño académico</span>
                     </h1>
                     <p class="font-body-lg text-body-lg text-on-surface-variant mb-10 max-w-xl">
                         No reinventes la rueda este semestre. Descubre los consejos, exámenes pasados, repositorios y las guías definitivas organizadas por carrera, materia y docente.
@@ -115,19 +115,19 @@
                         <div class="w-full h-64 bg-zinc-900 rounded-lg flex flex-col p-4 text-xs font-label-mono text-zinc-400 justify-between">
                             <div class="flex items-center justify-between border-b border-zinc-800 pb-2">
                                 <span>USFX / Ingeniería de Sistemas / 3er Semestre</span>
-                                <span class="bg-primary-container/20 text-primary-container px-2 py-0.5 rounded text-[10px]">Patrón Activo</span>
+                                <span class="bg-primary-container/20 text-primary px-2 py-0.5 rounded text-[10px]">Patrón Activo</span>
                             </div>
                             <div class="space-y-2">
                                 <p class="text-white font-bold text-sm">Materia: Álgebra Lineal — Docente: Ing. Pérez</p>
                                 <div class="text-zinc-500 flex items-start gap-1">
-                                    <span class="material-symbols-outlined text-[14px] text-primary-container mt-0.5" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+                                    <span class="material-symbols-outlined text-[14px] text-primary mt-0.5" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
                                     <span>Consejo Clave: "El primer parcial es práctico y basado en la guía de estudio. No faltes a los talleres semanales."</span>
                                 </div>
                             </div>
                             <div class="grid grid-cols-3 gap-2 text-center text-[10px]">
-                                <div class="p-2 bg-zinc-800 rounded border border-zinc-700 flex items-center justify-center gap-1"><span class="material-symbols-outlined text-[12px] text-primary-container">folder</span><span>Exámenes</span></div>
-                                <div class="p-2 bg-zinc-800 rounded border border-zinc-700 flex items-center justify-center gap-1"><span class="material-symbols-outlined text-[12px] text-primary-container">photo_camera</span><span>Pizarras</span></div>
-                                <div class="p-2 bg-zinc-800 rounded border border-zinc-700 flex items-center justify-center gap-1"><span class="material-symbols-outlined text-[12px] text-primary-container">code</span><span>Código</span></div>
+                                <div class="p-2 bg-zinc-800 rounded border border-zinc-700 flex items-center justify-center gap-1"><span class="material-symbols-outlined text-[12px] text-primary">folder</span><span>Exámenes</span></div>
+                                <div class="p-2 bg-zinc-800 rounded border border-zinc-700 flex items-center justify-center gap-1"><span class="material-symbols-outlined text-[12px] text-primary">photo_camera</span><span>Pizarras</span></div>
+                                <div class="p-2 bg-zinc-800 rounded border border-zinc-700 flex items-center justify-center gap-1"><span class="material-symbols-outlined text-[12px] text-primary">code</span><span>Código</span></div>
                             </div>
                         </div>
                     </div>
@@ -139,9 +139,9 @@
             <div class="max-w-container-max mx-auto px-gutter">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
                     <div class="lg:col-span-1 flex flex-col items-start gap-4">
-                        <img src="{{ asset('images/logos/logo-vertical.svg') }}" alt="Ayudita Logo Vertical" class="h-28 w-auto">
+                        <img src="{{ asset('images/logos/logo-horizontal.svg') }}" alt="Ayudita Logo Horizontal" class="h-24 w-auto">
                         <div>
-                            <span class="font-label-mono text-label-mono text-primary-container uppercase block mb-1">NUESTRO ORIGEN</span>
+                            <span class="font-label-mono text-label-mono text-primary uppercase block mb-1">NUESTRO ORIGEN</span>
                             <h3 class="font-headline-md text-headline-md text-on-surface">¿Por qué creamos Ayudita?</h3>
                         </div>
                     </div>
@@ -150,7 +150,7 @@
                             En la <strong>USFX</strong>, cada semestre se siente como empezar un juego en modo difícil sin manual. Nos dimos cuenta de que cientos de estudiantes tropezaban exactamente con la misma piedra: no sabían el enfoque de un docente, estudiaban de libros incorrectos o no tenían acceso a los laboratorios pasados. Los problemas eran idénticos; las soluciones ya existían, pero estaban dispersas.
                         </p>
                         <p>
-                            Inspirados en los <strong>Patrones de Diseño de Software</strong>, decidimos crear un repositorio centralizado de soluciones académicas preestablecidas. Si alguien ya descifró el algoritmo para vencer una materia compleja con un docente específico, esa solución te pertenece a ti también. Nuestro eslogan lo resume todo: <span class="text-primary-container">"Problemas de antes, soluciones para hoy."</span>
+                            Inspirados en los <strong>Patrones de Diseño de Software</strong>, decidimos crear un repositorio centralizado de soluciones académicas preestablecidas. Si alguien ya descifró el algoritmo para vencer una materia compleja con un docente específico, esa solución te pertenece a ti también. Nuestro eslogan lo resume todo: <span class="text-primary">"Problemas de antes, soluciones para hoy."</span>
                         </p>
                     </div>
                 </div>
@@ -166,29 +166,29 @@
             </div>
             <div class="max-w-container-max mx-auto px-gutter grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-bento-gap">
                 <div class="p-6 rounded-bento bg-surface-container bento-border hover:bg-surface-container-high transition-colors group">
-                    <div class="w-10 h-10 rounded-lg bg-surface flex items-center justify-center mb-6 bento-border group-hover:border-primary-container transition-colors">
-                        <span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">psychology</span>
+                    <div class="w-10 h-10 rounded-lg bg-surface flex items-center justify-center mb-6 bento-border group-hover:border-primary transition-colors">
+                        <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">psychology</span>
                     </div>
                     <h3 class="font-headline-md text-headline-md mb-2 text-on-surface">Consejos por Docente</h3>
                     <p class="text-body-sm text-on-surface-variant">La metodología exacta de evaluación, manías, qué libros prefiere y en qué áreas enfoca sus exámenes de forma específica.</p>
                 </div>
                 <div class="p-6 rounded-bento bg-surface-container bento-border hover:bg-surface-container-high transition-colors group">
-                    <div class="w-10 h-10 rounded-lg bg-surface flex items-center justify-center mb-6 bento-border group-hover:border-primary-container transition-colors">
-                        <span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">history_edu</span>
+                    <div class="w-10 h-10 rounded-lg bg-surface flex items-center justify-center mb-6 bento-border group-hover:border-primary transition-colors">
+                        <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">history_edu</span>
                     </div>
                     <h3 class="font-headline-md text-headline-md mb-2 text-on-surface">Exámenes Pasados</h3>
                     <p class="text-body-sm text-on-surface-variant">Prácticas resueltas, exámenes de semestres anteriores y segundas instancias ordenados cronológicamente.</p>
                 </div>
                 <div class="p-6 rounded-bento bg-surface-container bento-border hover:bg-surface-container-high transition-colors group">
-                    <div class="w-10 h-10 rounded-lg bg-surface flex items-center justify-center mb-6 bento-border group-hover:border-primary-container transition-colors">
-                        <span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">code</span>
+                    <div class="w-10 h-10 rounded-lg bg-surface flex items-center justify-center mb-6 bento-border group-hover:border-primary transition-colors">
+                        <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">code</span>
                     </div>
                     <h3 class="font-headline-md text-headline-md mb-2 text-on-surface">Repositorios y Código</h3>
                     <p class="text-body-sm text-on-surface-variant">Proyectos base, laboratorios de redes, arquitecturas limpias y scripts validados por auxiliares de docencia oficiales.</p>
                 </div>
                 <div class="p-6 rounded-bento bg-surface-container bento-border hover:bg-surface-container-high transition-colors group">
-                    <div class="w-10 h-10 rounded-lg bg-surface flex items-center justify-center mb-6 bento-border group-hover:border-primary-container transition-colors">
-                        <span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">photo_library</span>
+                    <div class="w-10 h-10 rounded-lg bg-surface flex items-center justify-center mb-6 bento-border group-hover:border-primary transition-colors">
+                        <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">photo_library</span>
                     </div>
                     <h3 class="font-headline-md text-headline-md mb-2 text-on-surface">Fotos de Pizarras</h3>
                     <p class="text-body-sm text-on-surface-variant">Apunta tus notas digitales. Fotos nítidas de pizarras con los ejercicios complejos de las clases magistrales presenciales.</p>
@@ -200,18 +200,18 @@
             <div class="max-w-container-max mx-auto px-gutter space-y-24">
                 <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-24">
                     <div class="flex-1 order-2 lg:order-1">
-                        <span class="font-label-mono text-label-mono text-primary-container mb-4 block">TU MAPA DE RUTA</span>
+                        <span class="font-label-mono text-label-mono text-primary mb-4 block">TU MAPA DE RUTA</span>
                         <h2 class="font-headline-lg text-headline-lg text-on-surface mb-6">Mapeado según tu Plan de Estudios</h2>
                         <p class="font-body-lg text-body-lg text-on-surface-variant mb-8">
                             Nuestra base de datos no es un montón de archivos sueltos. Todo está indexado de acuerdo a los planes de estudio vigentes de las carreras de la USFX. Encuentra tu año, tu semestre, tu materia y listo.
                         </p>
                         <ul class="space-y-4 mb-10">
                             <li class="flex items-center gap-3">
-                                <span class="material-symbols-outlined text-primary-container">check_circle</span>
+                                <span class="material-symbols-outlined text-primary">check_circle</span>
                                 <span class="text-on-surface font-body-sm">Estructura limpia por semestres/años</span>
                             </li>
                             <li class="flex items-center gap-3">
-                                <span class="material-symbols-outlined text-primary-container">check_circle</span>
+                                <span class="material-symbols-outlined text-primary">check_circle</span>
                                 <span class="text-on-surface font-body-sm">Prerrequisitos: Mira instantáneamente qué asignaturas bloqueas si repruebas</span>
                             </li>
                         </ul>
@@ -243,18 +243,18 @@
                         </div>
                     </div>
                     <div class="flex-1">
-                        <span class="font-label-mono text-label-mono text-primary-container mb-4 block">SABIDURÍA COLECTIVA</span>
+                        <span class="font-label-mono text-label-mono text-primary mb-4 block">SABIDURÍA COLECTIVA</span>
                         <h2 class="font-headline-lg text-headline-lg text-on-surface mb-6">De estudiantes para estudiantes</h2>
                         <p class="font-body-lg text-body-lg text-on-surface-variant mb-8">
                             Los mejores patrones nacen de quienes ya estuvieron en las trincheras. Sube tus apuntes, reporta si un examen cambió de formato y ayuda a mantener el ecosistema actualizado ganando reputación dentro de la app.
                         </p>
                         <ul class="space-y-4 mb-10">
                             <li class="flex items-center gap-3">
-                                <span class="material-symbols-outlined text-primary-container">check_circle</span>
+                                <span class="material-symbols-outlined text-primary">check_circle</span>
                                 <span class="text-on-surface font-body-sm">Sistema de verificación de contenido por moderadores</span>
                             </li>
                             <li class="flex items-center gap-3">
-                                <span class="material-symbols-outlined text-primary-container">check_circle</span>
+                                <span class="material-symbols-outlined text-primary">check_circle</span>
                                 <span class="text-on-surface font-body-sm">Roles Seguros: Accesos segmentados para estudiantes Free, Premium y cuentas de Administración</span>
                             </li>
                         </ul>
@@ -277,18 +277,18 @@
                             <h3 class="font-headline-md mb-2">Estrategia Académica</h3>
                             <p class="text-on-surface-variant font-body-sm">Los estudiantes que aplican el patrón de estudio correcto del docente logran asimilar mejor los conceptos clave y aprueban con éxito.</p>
                         </div>
-                        <div class="mt-8 flex items-center gap-2 text-primary-container">
+                        <div class="mt-8 flex items-center gap-2 text-primary">
                             <span class="material-symbols-outlined text-3xl">trending_up</span>
                             <span class="font-label-mono text-on-surface-variant">Rendimiento académico optimizado</span>
                         </div>
                     </div>
                     <div class="md:col-span-2 bg-surface-container border bento-border p-8 rounded-bento">
-                        <span class="material-symbols-outlined text-primary-container text-2xl mb-4">cloud_download</span>
+                        <span class="material-symbols-outlined text-primary text-2xl mb-4">cloud_download</span>
                         <h3 class="font-headline-md text-xl mb-2 text-on-surface">Acceso Offline</h3>
                         <p class="text-on-surface-variant font-body-sm">Descarga las fotos de pizarras y pdfs para estudiar sin gastar tus megas.</p>
                     </div>
                     <div class="md:col-span-2 bg-surface-container border bento-border p-8 rounded-bento">
-                        <span class="material-symbols-outlined text-primary-container text-2xl mb-4">rate_review</span>
+                        <span class="material-symbols-outlined text-primary text-2xl mb-4">rate_review</span>
                         <h3 class="font-headline-md text-xl mb-2 text-on-surface">Reseñas Anónimas</h3>
                         <p class="text-on-surface-variant font-body-sm">Comentarios completamente protegidos para opiniones honestas y realistas sobre los docentes.</p>
                     </div>
@@ -298,7 +298,7 @@
                             <p class="text-on-surface-variant font-body-sm">Filtramos grupos de WhatsApp caóticos. Aquí solo entra material que realmente sirve para los exámenes.</p>
                         </div>
                         <div class="flex-none bg-surface border bento-border p-4 rounded-lg">
-                            <span class="material-symbols-outlined text-3xl text-primary-container">verified</span>
+                            <span class="material-symbols-outlined text-3xl text-primary">verified</span>
                         </div>
                     </div>
                 </div>
@@ -382,7 +382,7 @@
                                         {{ $fbText }}
                                     </p>
                                     <div class="flex items-center justify-between border-t border-outline-variant/30 pt-4 text-[10px] font-label-mono text-on-surface-variant">
-                                        <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-xs text-primary-container">thumb_up</span> Recomendado por estudiantes</span>
+                                        <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-xs text-primary">thumb_up</span> Recomendado por estudiantes</span>
                                         <span>{{ $fbDate }}</span>
                                     </div>
                                     <a href="{{ $fbLink }}" target="_blank" class="w-full mt-4 py-2.5 rounded-lg bg-surface border bento-border text-on-surface hover:text-[#1877F2] hover:border-[#1877F2]/40 text-center font-label-mono text-[11px] font-semibold flex items-center justify-center gap-2 transition-all duration-300">
@@ -485,7 +485,7 @@
                 <h2 class="font-headline-lg text-headline-lg text-on-surface mb-16">Estudiantes que rompieron el ciclo</h2>
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-bento-gap text-left">
                     <div class="bg-surface-container border bento-border p-8 rounded-bento relative">
-                        <span class="text-4xl text-primary-container/20 font-serif absolute top-4 left-6 italic">"</span>
+                        <span class="text-4xl text-primary/20 font-serif absolute top-4 left-6 italic">"</span>
                         <p class="font-body-sm text-body-sm text-on-surface mb-8 relative z-10 italic">
                             Llevaba varios periodos intentando aprobar una materia troncal. Gracias al patrón de estudio de Ayudita entendí que el docente priorizaba el diseño de bases de datos antes que la programación y logré pasar satisfactoriamente.
                         </p>
@@ -498,7 +498,7 @@
                         </div>
                     </div>
                     <div class="bg-surface-container border bento-border p-8 rounded-bento relative">
-                        <span class="text-4xl text-primary-container/20 font-serif absolute top-4 left-6 italic">"</span>
+                        <span class="text-4xl text-primary/20 font-serif absolute top-4 left-6 italic">"</span>
                         <p class="font-body-sm text-body-sm text-on-surface mb-8 relative z-10 italic">
                             Las fotos de pizarras resueltas de los laboratorios avanzados me salvaron la vida. En los periodos de exámenes no hay tiempo de buscar libros completos; necesitas la solución al grano.
                         </p>
@@ -511,7 +511,7 @@
                         </div>
                     </div>
                     <div class="bg-surface-container border bento-border p-8 rounded-bento relative">
-                        <span class="text-4xl text-primary-container/20 font-serif absolute top-4 left-6 italic">"</span>
+                        <span class="text-4xl text-primary/20 font-serif absolute top-4 left-6 italic">"</span>
                         <p class="font-body-sm text-body-sm text-on-surface mb-8 relative z-10 italic">
                             Las dificultades de semestres anteriores ayudan a los nuevos estudiantes que recién entran a la universidad. Subir mis apuntes me dio acceso a las funciones pro de manera gratuita.
                         </p>
@@ -545,15 +545,15 @@
                         </div>
                         <ul class="space-y-4 mb-8">
                             <li class="flex items-center gap-2">
-                                <span class="material-symbols-outlined text-primary-container text-sm">check</span>
+                                <span class="material-symbols-outlined text-primary text-sm">check</span>
                                 <span class="font-body-sm text-on-surface">Filtros por carrera y plan de estudios</span>
                             </li>
                             <li class="flex items-center gap-2">
-                                <span class="material-symbols-outlined text-primary-container text-sm">check</span>
+                                <span class="material-symbols-outlined text-primary text-sm">check</span>
                                 <span class="font-body-sm text-on-surface">Visualización de Consejos Generales</span>
                             </li>
                             <li class="flex items-center gap-2">
-                                <span class="material-symbols-outlined text-primary-container text-sm">check</span>
+                                <span class="material-symbols-outlined text-primary text-sm">check</span>
                                 <span class="font-body-sm text-on-surface">Acceso a carpetas públicas de fotos</span>
                             </li>
                         </ul>
@@ -564,36 +564,36 @@
                         @endauth
                     </div>
                     <div class="bg-surface-container p-8 rounded-bento border-2 border-primary-container relative md:-my-4 z-10">
-                        <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary-container text-on-surface px-3 py-1 rounded-md font-label-mono text-[10px] uppercase">El Más Popular</div>
+                        <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary-container text-on-primary-container px-3 py-1 rounded-md font-label-mono text-[10px] uppercase">El Más Popular</div>
                         <h3 class="font-headline-md text-xl mb-2">Estudiante Pro</h3>
                         <p class="font-body-sm text-on-surface-variant mb-6">Para los que buscan la excelencia y asegurar nota.</p>
                         <div class="mb-8">
-                            <span class="text-4xl font-bold text-primary-container">Bs. 10</span>
+                            <span class="text-4xl font-bold text-primary">Bs. 10</span>
                             <span class="font-label-mono text-on-surface-variant">/mes</span>
                             <div class="text-[10px] text-on-surface-variant mt-1">Bs. 40 semestral · Bs. 70 anual</div>
                         </div>
                         <ul class="space-y-4 mb-8">
                             <li class="flex items-center gap-2">
-                                <span class="material-symbols-outlined text-primary-container text-sm">check</span>
+                                <span class="material-symbols-outlined text-primary text-sm">check</span>
                                 <span class="font-body-sm text-on-surface">Todo lo del plan gratuito</span>
                             </li>
                             <li class="flex items-center gap-2">
-                                <span class="material-symbols-outlined text-primary-container text-sm">check</span>
+                                <span class="material-symbols-outlined text-primary text-sm">check</span>
                                 <span class="font-body-sm text-on-surface">Acceso completo a Repositorios Premium</span>
                             </li>
                             <li class="flex items-center gap-2">
-                                <span class="material-symbols-outlined text-primary-container text-sm">check</span>
+                                <span class="material-symbols-outlined text-primary text-sm">check</span>
                                 <span class="font-body-sm text-on-surface">Descarga offline de Exámenes Resueltos</span>
                             </li>
                             <li class="flex items-center gap-2">
-                                <span class="material-symbols-outlined text-primary-container text-sm">check</span>
+                                <span class="material-symbols-outlined text-primary text-sm">check</span>
                                 <span class="font-body-sm text-on-surface">Soporte directo de tutores superiores</span>
                             </li>
                         </ul>
                         @auth
-                            <a href="{{ route('paywall') }}" class="w-full inline-block py-3 text-center rounded-lg bg-primary-container text-surface-container-lowest font-label-mono text-label-mono hover:opacity-90 transition-opacity">Pasar a Pro</a>
+                            <a href="{{ route('paywall') }}" class="w-full inline-block py-3 text-center rounded-lg bg-primary-container text-on-primary-container font-label-mono text-label-mono hover:opacity-90 transition-opacity">Pasar a Pro</a>
                         @else
-                            <a href="{{ route('login') }}" class="w-full inline-block py-3 text-center rounded-lg bg-primary-container text-surface-container-lowest font-label-mono text-label-mono hover:opacity-90 transition-opacity">Pasar a Pro</a>
+                            <a href="{{ route('login') }}" class="w-full inline-block py-3 text-center rounded-lg bg-primary-container text-on-primary-container font-label-mono text-label-mono hover:opacity-90 transition-opacity">Pasar a Pro</a>
                         @endauth
                     </div>
                     <div class="bg-surface-container p-8 rounded-bento border bento-border">
@@ -605,19 +605,19 @@
                         </div>
                         <ul class="space-y-4 mb-8">
                             <li class="flex items-center gap-2">
-                                <span class="material-symbols-outlined text-primary-container text-sm">check</span>
+                                <span class="material-symbols-outlined text-primary text-sm">check</span>
                                 <span class="font-body-sm text-on-surface">Sube archivos y gana 15 pts por documento</span>
                             </li>
                             <li class="flex items-center gap-2">
-                                <span class="material-symbols-outlined text-primary-container text-sm">check</span>
+                                <span class="material-symbols-outlined text-primary text-sm">check</span>
                                 <span class="font-body-sm text-on-surface">Aporta consejos y gana 5 pts por texto</span>
                             </li>
                             <li class="flex items-center gap-2">
-                                <span class="material-symbols-outlined text-primary-container text-sm">check</span>
+                                <span class="material-symbols-outlined text-primary text-sm">check</span>
                                 <span class="font-body-sm text-on-surface">Gana 1 pt por cada like en tus aportes</span>
                             </li>
                             <li class="flex items-center gap-2">
-                                <span class="material-symbols-outlined text-primary-container text-sm">check</span>
+                                <span class="material-symbols-outlined text-primary text-sm">check</span>
                                 <span class="font-body-sm text-on-surface">Canjea 10 pts por 1 mes de acceso Pro</span>
                             </li>
                         </ul>
@@ -638,7 +638,7 @@
                     <details class="group bg-surface-container border bento-border rounded-bento" open>
                         <summary class="flex justify-between items-center p-6 cursor-pointer list-none">
                             <span class="font-headline-md text-body-lg">¿Cómo se verifica que las respuestas o guías sean correctas?</span>
-                            <span class="material-symbols-outlined text-primary-container transition-transform group-open:rotate-180">expand_more</span>
+                            <span class="material-symbols-outlined text-primary transition-transform group-open:rotate-180">expand_more</span>
                         </summary>
                         <div class="p-6 pt-0 font-body-sm text-on-surface-variant">
                             Todo archivo o consejo subido por la comunidad pasa por un filtro de estudiantes destacados de semestres superiores y auxiliares de docencia que actúan como moderadores para evitar información errónea.
@@ -647,7 +647,7 @@
                     <details class="group bg-surface-container border bento-border rounded-bento">
                         <summary class="flex justify-between items-center p-6 cursor-pointer list-none">
                             <span class="font-headline-md text-body-lg">¿Es legal compartir exámenes pasados de la USFX?</span>
-                            <span class="material-symbols-outlined text-primary-container transition-transform group-open:rotate-180">expand_more</span>
+                            <span class="material-symbols-outlined text-primary transition-transform group-open:rotate-180">expand_more</span>
                         </summary>
                         <div class="p-6 pt-0 font-body-sm text-on-surface-variant">
                             ¡Claro que sí! Los exámenes pasados y las pizarras son recursos de dominio público de los estudiantes. Compartirlos fomenta la democratización de la educación y el estudio colaborativo.
@@ -656,7 +656,7 @@
                     <details class="group bg-surface-container border bento-border rounded-bento">
                         <summary class="flex justify-between items-center p-6 cursor-pointer list-none">
                             <span class="font-headline-md text-body-lg">¿Puedo usar la plataforma gratis para siempre?</span>
-                            <span class="material-symbols-outlined text-primary-container transition-transform group-open:rotate-180">expand_more</span>
+                            <span class="material-symbols-outlined text-primary transition-transform group-open:rotate-180">expand_more</span>
                         </summary>
                         <div class="p-6 pt-0 font-body-sm text-on-surface-variant">
                             Sí, el plan base es gratuito por tiempo indefinido. Además, si colaboras activamente subiendo apuntes limpios o códigos funcionales, el mismo sistema te regalará días Pro sin pagar un solo peso.
@@ -717,7 +717,7 @@
                     <p class="text-on-surface-variant/80 font-label-mono text-xs">© 2026 Ayudita Inc. Elevando el nivel académico de la USFX.</p>
                     <p class="text-on-surface-variant/80 font-label-mono text-xs flex items-center justify-center md:justify-start gap-1">
                         Hecho con 
-                        <span class="material-symbols-outlined text-[12px] text-primary-container" style="font-variation-settings: 'FILL' 1;">favorite</span> 
+                        <span class="material-symbols-outlined text-[12px] text-primary" style="font-variation-settings: 'FILL' 1;">favorite</span> 
                         por y para estudiantes de Sucre.
                     </p>
                 </div>
