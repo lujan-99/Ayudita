@@ -344,7 +344,7 @@
         });
 
         function redeemPointsWithFetch() {
-            const userPuntos = {{ Auth::user()->perfilEstudiante->puntos ?? 0 }};
+            const userPuntos = {{ Auth::user()->perfilEstudiante?->puntos ?? 0 }};
             const days = userPuntos * 3;
             if (!confirm(`¿Estás seguro de que deseas canjear todos tus ${userPuntos} puntos por ${days} días de acceso Pro?`)) {
                 return;
