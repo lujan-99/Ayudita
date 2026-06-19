@@ -248,8 +248,9 @@
             }
         ],
         init() {
-            // Only start the tour if it hasn't been completed yet
-            if (!localStorage.getItem('onboardingCompleted')) {
+            const userId = {{ Auth::id() }};
+            // Only start the tour if it hasn't been completed yet for this user
+            if (!localStorage.getItem('onboardingCompleted_' + userId)) {
                 setTimeout(() => {
                     this.startTour();
                 }, 1000);
@@ -278,7 +279,8 @@
         },
         endTour() {
             this.tourActive = false;
-            localStorage.setItem('onboardingCompleted', 'true');
+            const userId = {{ Auth::id() }};
+            localStorage.setItem('onboardingCompleted_' + userId, 'true');
             
             // Clean up highlights
             this.steps.forEach(s => {

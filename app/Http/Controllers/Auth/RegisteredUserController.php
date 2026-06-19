@@ -93,7 +93,7 @@ class RegisteredUserController extends Controller
             'carnet_identidad' => $request->carnet_identidad,
             'carnet_universitario' => $request->carnet_universitario,
             'formulario_completo' => true,
-            'tour_visto' => true,
+            'tour_visto' => false,
         ]);
 
         // Attach subjects with correct states
