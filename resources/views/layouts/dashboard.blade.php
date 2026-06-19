@@ -255,39 +255,41 @@
         </main>
 
         <!-- Pie de Página (Footer) con Redes Sociales Unificadas -->
-        <footer class="bg-surface-container-lowest text-on-surface-variant w-full py-12 border-t border-outline-variant max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-6 mt-auto">
-            <div class="flex flex-col items-center md:items-start gap-2">
-                <div class="flex items-center gap-2">
-                    <span class="material-symbols-outlined text-primary text-xl">hub</span>
-                    <span class="font-display text-body-lg font-bold text-primary tracking-tight">Ayudita</span>
+        <footer class="bg-surface-container-lowest text-on-surface-variant w-full py-12 border-t border-outline-variant mt-auto">
+            <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-6 w-full">
+                <div class="flex flex-col items-center md:items-start gap-2">
+                    <div class="flex items-center gap-2.5">
+                        <img alt="Ayudita Logo" class="w-6 h-6 rounded-md border border-outline-variant/30" src="{{ asset('images/logos/logo-icono.svg') }}"/>
+                        <span class="font-display text-body-lg font-bold text-primary tracking-tight">Ayudita</span>
+                    </div>
+                    <p class="text-xs text-on-surface-variant text-center md:text-left">Problemas de antes, soluciones para hoy. Elevando el nivel académico de Sucre y la USFX.</p>
                 </div>
-                <p class="text-xs text-on-surface-variant text-center md:text-left">Problemas de antes, soluciones para hoy. Elevando el nivel académico de Sucre y la USFX.</p>
-            </div>
-            
-            <!-- Redes de la comunidad -->
-            <div class="flex flex-col items-center gap-3">
-                <span class="font-label-mono text-[11px] text-on-surface-variant uppercase tracking-wider">Sigue a la Comunidad</span>
-                <div class="flex items-center gap-5 text-on-surface-variant">
-                    <a href="https://www.tiktok.com/@ayuditausfx0" target="_blank" class="hover:text-primary transition-colors duration-200" title="TikTok">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.01 1.62 4.14.94 1.08 2.27 1.81 3.69 2.07v3.89c-1.78-.14-3.48-.89-4.73-2.18-.1-.09-.17-.22-.3-.38v6.82c.02 4.05-2.52 7.77-6.37 9.03-3.85 1.26-8.2-.1-10.45-3.37A9.342 9.342 0 0 1 1.02 13c-.15-4.4 2.89-8.41 7.14-9.55 1.1-.3 2.25-.39 3.38-.27V7.1c-.88-.16-1.8-.07-2.61.31-1.63.75-2.63 2.51-2.43 4.3.2 1.8 1.7 3.23 3.5 3.23 1.63 0 3.03-1.18 3.28-2.79.05-.31.06-.63.06-.94V.02z"/></svg>
-                    </a>
-                    <a href="https://www.instagram.com/ayuditausfx/" target="_blank" class="hover:text-primary transition-colors duration-200" title="Instagram">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.062 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
-                    </a>
-                    <a href="https://www.facebook.com/share/1KxGd7doF9/" target="_blank" class="hover:text-primary transition-colors duration-200" title="Facebook">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/></svg>
-                    </a>
-                    <a href="https://www.youtube.com/@ayudita-w4tf" target="_blank" class="hover:text-primary transition-colors duration-200" title="YouTube">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.5 12 3.5 12 3.5s-7.518 0-9.388.553a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11C4.482 20.5 12 20.5 12 20.5s7.518 0 9.388-.553a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-                    </a>
+                
+                <!-- Redes de la comunidad -->
+                <div class="flex flex-col items-center gap-3">
+                    <span class="font-label-mono text-[11px] text-on-surface-variant uppercase tracking-wider">Sigue a la Comunidad</span>
+                    <div class="flex items-center gap-5 text-on-surface-variant">
+                        <a href="https://www.tiktok.com/@ayuditausfx0" target="_blank" class="hover:text-primary transition-colors duration-200" title="TikTok">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.01 1.62 4.14.94 1.08 2.27 1.81 3.69 2.07v3.89c-1.78-.14-3.48-.89-4.73-2.18-.1-.09-.17-.22-.3-.38v6.82c.02 4.05-2.52 7.77-6.37 9.03-3.85 1.26-8.2-.1-10.45-3.37A9.342 9.342 0 0 1 1.02 13c-.15-4.4 2.89-8.41 7.14-9.55 1.1-.3 2.25-.39 3.38-.27V7.1c-.88-.16-1.8-.07-2.61.31-1.63.75-2.63 2.51-2.43 4.3.2 1.8 1.7 3.23 3.5 3.23 1.63 0 3.03-1.18 3.28-2.79.05-.31.06-.63.06-.94V.02z"/></svg>
+                        </a>
+                        <a href="https://www.instagram.com/ayuditausfx/" target="_blank" class="hover:text-primary transition-colors duration-200" title="Instagram">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.062 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+                        </a>
+                        <a href="https://www.facebook.com/share/1KxGd7doF9/" target="_blank" class="hover:text-primary transition-colors duration-200" title="Facebook">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/></svg>
+                        </a>
+                        <a href="https://www.youtube.com/@ayudita-w4tf" target="_blank" class="hover:text-primary transition-colors duration-200" title="YouTube">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.5 12 3.5 12 3.5s-7.518 0-9.388.553a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11C4.482 20.5 12 20.5 12 20.5s7.518 0 9.388-.553a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                        </a>
+                    </div>
                 </div>
-            </div>
-
-            <div class="text-center md:text-right font-label-mono text-[11px] opacity-70 flex flex-col items-center md:items-end gap-1">
-                <p>© 2026 Ayudita Inc. Todos los derechos reservados.</p>
-                <div class="flex gap-3 text-[10px]">
-                    <a href="{{ route('terminos') }}" class="hover:text-primary transition-colors underline">Términos y Condiciones</a>
-                    <a href="{{ route('privacidad') }}" class="hover:text-primary transition-colors underline">Política de Privacidad</a>
+                
+                <div class="text-center md:text-right font-label-mono text-[11px] opacity-70 flex flex-col items-center md:items-end gap-1">
+                    <p>© 2026 Ayudita Inc. Todos los derechos reservados.</p>
+                    <div class="flex gap-3 text-[10px]">
+                        <a href="{{ route('terminos') }}" class="hover:text-primary transition-colors underline">Términos y Condiciones</a>
+                        <a href="{{ route('privacidad') }}" class="hover:text-primary transition-colors underline">Política de Privacidad</a>
+                    </div>
                 </div>
             </div>
         </footer>
