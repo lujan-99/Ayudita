@@ -33,7 +33,7 @@
         <header class="sticky top-0 w-full z-50 glass-morphism border-b bento-border">
             <div class="flex justify-between items-center max-w-container-max mx-auto px-gutter py-4">
                 <a href="/" class="flex items-center gap-3 hover:opacity-95 transition-opacity">
-                    <img src="{{ asset('images/logos/logo-icono.svg') }}" alt="Ayudita Icono" class="h-12 w-auto">
+                    <img src="{{ asset('images/logos/logo-icono.svg') }}" alt="Ayudita Icono" class="h-[72px] w-auto">
                     <span class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">Ayudita</span>
                 </a>
                 <nav class="hidden md:flex items-center gap-8">
@@ -102,11 +102,11 @@
                     </div>
                     <div class="mt-8 flex items-center gap-3">
                         <div class="flex -space-x-2">
-                            <div class="w-8 h-8 rounded-full border border-surface-container bg-zinc-700 flex items-center justify-center text-[10px] text-white">👨‍💻</div>
-                            <div class="w-8 h-8 rounded-full border border-surface-container bg-zinc-600 flex items-center justify-center text-[10px] text-white">👩‍🎓</div>
-                            <div class="w-8 h-8 rounded-full border border-surface-container bg-zinc-500 flex items-center justify-center text-[10px] text-white">👨‍🎓</div>
+                            <div class="w-8 h-8 rounded-full border border-surface-container bg-primary-container/20 flex items-center justify-center text-[10px] font-bold text-primary font-label-mono">AC</div>
+                            <div class="w-8 h-8 rounded-full border border-surface-container bg-secondary-container/20 flex items-center justify-center text-[10px] font-bold text-secondary font-label-mono">MF</div>
+                            <div class="w-8 h-8 rounded-full border border-surface-container bg-tertiary-container/20 flex items-center justify-center text-[10px] font-bold text-tertiary font-label-mono">CM</div>
                         </div>
-                        <span class="text-on-surface-variant font-label-mono text-label-mono">Más de 1,200 universitarios ya no jalan materias</span>
+                        <span class="text-on-surface-variant font-label-mono text-label-mono">Comunidad de la Facultad de Tecnología compartiendo experiencia real</span>
                     </div>
                 </div>
                 <div class="relative">
@@ -119,12 +119,15 @@
                             </div>
                             <div class="space-y-2">
                                 <p class="text-white font-bold text-sm">Materia: Álgebra Lineal — Docente: Ing. Pérez</p>
-                                <p class="text-zinc-500">💡 Consejo Clave: "El primer parcial es 80% práctico basado en la guía del 2024. No faltes a los talleres de los viernes."</p>
+                                <div class="text-zinc-500 flex items-start gap-1">
+                                    <span class="material-symbols-outlined text-[14px] text-primary-container mt-0.5" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+                                    <span>Consejo Clave: "El primer parcial es práctico y basado en la guía de estudio. No faltes a los talleres semanales."</span>
+                                </div>
                             </div>
                             <div class="grid grid-cols-3 gap-2 text-center text-[10px]">
-                                <div class="p-2 bg-zinc-800 rounded border border-zinc-700">📂 14 Exámenes</div>
-                                <div class="p-2 bg-zinc-800 rounded border border-zinc-700">📸 45 Fotos Pizarra</div>
-                                <div class="p-2 bg-zinc-800 rounded border border-zinc-700">💻 3 Repositorios</div>
+                                <div class="p-2 bg-zinc-800 rounded border border-zinc-700 flex items-center justify-center gap-1"><span class="material-symbols-outlined text-[12px] text-primary-container">folder</span><span>Exámenes</span></div>
+                                <div class="p-2 bg-zinc-800 rounded border border-zinc-700 flex items-center justify-center gap-1"><span class="material-symbols-outlined text-[12px] text-primary-container">photo_camera</span><span>Pizarras</span></div>
+                                <div class="p-2 bg-zinc-800 rounded border border-zinc-700 flex items-center justify-center gap-1"><span class="material-symbols-outlined text-[12px] text-primary-container">code</span><span>Código</span></div>
                             </div>
                         </div>
                     </div>
@@ -271,12 +274,12 @@
                 <div class="grid grid-cols-1 md:grid-cols-6 gap-bento-gap">
                     <div class="md:col-span-4 bg-surface-container border bento-border p-8 rounded-bento flex flex-col justify-between">
                         <div>
-                            <h3 class="font-headline-md mb-2">Efectividad Académica</h3>
-                            <p class="text-on-surface-variant font-body-sm">El 92% de los estudiantes que aplicaron el patrón de estudio correcto del docente aprobaron en primera instancia.</p>
+                            <h3 class="font-headline-md mb-2">Estrategia Académica</h3>
+                            <p class="text-on-surface-variant font-body-sm">Los estudiantes que aplican el patrón de estudio correcto del docente logran asimilar mejor los conceptos clave y aprueban con éxito.</p>
                         </div>
-                        <div class="mt-8 flex items-baseline gap-2">
-                            <span class="text-4xl font-bold text-primary-container">92%</span>
-                            <span class="font-label-mono text-on-surface-variant">Tasa de aprobación asistida</span>
+                        <div class="mt-8 flex items-center gap-2 text-primary-container">
+                            <span class="material-symbols-outlined text-3xl">trending_up</span>
+                            <span class="font-label-mono text-on-surface-variant">Rendimiento académico optimizado</span>
                         </div>
                     </div>
                     <div class="md:col-span-2 bg-surface-container border bento-border p-8 rounded-bento">
@@ -287,7 +290,7 @@
                     <div class="md:col-span-2 bg-surface-container border bento-border p-8 rounded-bento">
                         <span class="material-symbols-outlined text-primary-container text-2xl mb-4">rate_review</span>
                         <h3 class="font-headline-md text-xl mb-2 text-on-surface">Reseñas Anónimas</h3>
-                        <p class="text-on-surface-variant font-body-sm">Comentarios 100% protegidos para opiniones honestas y realistas sobre los docentes.</p>
+                        <p class="text-on-surface-variant font-body-sm">Comentarios completamente protegidos para opiniones honestas y realistas sobre los docentes.</p>
                     </div>
                     <div class="md:col-span-4 bg-surface-container border bento-border p-8 rounded-bento flex flex-col md:flex-row items-center gap-8">
                         <div class="flex-1">
@@ -326,12 +329,12 @@
                     }
 
                     // Fallbacks
-                    $fbText = $fbPost['text'] ?? '📂 ¡Nuevo repositorio de Álgebra Lineal subido! Exámenes pasados resueltos, pizarras y ejercicios resueltos paso a paso por auxiliares autorizados.';
+                    $fbText = $fbPost['text'] ?? '¡Nuevo repositorio de Álgebra Lineal subido! Exámenes pasados resueltos, pizarras y ejercicios resueltos paso a paso por auxiliares autorizados.';
                     $fbImage = $fbPost['image'] ?? '';
                     $fbLink = $fbPost['link'] ?? 'https://www.facebook.com/share/1KxGd7doF9/';
-                    $fbDate = isset($fbPost['timestamp']) ? date('d M, Y', $fbPost['timestamp']) : 'Hace 2 días';
+                    $fbDate = isset($fbPost['timestamp']) ? date('d M, Y', $fbPost['timestamp']) : 'Hace unos días';
 
-                    $igText = $igPost['text'] ?? '📝 ¿Sufriendo con Física General en la USFX? Aquí tienes un patrón de estudio clave para superar el primer parcial del Ing. Ramos. ¡Asegura tu nota hoy!';
+                    $igText = $igPost['text'] ?? '¿Sufriendo con Física General en la USFX? Aquí tienes un patrón de estudio clave para superar el primer parcial del Ing. Ramos. ¡Asegura tu nota hoy!';
                     $igImage = $igPost['image'] ?? '';
                     $igLink = $igPost['link'] ?? 'https://www.instagram.com/ayuditausfx/';
                     $igDate = isset($igPost['timestamp']) ? date('d M, Y', $igPost['timestamp']) : 'Hace 3 días';
@@ -379,7 +382,7 @@
                                         {{ $fbText }}
                                     </p>
                                     <div class="flex items-center justify-between border-t border-outline-variant/30 pt-4 text-[10px] font-label-mono text-on-surface-variant">
-                                        <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-xs">favorite</span> 142 Likes</span>
+                                        <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-xs text-primary-container">thumb_up</span> Recomendado por estudiantes</span>
                                         <span>{{ $fbDate }}</span>
                                     </div>
                                     <a href="{{ $fbLink }}" target="_blank" class="w-full mt-4 py-2.5 rounded-lg bg-surface border bento-border text-on-surface hover:text-[#1877F2] hover:border-[#1877F2]/40 text-center font-label-mono text-[11px] font-semibold flex items-center justify-center gap-2 transition-all duration-300">
@@ -462,7 +465,7 @@
                                         {{ $igText }}
                                     </p>
                                     <div class="flex items-center justify-between border-t border-outline-variant/30 pt-4 text-[10px] font-label-mono text-on-surface-variant">
-                                        <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-xs">favorite</span> 210 Likes</span>
+                                        <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-xs text-red-500" style="font-variation-settings: 'FILL' 1;">favorite</span> Destacado por la comunidad</span>
                                         <span>{{ $igDate }}</span>
                                     </div>
                                     <a href="{{ $igLink }}" target="_blank" class="w-full mt-4 py-2.5 rounded-lg bg-surface border bento-border text-on-surface hover:text-pink-500 hover:border-pink-500/40 text-center font-label-mono text-[11px] font-semibold flex items-center justify-center gap-2 transition-all duration-300">
@@ -484,13 +487,13 @@
                     <div class="bg-surface-container border bento-border p-8 rounded-bento relative">
                         <span class="text-4xl text-primary-container/20 font-serif absolute top-4 left-6 italic">"</span>
                         <p class="font-body-sm text-body-sm text-on-surface mb-8 relative z-10 italic">
-                            Llevaba dos semestres arrastrando una materia troncal. Gracias al patrón de estudio de Ayudita entendí que el docente priorizaba el diseño de bases de datos antes que la programación. Aprobé con 75 en mesas.
+                            Llevaba varios periodos intentando aprobar una materia troncal. Gracias al patrón de estudio de Ayudita entendí que el docente priorizaba el diseño de bases de datos antes que la programación y logré pasar satisfactoriamente.
                         </p>
                         <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 rounded-full bg-zinc-700 flex items-center justify-center">👨</div>
+                            <div class="w-10 h-10 rounded-full bg-primary-container/20 border border-primary-container/30 flex items-center justify-center font-bold text-primary font-label-mono text-sm">AC</div>
                             <div>
                                 <h4 class="font-headline-md text-sm text-on-surface">Alejandro Condori</h4>
-                                <p class="font-label-mono text-xs text-on-surface-variant">Sistemas — 6to Semestre</p>
+                                <p class="font-label-mono text-xs text-on-surface-variant">Ingeniería de Sistemas</p>
                             </div>
                         </div>
                     </div>
@@ -500,7 +503,7 @@
                             Las fotos de pizarras resueltas de los laboratorios avanzados me salvaron la vida. En los periodos de exámenes no hay tiempo de buscar libros completos; necesitas la solución al grano.
                         </p>
                         <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 rounded-full bg-zinc-600 flex items-center justify-center">👩</div>
+                            <div class="w-10 h-10 rounded-full bg-secondary-container/20 border border-secondary-container/30 flex items-center justify-center font-bold text-secondary font-label-mono text-sm">MF</div>
                             <div>
                                 <h4 class="font-headline-md text-sm text-on-surface">Mariana Flores</h4>
                                 <p class="font-label-mono text-xs text-on-surface-variant">Ciencias de la Computación</p>
@@ -510,10 +513,10 @@
                     <div class="bg-surface-container border bento-border p-8 rounded-bento relative">
                         <span class="text-4xl text-primary-container/20 font-serif absolute top-4 left-6 italic">"</span>
                         <p class="font-body-sm text-body-sm text-on-surface mb-8 relative z-10 italic">
-                            Las dolores de cabeza pasados ayudan a los changos nuevos que recién entran a la U. Subir mis exámenes pasados me dio acceso a las funciones pro de manera gratuita.
+                            Las dificultades de semestres anteriores ayudan a los nuevos estudiantes que recién entran a la universidad. Subir mis apuntes me dio acceso a las funciones pro de manera gratuita.
                         </p>
                         <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 rounded-full bg-zinc-500 flex items-center justify-center">👦</div>
+                            <div class="w-10 h-10 rounded-full bg-tertiary-container/20 border border-tertiary-container/30 flex items-center justify-center font-bold text-tertiary font-label-mono text-sm">CM</div>
                             <div>
                                 <h4 class="font-headline-md text-sm text-on-surface">Carlos Mendoza</h4>
                                 <p class="font-label-mono text-xs text-on-surface-variant">Ingeniería de Tecnologías</p>
@@ -712,7 +715,11 @@
                 </div>
                 <div class="pt-8 border-t border-outline-variant/30 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
                     <p class="text-on-surface-variant/80 font-label-mono text-xs">© 2026 Ayudita Inc. Elevando el nivel académico de la USFX.</p>
-                    <p class="text-on-surface-variant/80 font-label-mono text-xs">Hecho con 💜 por y para estudiantes de Sucre.</p>
+                    <p class="text-on-surface-variant/80 font-label-mono text-xs flex items-center justify-center md:justify-start gap-1">
+                        Hecho con 
+                        <span class="material-symbols-outlined text-[12px] text-primary-container" style="font-variation-settings: 'FILL' 1;">favorite</span> 
+                        por y para estudiantes de Sucre.
+                    </p>
                 </div>
             </div>
         </footer>
