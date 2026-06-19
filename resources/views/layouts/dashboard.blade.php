@@ -88,14 +88,14 @@
             </div>
         </div>
         <div class="flex-1 flex flex-col gap-2 w-full">
-            <a class="relative flex items-center gap-3 px-3 py-2.5 {{ Request::routeIs('dashboard') ? 'bg-primary-container text-on-primary-container font-bold shadow-xs' : 'text-on-surface-variant hover:bg-surface-variant/50' }} rounded-lg transition-all" href="{{ route('dashboard') }}" :class="sidebarCollapsed ? 'justify-center' : ''" title="Dashboard">
+            <a id="tour-dashboard-link" class="relative flex items-center gap-3 px-3 py-2.5 {{ Request::routeIs('dashboard') ? 'bg-primary-container text-on-primary-container font-bold shadow-xs' : 'text-on-surface-variant hover:bg-surface-variant/50' }} rounded-lg transition-all" href="{{ route('dashboard') }}" :class="sidebarCollapsed ? 'justify-center' : ''" title="Dashboard">
                 @if(Request::routeIs('dashboard'))
                     <span class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-md"></span>
                 @endif
                 <span class="material-symbols-outlined {{ Request::routeIs('dashboard') ? 'fill-icon' : '' }} text-[20px]">dashboard</span>
                 <span x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms>Dashboard</span>
             </a>
-            <a class="relative flex items-center gap-3 px-3 py-2.5 {{ Request::routeIs('materias.index') || Request::routeIs('materias.show') ? 'bg-primary-container text-on-primary-container font-bold shadow-xs' : 'text-on-surface-variant hover:bg-surface-variant/50' }} rounded-lg transition-all" href="{{ route('materias.index') }}" :class="sidebarCollapsed ? 'justify-center' : ''" title="Materias">
+            <a id="tour-materias-link" class="relative flex items-center gap-3 px-3 py-2.5 {{ Request::routeIs('materias.index') || Request::routeIs('materias.show') ? 'bg-primary-container text-on-primary-container font-bold shadow-xs' : 'text-on-surface-variant hover:bg-surface-variant/50' }} rounded-lg transition-all" href="{{ route('materias.index') }}" :class="sidebarCollapsed ? 'justify-center' : ''" title="Materias">
                 @if(Request::routeIs('materias.index') || Request::routeIs('materias.show'))
                     <span class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-md"></span>
                 @endif
@@ -103,7 +103,7 @@
                 <span x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms>Materias</span>
             </a>
             <!-- Botones que abren el Paywall -->
-            <a class="relative flex items-center gap-3 px-3 py-2.5 {{ Request::routeIs('plan-estudios') ? 'bg-primary-container text-on-primary-container font-bold shadow-xs' : 'text-on-surface-variant hover:bg-surface-variant/50' }} rounded-lg transition-all" href="{{ route('plan-estudios') }}" :class="sidebarCollapsed ? 'justify-center' : ''" title="Planes de Estudio">
+            <a id="tour-plan-link" class="relative flex items-center gap-3 px-3 py-2.5 {{ Request::routeIs('plan-estudios') ? 'bg-primary-container text-on-primary-container font-bold shadow-xs' : 'text-on-surface-variant hover:bg-surface-variant/50' }} rounded-lg transition-all" href="{{ route('plan-estudios') }}" :class="sidebarCollapsed ? 'justify-center' : ''" title="Planes de Estudio">
                 @if(Request::routeIs('plan-estudios'))
                     <span class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-md"></span>
                 @endif
@@ -112,7 +112,7 @@
                     <span>Planes de Estudio</span>
                 </span>
             </a>
-            <a class="relative flex items-center gap-3 px-3 py-2.5 {{ Request::routeIs('docentes.index') ? 'bg-primary-container text-on-primary-container font-bold shadow-xs' : 'text-on-surface-variant hover:bg-surface-variant/50' }} rounded-lg transition-all" href="{{ route('docentes.index') }}" :class="sidebarCollapsed ? 'justify-center' : ''" title="Docentes">
+            <a id="tour-docentes-link" class="relative flex items-center gap-3 px-3 py-2.5 {{ Request::routeIs('docentes.index') ? 'bg-primary-container text-on-primary-container font-bold shadow-xs' : 'text-on-surface-variant hover:bg-surface-variant/50' }} rounded-lg transition-all" href="{{ route('docentes.index') }}" :class="sidebarCollapsed ? 'justify-center' : ''" title="Docentes">
                 @if(Request::routeIs('docentes.index'))
                     <span class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-md"></span>
                 @endif
