@@ -10,6 +10,15 @@
             scrollbar-width: none;
         }
 
+        /* Figma-like infinite dot-grid */
+        .canvas-dot-grid {
+            background-image: radial-gradient(rgba(132, 43, 210, 0.15) 1.2px, transparent 1.2px);
+            background-size: 32px 32px;
+        }
+        .dark .canvas-dot-grid {
+            background-image: radial-gradient(rgba(221, 183, 255, 0.08) 1.2px, transparent 1.2px);
+        }
+
         /* Neural network floating node effect */
         @keyframes float {
             0% { transform: translateY(0px) translateX(0px); }
@@ -76,65 +85,70 @@
             <p class="text-xs mt-2">Inicia sesión en el panel de administración para registrar carreras y planes de estudio.</p>
         </div>
     @else
-        <!-- Graph Area -->
-        <div class="relative w-full">
+        <!-- Screen Breakout Wrapper -->
+        <div class="fixed top-16 bottom-0 right-0 z-30 transition-all duration-300 select-none overflow-hidden"
+             :class="sidebarCollapsed ? 'left-0 md:left-20' : 'left-0 md:left-64'">
 
-            <div class="w-full">
-                <div class="glass-panel rounded-xl p-0 relative overflow-hidden">
-            <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
-            
-            <!-- Instructions Legend -->
-            <div class="flex flex-wrap items-center gap-4 mt-2 mx-2 mb-3 text-[10px] sm:text-xs text-on-surface-variant bg-surface-container/30 p-2.5 rounded-lg border border-outline-variant/30">
-                <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_8px_#ddb7ff]"></span>Seleccionada</span>
-                <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-error shadow-[0_0_8px_#ffb4ab]"></span>Prerrequisitos</span>
-                <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#842bd2] shadow-[0_0_8px_#842bd2]"></span>Dependientes</span>
-                <div class="w-px h-3 bg-outline-variant/40 mx-1 hidden sm:block"></div>
-                <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>Vencida (Aprobada)</span>
-                <span class="flex items-center gap-1.5">
-                    <span class="relative flex h-2 w-2">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
-                    </span>
-                    Cursando actualmente
-                </span>
-                <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-on-surface-variant/40"></span>Pendiente (Falta)</span>
-                <span class="ml-auto italic hidden lg:inline">Consejo: Haz clic en una materia para fijar sus conexiones.</span>
+            <!-- HUD Panel: Career Info -->
+            <div class="hud-panel absolute top-4 left-4 z-40 bg-surface-container-high/90 border border-outline-variant/50 backdrop-blur-md px-4 py-3 rounded-xl shadow-lg flex flex-col gap-0.5 pointer-events-auto">
+                <span class="text-[9px] font-label-mono text-on-surface-variant uppercase tracking-widest">Plan de Estudios Vigente</span>
+                <h2 class="font-display font-bold text-sm text-primary leading-tight">{{ $carrera->nombre }}</h2>
             </div>
 
-            <!-- Interactive Board Wrapper -->
-            <div class="relative w-full border border-outline-variant/30 rounded-xl bg-surface-container/20 overflow-hidden select-none">
-                <!-- Figma-like HUD Controls -->
-                <div class="absolute bottom-4 left-4 z-30 flex items-center gap-2 bg-surface-container-high/90 border border-outline-variant/50 backdrop-blur-md px-3 py-2 rounded-xl shadow-lg">
-                    <button id="zoom-out-btn" class="w-8 h-8 rounded-lg hover:bg-surface-variant flex items-center justify-center text-on-surface transition-colors cursor-pointer" title="Alejar (Zoom Out)">
-                        <span class="material-symbols-outlined text-[20px]">remove</span>
-                    </button>
-                    <span id="zoom-badge" class="font-label-mono text-xs font-bold text-primary min-w-[48px] text-center">100%</span>
-                    <button id="zoom-in-btn" class="w-8 h-8 rounded-lg hover:bg-surface-variant flex items-center justify-center text-on-surface transition-colors cursor-pointer" title="Acercar (Zoom In)">
-                        <span class="material-symbols-outlined text-[20px]">add</span>
-                    </button>
-                    <div class="w-px h-5 bg-outline-variant/40 mx-1"></div>
-                    <button id="zoom-reset-btn" class="w-8 h-8 rounded-lg hover:bg-surface-variant flex items-center justify-center text-on-surface transition-colors cursor-pointer" title="Centrar / Restablecer vista">
-                        <span class="material-symbols-outlined text-[20px]">fullscreen</span>
-                    </button>
+            <!-- HUD Panel: Legend -->
+            <div class="hud-panel absolute top-4 right-4 z-40 max-w-[280px] bg-surface-container-high/90 border border-outline-variant/50 backdrop-blur-md p-3.5 rounded-xl shadow-lg flex flex-col gap-2.5 pointer-events-auto">
+                <div class="flex items-center justify-between border-b border-outline-variant/30 pb-1.5">
+                    <span class="font-display font-bold text-[10px] text-primary uppercase tracking-wider">Leyenda del Plan</span>
+                    <span class="text-[8px] text-on-surface-variant/80 italic">Click para fijar</span>
                 </div>
+                <div class="grid grid-cols-2 gap-x-3 gap-y-2 text-[10px] text-on-surface-variant">
+                    <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_#ddb7ff]"></span>Seleccionada</span>
+                    <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.4)]"></span>Aprobada</span>
+                    <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-error shadow-[0_0_8px_#ffb4ab]"></span>Prerrequisito</span>
+                    <span class="flex items-center gap-1.5">
+                        <span class="relative flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
+                        </span>
+                        Cursando
+                    </span>
+                    <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#842bd2] shadow-[0_0_8px_#842bd2]"></span>Dependiente</span>
+                    <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-on-surface-variant/40"></span>Pendiente (Falta)</span>
+                </div>
+            </div>
 
-                <!-- Canvas Viewport -->
-                <div id="graph-container" class="w-full relative min-h-[600px] h-[750px] overflow-hidden cursor-grab active:cursor-grabbing" style="user-select: none; -webkit-user-select: none;">
+            <!-- HUD Panel: Zoom Controls -->
+            <div class="hud-panel absolute bottom-4 left-4 z-40 flex items-center gap-2 bg-surface-container-high/90 border border-outline-variant/50 backdrop-blur-md px-3 py-2 rounded-xl shadow-lg pointer-events-auto">
+                <button id="zoom-out-btn" class="w-8 h-8 rounded-lg hover:bg-surface-variant flex items-center justify-center text-on-surface transition-colors cursor-pointer" title="Alejar (Zoom Out)">
+                    <span class="material-symbols-outlined text-[20px]">remove</span>
+                </button>
+                <span id="zoom-badge" class="font-label-mono text-xs font-bold text-primary min-w-[48px] text-center">75%</span>
+                <button id="zoom-in-btn" class="w-8 h-8 rounded-lg hover:bg-surface-variant flex items-center justify-center text-on-surface transition-colors cursor-pointer" title="Acercar (Zoom In)">
+                    <span class="material-symbols-outlined text-[20px]">add</span>
+                </button>
+                <div class="w-px h-5 bg-outline-variant/40 mx-1"></div>
+                <button id="zoom-reset-btn" class="w-8 h-8 rounded-lg hover:bg-surface-variant flex items-center justify-center text-on-surface transition-colors cursor-pointer" title="Centrar / Restablecer vista">
+                    <span class="material-symbols-outlined text-[20px]">fullscreen</span>
+                </button>
+            </div>
+
+            <!-- Canvas Viewport -->
+            <div id="graph-container" class="w-full h-full relative overflow-hidden canvas-dot-grid cursor-grab active:cursor-grabbing" style="user-select: none; -webkit-user-select: none;">
+                
+                @php
+                    $maxSemestre = max(10, $materiasBySemestre->keys()->max() ?? 10);
+                    $colWidth = 460;
+                    $cardWidth = 220;
+                    $canvasHeight = 1100;
+                    $yMin = 100;
+                    $yMax = 980;
+                @endphp
+
+                <!-- Graph Canvas (Transformed via JS) -->
+                <div id="graph-canvas" class="relative origin-top-left" style="width: {{ $maxSemestre * $colWidth }}px; height: {{ $canvasHeight }}px;">
                     
-                    @php
-                        $maxSemestre = max(10, $materiasBySemestre->keys()->max() ?? 10);
-                        $colWidth = 460;
-                        $cardWidth = 220;
-                        $canvasHeight = 1100;
-                        $yMin = 100;
-                        $yMax = 980;
-                    @endphp
-
-                    <!-- Graph Canvas (Transformed via JS) -->
-                    <div id="graph-canvas" class="relative origin-top-left" style="width: {{ $maxSemestre * $colWidth }}px; height: {{ $canvasHeight }}px;">
-                        
-                        <!-- SVG connector overlay -->
-                        <svg id="connector-svg" class="absolute top-0 left-0 w-full h-full pointer-events-none z-10 overflow-visible"></svg>
+                    <!-- SVG connector overlay -->
+                    <svg id="connector-svg" class="absolute top-0 left-0 w-full h-full pointer-events-none z-10 overflow-visible"></svg>
 
                     <!-- Semester Lanes (Background) -->
                     @for($sem = 1; $sem <= $maxSemestre; $sem++)
@@ -244,8 +258,8 @@
                 </div>
 
             </div>
-            </div> <!-- Close Interactive Board Wrapper -->
-        </div>
+
+        </div> <!-- Close Screen Breakout Wrapper -->
 
         @push('scripts')
             <script>
@@ -255,7 +269,7 @@
 
                 // Pan and Zoom states
                 let scale = 0.75;
-                let panX = 40;
+                let panX = 60;
                 let panY = 40;
                 let isDragging = false;
                 let startX = 0;
@@ -291,10 +305,15 @@
 
                 function applyTransform() {
                     const canvas = document.getElementById('graph-canvas');
+                    const container = document.getElementById('graph-container');
                     const badge = document.getElementById('zoom-badge');
                     if (!canvas) return;
                     
                     canvas.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+                    if (container) {
+                        container.style.backgroundPosition = `${panX}px ${panY}px`;
+                        container.style.backgroundSize = `${32 * scale}px ${32 * scale}px`;
+                    }
                     if (badge) {
                         badge.innerText = `${Math.round(scale * 100)}%`;
                     }
@@ -305,18 +324,22 @@
                     const canvas = document.getElementById('graph-canvas');
                     if (!container || !canvas) return;
 
-                    // Centering calculation on initial load
-                    const containerWidth = container.clientWidth;
-                    const canvasWidth = canvas.clientWidth;
-                    
-                    scale = Math.min(1.0, containerWidth / 1400); // Scale down slightly to fit initial semesters
-                    if (scale < 0.5) scale = 0.5;
-                    panX = 30;
-                    panY = 30;
-                    
-                    applyTransform();
+                    // Centering calculation dynamically with layout delay
+                    setTimeout(() => {
+                        const containerWidth = container.clientWidth;
+                        const containerHeight = container.clientHeight;
+                        const canvasHeight = canvas.clientHeight || 1100;
+                        
+                        scale = Math.min(0.8, Math.max(0.4, containerWidth / 1800)); // Dynamic scale
+                        panY = (containerHeight - (canvasHeight * scale)) / 2;
+                        if (panY < 20) panY = 20;
+                        panX = 60;
+                        
+                        applyTransform();
+                        initConnections();
+                    }, 100);
 
-                    // Mouse Wheel Zooming
+                    // Mouse Wheel Zooming centered on cursor
                     container.addEventListener('wheel', (e) => {
                         e.preventDefault();
 
@@ -329,11 +352,11 @@
                         const canvasY = (mouseY - panY) / scale;
 
                         // Zoom factor
-                        const zoomFactor = e.deltaY < 0 ? 1.08 : 0.92;
+                        const zoomFactor = e.deltaY < 0 ? 1.05 : 0.95;
                         let newScale = scale * zoomFactor;
 
                         // Bounds
-                        newScale = Math.min(Math.max(newScale, 0.25), 2.0);
+                        newScale = Math.min(Math.max(newScale, 0.2), 2.0);
 
                         // Adjust pan to zoom towards mouse position
                         panX = mouseX - canvasX * newScale;
@@ -347,6 +370,11 @@
                     container.addEventListener('mousedown', (e) => {
                         // Only drag with left click
                         if (e.button !== 0) return;
+                        
+                        // Ignore drag if clicking on nodes, HUD panels or buttons
+                        if (e.target.closest('.materia-node') || e.target.closest('.hud-panel') || e.target.closest('button')) {
+                            return;
+                        }
                         
                         isDragging = true;
                         hasMoved = false;
@@ -385,6 +413,9 @@
                     let touchStartY = 0;
                     container.addEventListener('touchstart', (e) => {
                         if (e.touches.length === 1) {
+                            if (e.touches[0].target.closest('.materia-node') || e.touches[0].target.closest('.hud-panel') || e.touches[0].target.closest('button')) {
+                                return;
+                            }
                             isDragging = true;
                             touchStartX = e.touches[0].clientX - panX;
                             touchStartY = e.touches[0].clientY - panY;
@@ -423,9 +454,14 @@
                     });
 
                     document.getElementById('zoom-reset-btn').addEventListener('click', () => {
-                        scale = 0.75;
-                        panX = 40;
-                        panY = 40;
+                        const containerWidth = container.clientWidth;
+                        const containerHeight = container.clientHeight;
+                        const canvasHeight = canvas.clientHeight || 1100;
+                        
+                        scale = Math.min(0.8, Math.max(0.4, containerWidth / 1800));
+                        panY = (containerHeight - (canvasHeight * scale)) / 2;
+                        if (panY < 20) panY = 20;
+                        panX = 60;
                         applyTransform();
                     });
 
@@ -439,7 +475,7 @@
                         const canvasY = (centerY - panY) / scale;
 
                         let newScale = scale * factor;
-                        newScale = Math.min(Math.max(newScale, 0.25), 2.0);
+                        newScale = Math.min(Math.max(newScale, 0.2), 2.0);
 
                         panX = centerX - canvasX * newScale;
                         panY = centerY - canvasY * newScale;
@@ -543,6 +579,7 @@
                     return visited;
                 }
 
+                // Retrieve all descendants
                 function getDescendants(codigo, visited = new Set()) {
                     if (visited.has(codigo)) return visited;
                     visited.add(codigo);
