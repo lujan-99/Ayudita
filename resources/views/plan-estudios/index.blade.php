@@ -90,13 +90,13 @@
              :class="sidebarCollapsed ? 'left-0 md:left-20' : 'left-0 md:left-64'">
 
             <!-- HUD Panel: Career Info -->
-            <div class="hud-panel absolute top-4 left-4 z-40 bg-surface-container-high/90 border border-outline-variant/50 backdrop-blur-md px-4 py-3 rounded-xl shadow-lg flex flex-col gap-0.5 pointer-events-auto">
+            <div id="tour-plan-title" class="hud-panel absolute top-4 left-4 z-40 bg-surface-container-high/90 border border-outline-variant/50 backdrop-blur-md px-4 py-3 rounded-xl shadow-lg flex flex-col gap-0.5 pointer-events-auto">
                 <span class="text-[9px] font-label-mono text-on-surface-variant uppercase tracking-widest">Plan de Estudios Vigente</span>
                 <h2 class="font-display font-bold text-sm text-primary leading-tight">{{ $carrera->nombre }}</h2>
             </div>
 
             <!-- HUD Panel: Legend -->
-            <div class="hud-panel absolute top-4 right-4 z-40 max-w-[280px] bg-surface-container-high/90 border border-outline-variant/50 backdrop-blur-md p-3.5 rounded-xl shadow-lg flex flex-col gap-2.5 pointer-events-auto">
+            <div id="tour-plan-legend" class="hud-panel absolute top-4 right-4 z-40 max-w-[280px] bg-surface-container-high/90 border border-outline-variant/50 backdrop-blur-md p-3.5 rounded-xl shadow-lg flex flex-col gap-2.5 pointer-events-auto">
                 <div class="flex items-center justify-between border-b border-outline-variant/30 pb-1.5">
                     <span class="font-display font-bold text-[10px] text-primary uppercase tracking-wider">Leyenda del Plan</span>
                     <span class="text-[8px] text-on-surface-variant/80 italic">Click para fijar</span>
@@ -118,7 +118,7 @@
             </div>
 
             <!-- HUD Panel: Zoom Controls -->
-            <div class="hud-panel absolute bottom-4 left-4 z-40 flex items-center gap-2 bg-surface-container-high/90 border border-outline-variant/50 backdrop-blur-md px-3 py-2 rounded-xl shadow-lg pointer-events-auto">
+            <div id="tour-plan-zoom" class="hud-panel absolute bottom-4 left-4 z-40 flex items-center gap-2 bg-surface-container-high/90 border border-outline-variant/50 backdrop-blur-md px-3 py-2 rounded-xl shadow-lg pointer-events-auto">
                 <button id="zoom-out-btn" class="w-8 h-8 rounded-lg hover:bg-surface-variant flex items-center justify-center text-on-surface transition-colors cursor-pointer" title="Alejar (Zoom Out)">
                     <span class="material-symbols-outlined text-[20px]">remove</span>
                 </button>
@@ -129,6 +129,10 @@
                 <div class="w-px h-5 bg-outline-variant/40 mx-1"></div>
                 <button id="zoom-reset-btn" class="w-8 h-8 rounded-lg hover:bg-surface-variant flex items-center justify-center text-on-surface transition-colors cursor-pointer" title="Centrar / Restablecer vista">
                     <span class="material-symbols-outlined text-[20px]">fullscreen</span>
+                </button>
+                <div class="w-px h-5 bg-outline-variant/40 mx-1"></div>
+                <button @click="$dispatch('start-tour')" class="w-8 h-8 rounded-lg hover:bg-surface-variant flex items-center justify-center text-on-surface hover:text-primary transition-colors cursor-pointer" title="Guía Rápida (Tour)">
+                    <span class="material-symbols-outlined text-[20px] animate-pulse">explore</span>
                 </button>
             </div>
 
@@ -207,8 +211,8 @@
                                 }
                             @endphp
 
-                            <div
-                                id="node-{{ $materia->codigo }}"
+                             <div
+                                id="{{ ($sem === 1 && $loop->first) ? 'tour-plan-materia' : 'node-' . $materia->codigo }}"
                                 data-codigo="{{ $materia->codigo }}"
                                 data-prereqs="{{ $materia->prerequisitos->pluck('codigo')->implode(',') }}"
                                 class="materia-node absolute glass-card rounded-xl p-4 border cursor-pointer z-20 floating-node w-[220px] {{ $cardClasses }}"
@@ -724,6 +728,204 @@
             </script>
         @endpush
         </div>
-        </div>
     @endif
+
+    @push('modals')
+    <!-- Alpine Onboarding Tour Component -->
+    <div x-data="{
+        tourActive: false,
+        currentStep: 0,
+        arrowDirection: 'up',
+        steps: [
+            {
+                targetId: 'tour-plan-title',
+                title: 'Carrera y Plan de Estudios',
+                content: 'Aquí puedes ver el plan de estudios vigente para tu carrera.',
+                image: 'saludo.png'
+            },
+            {
+                targetId: 'tour-plan-materia',
+                title: 'Tarjeta de Asignatura',
+                content: 'Cada tarjeta representa una materia. Al hacer clic sobre ella, verás de forma interactiva cuáles son sus prerrequisitos (en rojo) y sus materias dependientes (en morado).',
+                image: 'sentado.png'
+            },
+            {
+                targetId: 'tour-plan-legend',
+                title: 'Estados y Leyenda',
+                content: 'Usa la leyenda para identificar el estado académico de cada materia (aprobada, cursando o pendiente).',
+                image: 'corriendo.png'
+            },
+            {
+                targetId: 'tour-plan-zoom',
+                title: 'Navegación del Lienzo',
+                content: 'Puedes arrastrar el fondo para moverte estilo Figma, usar la rueda del mouse para hacer zoom, o usar estos controles para centrar y ajustar la escala.',
+                image: 'feliz.png'
+            }
+        ],
+        spotlight: {
+            top: 0,
+            left: 0,
+            width: 0,
+            height: 0,
+            active: false,
+            transition: false
+        },
+        init() {
+            const userId = {{ Auth::id() }};
+            // Only start the tour if it hasn't been completed yet for this user
+            if (!localStorage.getItem('onboardingCompleted_planEstudios_' + userId)) {
+                setTimeout(() => {
+                    this.startTour();
+                }, 1200);
+            }
+        },
+        startTour() {
+            this.tourActive = true;
+            this.currentStep = 0;
+            this.showStep();
+        },
+        nextStep() {
+            if (this.currentStep < this.steps.length - 1) {
+                this.currentStep++;
+                this.showStep();
+            } else {
+                this.endTour();
+            }
+        },
+        prevStep() {
+            if (this.currentStep > 0) {
+                this.currentStep--;
+                this.showStep();
+            }
+        },
+        endTour() {
+            this.tourActive = false;
+            const userId = {{ Auth::id() }};
+            localStorage.setItem('onboardingCompleted_planEstudios_' + userId, 'true');
+            this.spotlight.active = false;
+        },
+        showStep() {
+            // Hide spotlight and tooltip opacity during transit
+            this.spotlight.active = false;
+            if (this.$refs.tourTooltip) {
+                this.$refs.tourTooltip.style.opacity = '0';
+            }
+
+            const step = this.steps[this.currentStep];
+            
+            this.$nextTick(() => {
+                const target = document.getElementById(step.targetId);
+                if (!target) {
+                    this.nextStep();
+                    return;
+                }
+                
+                // Scroll target into view
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                // Position spotlight and tooltip after scroll settles
+                setTimeout(() => {
+                    this.updateLayout(true);
+                }, 350);
+            });
+        },
+        updateLayout(useTransition = false) {
+            if (!this.tourActive) return;
+            const step = this.steps[this.currentStep];
+            const target = document.getElementById(step.targetId);
+            if (!target) return;
+            
+            const rect = target.getBoundingClientRect();
+            
+            // Set spotlight geometry
+            this.spotlight.transition = useTransition;
+            this.spotlight.top = rect.top;
+            this.spotlight.left = rect.left;
+            this.spotlight.width = rect.width;
+            this.spotlight.height = rect.height;
+            this.spotlight.active = true;
+            
+            // Position tooltip
+            const tooltip = this.$refs.tourTooltip;
+            if (!tooltip) return;
+            
+            const tooltipRect = tooltip.getBoundingClientRect();
+            let top = rect.bottom + 12;
+            let left = rect.left;
+            
+            // Prevent right side overflow
+            if (left + tooltipRect.width > window.innerWidth) {
+                left = window.innerWidth - tooltipRect.width - 16;
+            }
+            if (left < 16) left = 16;
+            
+            // Position tooltip above target if it overflows viewport bottom
+            if (rect.bottom + tooltipRect.height > window.innerHeight) {
+                top = rect.top - tooltipRect.height - 12;
+                this.arrowDirection = 'down';
+            } else {
+                this.arrowDirection = 'up';
+            }
+            
+            tooltip.style.top = top + 'px';
+            tooltip.style.left = left + 'px';
+            tooltip.style.opacity = '1';
+        }
+    }" 
+    @start-tour.window="startTour()"
+    @scroll.window.passive="if (tourActive) updateLayout(false)"
+    @resize.window.passive="if (tourActive) updateLayout(false)"
+    x-show="tourActive" 
+    class="fixed inset-0 pointer-events-none z-[100000]" 
+    style="display: none;">
+        <!-- Backdrop (transparent layer to catch click outside) -->
+        <div class="fixed inset-0 bg-transparent transition-opacity duration-300 pointer-events-auto z-[99990]" @click="endTour()"></div>
+        
+        <!-- Spotlight visual highlight layer (z-99995) -->
+        <div 
+            x-show="spotlight.active" 
+            class="fixed rounded-lg pointer-events-none z-[99995]"
+            :class="spotlight.transition ? 'transition-all duration-300' : ''"
+            :style="`top: ${spotlight.top}px; left: ${spotlight.left}px; width: ${spotlight.width}px; height: ${spotlight.height}px; box-shadow: 0 0 0 4px var(--color-primary), 0 0 0 9999px rgba(0, 0, 0, 0.45);`"
+        ></div>
+
+        <!-- Floating Tooltip Card (z-99999) -->
+        <div x-ref="tourTooltip" 
+             class="fixed z-[99999] w-[290px] bg-surface-container-high rounded-xl p-4 shadow-2xl pointer-events-auto text-left opacity-0 select-none border-0"
+             :class="spotlight.transition ? 'transition-all duration-300' : 'transition-opacity duration-300'">
+            
+            <!-- Arrow up marker -->
+            <div x-show="arrowDirection === 'up'" class="absolute -top-2 left-6 w-3 h-3 bg-surface-container-high rotate-45 pointer-events-none"></div>
+            <!-- Arrow down marker -->
+            <div x-show="arrowDirection === 'down'" class="absolute -bottom-2 left-6 w-3 h-3 bg-surface-container-high rotate-45 pointer-events-none"></div>
+            
+            <div class="flex items-center justify-between mb-2.5">
+                <span class="text-[9px] font-bold text-primary font-label-mono uppercase tracking-wider">Paso <span x-text="currentStep + 1"></span> de <span x-text="steps.length"></span></span>
+                <button @click="endTour()" class="text-on-surface-variant hover:text-error transition-colors p-1 rounded-full flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[16px]">close</span>
+                </button>
+            </div>
+            
+            <div class="flex gap-3 items-start mb-3 select-none">
+                <img :src="'/images/character/' + steps[currentStep].image" class="w-12 h-12 object-contain shrink-0" alt="Mapache Ayudita">
+                <div class="flex-1 min-w-0">
+                    <h3 class="font-display text-body-sm font-bold text-on-surface leading-tight mb-1" x-text="steps[currentStep].title"></h3>
+                    <p class="text-[10px] text-on-surface-variant leading-relaxed" x-text="steps[currentStep].content"></p>
+                </div>
+            </div>
+            
+            <div class="flex justify-between items-center pt-2.5 border-t border-outline-variant/30">
+                <button @click="endTour()" class="text-[10px] text-on-surface-variant hover:text-primary transition-all font-bold">Omitir</button>
+                <div class="flex gap-2">
+                    <button @click="prevStep()" x-show="currentStep > 0" class="px-2 py-1 border border-outline-variant text-[10px] font-bold rounded-DEFAULT text-on-surface hover:bg-surface-variant/50 transition-all cursor-pointer">
+                        Atrás
+                    </button>
+                    <button @click="nextStep()" class="px-2.5 py-1 bg-primary text-on-primary text-[10px] font-bold rounded-DEFAULT hover:brightness-110 active:scale-[0.98] transition-all cursor-pointer border-0">
+                        <span x-text="currentStep === steps.length - 1 ? 'Finalizar' : 'Siguiente'"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endpush
 </x-dashboard-layout>

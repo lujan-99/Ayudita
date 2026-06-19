@@ -8,8 +8,20 @@
         </div>
     @endif
 
+    <div class="flex justify-between items-center mb-6">
+        <a href="{{ route('materias.index') }}" class="inline-flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors text-body-sm">
+            <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+            Volver a Mis Materias
+        </a>
+        <!-- Reset Tour Button -->
+        <button @click="$dispatch('start-tour')" class="px-3 py-1.5 border border-outline-variant text-on-surface-variant hover:text-primary hover:border-primary text-xs font-bold rounded-DEFAULT transition-all hover:bg-surface-variant/50 cursor-pointer bg-transparent flex items-center justify-center gap-1.5">
+            <span class="material-symbols-outlined text-[16px] animate-pulse">explore</span>
+            <span>Guía Rápida</span>
+        </button>
+    </div>
+
     <!-- Resumen de la Materia -->
-    <section class="bg-surface-container border border-outline-variant/30 rounded-bento p-6 relative overflow-hidden">
+    <section id="tour-materia-summary" class="bg-surface-container border border-outline-variant/30 rounded-bento p-6 relative overflow-hidden">
         <div class="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-primary via-primary-container to-transparent"></div>
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
             <div>
@@ -69,7 +81,7 @@
         </div>
 
         <!-- Botón para Aportar Consejo/Archivo -->
-        <button onclick="toggleAporteForm()" class="px-4 py-2 bg-primary text-on-primary font-bold text-body-sm rounded-DEFAULT hover:brightness-110 transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(183,109,255,0.2)]">
+        <button id="tour-materia-contribute" onclick="toggleAporteForm()" class="px-4 py-2 bg-primary text-on-primary font-bold text-body-sm rounded-DEFAULT hover:brightness-110 transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(183,109,255,0.2)]">
             <span class="material-symbols-outlined text-[18px]">add_circle</span>
             Aportar a la Comunidad
         </button>
@@ -203,7 +215,7 @@
                         default => 'Otro',
                     };
                 @endphp
-                <div class="bg-surface-container border border-outline-variant rounded-bento p-5 flex flex-col gap-3 hover:border-outline-variant transition-colors consejo-card"
+                <div id="{{ $loop->first ? 'tour-materia-first-card' : '' }}" class="bg-surface-container border border-outline-variant rounded-bento p-5 flex flex-col gap-3 hover:border-outline-variant transition-colors consejo-card"
                      data-timestamp="{{ $consejo->created_at->timestamp }}"
                      data-tipo="{{ $consejo->tipo }}">
                     
@@ -599,6 +611,203 @@
                 }
             }
         </script>
+    @endpush
+
+    @push('modals')
+    <!-- Alpine Onboarding Tour Component -->
+    <div x-data="{
+        tourActive: false,
+        currentStep: 0,
+        arrowDirection: 'up',
+        steps: [
+            {
+                targetId: 'tour-materia-summary',
+                title: 'Información de la Materia',
+                content: 'Aquí puedes ver los detalles de la asignatura, el grupo que estás cursando y tu docente asignado.',
+                image: 'saludo.png'
+            },
+            {
+                targetId: 'tab-btn-archivos',
+                title: 'Exámenes y Apuntes (Pro)',
+                content: 'Cambia a esta pestaña para acceder a todos los exámenes pasados, pizarras y guías en PDF subidos por otros compañeros.',
+                image: 'sentado.png'
+            },
+            {
+                targetId: 'tour-materia-contribute',
+                title: 'Aportar a la Comunidad',
+                content: 'Sube exámenes pasados o apuntes de clase para ayudar a tus compañeros. ¡Ganarás puntos para canjear por acceso Pro gratis!',
+                image: 'corriendo.png'
+            },
+            {
+                targetId: 'tour-materia-first-card',
+                title: 'Muro de Recursos',
+                content: 'Explora los aportes, opiniones y consejos académicos. El material validado cuenta con un sello de verificación oficial.',
+                image: 'feliz.png'
+            }
+        ],
+        spotlight: {
+            top: 0,
+            left: 0,
+            width: 0,
+            height: 0,
+            active: false,
+            transition: false
+        },
+        init() {
+            const userId = {{ Auth::id() }};
+            // Only start the tour if it hasn't been completed yet for this user
+            if (!localStorage.getItem('onboardingCompleted_materiaShow_' + userId)) {
+                setTimeout(() => {
+                    this.startTour();
+                }, 1200);
+            }
+        },
+        startTour() {
+            this.tourActive = true;
+            this.currentStep = 0;
+            this.showStep();
+        },
+        nextStep() {
+            if (this.currentStep < this.steps.length - 1) {
+                this.currentStep++;
+                this.showStep();
+            } else {
+                this.endTour();
+            }
+        },
+        prevStep() {
+            if (this.currentStep > 0) {
+                this.currentStep--;
+                this.showStep();
+            }
+        },
+        endTour() {
+            this.tourActive = false;
+            const userId = {{ Auth::id() }};
+            localStorage.setItem('onboardingCompleted_materiaShow_' + userId, 'true');
+            this.spotlight.active = false;
+        },
+        showStep() {
+            // Hide spotlight and tooltip opacity during transit
+            this.spotlight.active = false;
+            if (this.$refs.tourTooltip) {
+                this.$refs.tourTooltip.style.opacity = '0';
+            }
+
+            const step = this.steps[this.currentStep];
+            
+            this.$nextTick(() => {
+                const target = document.getElementById(step.targetId);
+                if (!target) {
+                    this.nextStep();
+                    return;
+                }
+                
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                setTimeout(() => {
+                    this.updateLayout(true);
+                }, 350);
+            });
+        },
+        updateLayout(useTransition = false) {
+            if (!this.tourActive) return;
+            const step = this.steps[this.currentStep];
+            const target = document.getElementById(step.targetId);
+            if (!target) return;
+            
+            const rect = target.getBoundingClientRect();
+            
+            // Set spotlight geometry
+            this.spotlight.transition = useTransition;
+            this.spotlight.top = rect.top;
+            this.spotlight.left = rect.left;
+            this.spotlight.width = rect.width;
+            this.spotlight.height = rect.height;
+            this.spotlight.active = true;
+            
+            // Position tooltip
+            const tooltip = this.$refs.tourTooltip;
+            if (!tooltip) return;
+            
+            const tooltipRect = tooltip.getBoundingClientRect();
+            let top = rect.bottom + 12;
+            let left = rect.left;
+            
+            // Prevent right side overflow
+            if (left + tooltipRect.width > window.innerWidth) {
+                left = window.innerWidth - tooltipRect.width - 16;
+            }
+            if (left < 16) left = 16;
+            
+            // Position tooltip above target if it overflows viewport bottom
+            if (rect.bottom + tooltipRect.height > window.innerHeight) {
+                top = rect.top - tooltipRect.height - 12;
+                this.arrowDirection = 'down';
+            } else {
+                this.arrowDirection = 'up';
+            }
+            
+            tooltip.style.top = top + 'px';
+            tooltip.style.left = left + 'px';
+            tooltip.style.opacity = '1';
+        }
+    }" 
+    @start-tour.window="startTour()"
+    @scroll.window.passive="if (tourActive) updateLayout(false)"
+    @resize.window.passive="if (tourActive) updateLayout(false)"
+    x-show="tourActive" 
+    class="fixed inset-0 pointer-events-none z-[100000]" 
+    style="display: none;">
+        <!-- Backdrop (transparent layer to catch click outside) -->
+        <div class="fixed inset-0 bg-transparent transition-opacity duration-300 pointer-events-auto z-[99990]" @click="endTour()"></div>
+        
+        <!-- Spotlight visual highlight layer (z-99995) -->
+        <div 
+            x-show="spotlight.active" 
+            class="fixed rounded-lg pointer-events-none z-[99995]"
+            :class="spotlight.transition ? 'transition-all duration-300' : ''"
+            :style="`top: ${spotlight.top}px; left: ${spotlight.left}px; width: ${spotlight.width}px; height: ${spotlight.height}px; box-shadow: 0 0 0 4px var(--color-primary), 0 0 0 9999px rgba(0, 0, 0, 0.45);`"
+        ></div>
+
+        <!-- Floating Tooltip Card (z-99999) -->
+        <div x-ref="tourTooltip" 
+             class="fixed z-[99999] w-[290px] bg-surface-container-high rounded-xl p-4 shadow-2xl pointer-events-auto text-left opacity-0 select-none border-0"
+             :class="spotlight.transition ? 'transition-all duration-300' : 'transition-opacity duration-300'">
+            
+            <!-- Arrow up marker -->
+            <div x-show="arrowDirection === 'up'" class="absolute -top-2 left-6 w-3 h-3 bg-surface-container-high rotate-45 pointer-events-none"></div>
+            <!-- Arrow down marker -->
+            <div x-show="arrowDirection === 'down'" class="absolute -bottom-2 left-6 w-3 h-3 bg-surface-container-high rotate-45 pointer-events-none"></div>
+            
+            <div class="flex items-center justify-between mb-2.5">
+                <span class="text-[9px] font-bold text-primary font-label-mono uppercase tracking-wider">Paso <span x-text="currentStep + 1"></span> de <span x-text="steps.length"></span></span>
+                <button @click="endTour()" class="text-on-surface-variant hover:text-error transition-colors p-1 rounded-full flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[16px]">close</span>
+                </button>
+            </div>
+            
+            <div class="flex gap-3 items-start mb-3 select-none">
+                <img :src="'/images/character/' + steps[currentStep].image" class="w-12 h-12 object-contain shrink-0" alt="Mapache Ayudita">
+                <div class="flex-1 min-w-0">
+                    <h3 class="font-display text-body-sm font-bold text-on-surface leading-tight mb-1" x-text="steps[currentStep].title"></h3>
+                    <p class="text-[10px] text-on-surface-variant leading-relaxed" x-text="steps[currentStep].content"></p>
+                </div>
+            </div>
+            
+            <div class="flex justify-between items-center pt-2.5 border-t border-outline-variant/30">
+                <button @click="endTour()" class="text-[10px] text-on-surface-variant hover:text-primary transition-all font-bold">Omitir</button>
+                <div class="flex gap-2">
+                    <button @click="prevStep()" x-show="currentStep > 0" class="px-2 py-1 border border-outline-variant text-[10px] font-bold rounded-DEFAULT text-on-surface hover:bg-surface-variant/50 transition-all cursor-pointer">
+                        Atrás
+                    </button>
+                    <button @click="nextStep()" class="px-2.5 py-1 bg-primary text-on-primary text-[10px] font-bold rounded-DEFAULT hover:brightness-110 active:scale-[0.98] transition-all cursor-pointer border-0">
+                        <span x-text="currentStep === steps.length - 1 ? 'Finalizar' : 'Siguiente'"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
     @endpush
 
 </x-dashboard-layout>
