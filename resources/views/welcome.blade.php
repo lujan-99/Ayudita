@@ -724,6 +724,42 @@
             </div>
         </footer>
 
+        <!-- Floating Telegram Support Bubble (Stacked above WhatsApp) -->
+        <div class="fixed bottom-[168px] left-6 z-50 flex flex-col items-start gap-2 group/tg" x-data="{ openWelcomeTg: true }">
+            <!-- Tooltip/Welcome Bubble -->
+            <div x-show="openWelcomeTg" 
+                 x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="opacity-0 translate-y-2"
+                 x-transition:enter-end="opacity-100 translate-y-0"
+                 x-transition:leave="transition ease-in duration-200"
+                 x-transition:leave-start="opacity-100 translate-y-0"
+                 x-transition:leave-end="opacity-0 translate-y-2"
+                 class="bg-surface-container border bento-border px-4 py-3 rounded-2xl shadow-xl max-w-xs text-left flex flex-col gap-1 items-start relative select-none">
+                <button @click="openWelcomeTg = false" class="absolute top-1 right-2 text-on-surface-variant hover:text-on-surface text-[14px] p-1 leading-none font-bold">
+                    &times;
+                </button>
+                <span class="font-label-mono text-[9px] text-[#24A1DE] uppercase tracking-wider font-bold">Telegram Directo</span>
+                <p class="text-[12px] text-on-surface leading-normal mt-1">
+                    ¿Prefieres contactarnos por Telegram? Escríbenos a @lujan7997.
+                </p>
+                <div class="w-3 h-3 bg-surface-container border-l border-b border-outline-variant/30 rotate-45 absolute -bottom-1.5 left-6"></div>
+            </div>
+            
+            <!-- Floating Bubble Button -->
+            <a href="https://t.me/lujan7997" target="_blank" 
+               class="w-14 h-14 rounded-full bg-gradient-to-tr from-[#24A1DE] to-[#0088cc] text-white flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-all duration-300 relative group-hover/tg:shadow-2xl">
+                <!-- Telegram Icon -->
+                <svg class="w-6 h-6 mr-0.5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-1-.65-.35-1 .22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.12.02-1.96 1.25-5.54 3.69-.52.36-1 .53-1.42.52-.47-.01-1.37-.26-2.03-.48-.82-.27-1.47-.42-1.42-.88.03-.24.35-.49.97-.74 3.79-1.65 6.32-2.73 7.57-3.25 3.59-1.48 4.34-1.74 4.83-1.75.11 0 .35.03.5.16.13.11.17.26.19.37.02.13.02.26-.01.39z"/>
+                </svg>
+                <!-- Ping Notification Badge -->
+                <span class="absolute -top-1 -right-1 flex h-4 w-4">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-4 w-4 bg-green-500 border-2 border-white"></span>
+                </span>
+            </a>
+        </div>
+
         <!-- Floating WhatsApp Support Bubble (Stacked above Messenger) -->
         <div class="fixed bottom-24 left-6 z-50 flex flex-col items-start gap-2 group/wa" x-data="{ openWelcomeWa: true }">
             <!-- Tooltip/Welcome Bubble -->
