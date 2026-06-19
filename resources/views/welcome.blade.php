@@ -724,6 +724,42 @@
             </div>
         </footer>
 
+        <!-- Floating WhatsApp Support Bubble (Stacked above Messenger) -->
+        <div class="fixed bottom-24 left-6 z-50 flex flex-col items-start gap-2 group/wa" x-data="{ openWelcomeWa: true }">
+            <!-- Tooltip/Welcome Bubble -->
+            <div x-show="openWelcomeWa" 
+                 x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="opacity-0 translate-y-2"
+                 x-transition:enter-end="opacity-100 translate-y-0"
+                 x-transition:leave="transition ease-in duration-200"
+                 x-transition:leave-start="opacity-100 translate-y-0"
+                 x-transition:leave-end="opacity-0 translate-y-2"
+                 class="bg-surface-container border bento-border px-4 py-3 rounded-2xl shadow-xl max-w-xs text-left flex flex-col gap-1 items-start relative select-none">
+                <button @click="openWelcomeWa = false" class="absolute top-1 right-2 text-on-surface-variant hover:text-on-surface text-[14px] p-1 leading-none font-bold">
+                    &times;
+                </button>
+                <span class="font-label-mono text-[9px] text-[#25D366] uppercase tracking-wider font-bold">WhatsApp Directo</span>
+                <p class="text-[12px] text-on-surface leading-normal mt-1">
+                    ¿Prefieres consultarnos por WhatsApp? Escríbenos directamente aquí.
+                </p>
+                <div class="w-3 h-3 bg-surface-container border-l border-b border-outline-variant/30 rotate-45 absolute -bottom-1.5 left-6"></div>
+            </div>
+            
+            <!-- Floating Bubble Button -->
+            <a href="https://wa.me/59177134270?text=Hola!%20Tengo%20una%20consulta%20sobre%20Ayudita%20USFX" target="_blank" 
+               class="w-14 h-14 rounded-full bg-gradient-to-tr from-[#25D366] to-[#128C7E] text-white flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-all duration-300 relative group-hover/wa:shadow-2xl">
+                <!-- WhatsApp Icon -->
+                <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19.005 3.175C17.252 1.42 14.927.453 12.443.453 7.397.453 3.3 4.55 3.3 9.597c0 1.612.42 3.186 1.22 4.57L2.4 21.362l7.394-1.94c1.338.73 2.846 1.115 4.394 1.115 5.043 0 9.14-4.097 9.14-9.143 0-2.443-.952-4.74-2.706-6.494zM12.443 18.9c-1.42 0-2.81-.38-4.016-1.103l-.288-.172-4.39 1.15 1.17-4.28-.188-.3c-.792-1.26-1.21-2.715-1.21-4.21 0-4.303 3.502-7.805 7.807-7.805 2.083 0 4.043.81 5.517 2.285 1.474 1.474 2.284 3.435 2.284 5.52 0 4.304-3.502 7.805-7.807 7.805zm4.277-5.845c-.234-.117-1.385-.684-1.6-.762-.215-.078-.37-.117-.527.117-.156.234-.605.762-.74 1.015-.137.254-.274.293-.508.176-.235-.117-.988-.364-1.884-1.163-.696-.62-1.165-1.387-1.302-1.62-.137-.234-.015-.36.103-.477.106-.106.234-.274.35-.41.118-.138.157-.235.235-.39.078-.157.04-.294-.02-.41-.06-.118-.527-1.27-.723-1.74-.19-.462-.385-.4-.527-.407-.137-.007-.294-.007-.45-.007-.156 0-.41.058-.624.293-.215.234-.82.8-.82 1.953 0 1.153.84 2.266.957 2.422.117.156 1.653 2.523 4.004 3.537.56.242.996.387 1.338.496.562.178 1.074.153 1.48.093.45-.067 1.385-.566 1.58-.113.197-.553.197-1.026.137-1.103-.06-.078-.215-.118-.45-.235z"/>
+                </svg>
+                <!-- Ping Notification Badge -->
+                <span class="absolute -top-1 -right-1 flex h-4 w-4">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-4 w-4 bg-green-500 border-2 border-white"></span>
+                </span>
+            </a>
+        </div>
+
         <!-- Floating Messenger Support Bubble -->
         <div class="fixed bottom-6 left-6 z-50 flex flex-col items-start gap-2 group" x-data="{ openWelcome: true }">
             <!-- Tooltip/Welcome Bubble -->
