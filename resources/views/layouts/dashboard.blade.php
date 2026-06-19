@@ -175,7 +175,7 @@
                             $secondIcon = 'psychology';
                         }
                     @endphp
-                    <div class="flex items-center gap-1.5 font-display text-[10px] md:text-body-sm pl-2 md:pl-4 select-none overflow-x-auto scrollbar-none whitespace-nowrap">
+                    <div class="flex items-center gap-1.5 font-display text-[10px] md:text-body-sm pl-2 md:pl-4 py-1.5 select-none overflow-x-auto scrollbar-none whitespace-nowrap">
                         @if(count($parts) > 1)
                             <span class="flex items-center gap-1 text-on-surface-variant/80 hover:text-primary transition-colors font-medium whitespace-nowrap">
                                 <span class="material-symbols-outlined text-[14px] md:text-[16px] text-primary">account_balance</span>
