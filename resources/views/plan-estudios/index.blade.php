@@ -1,20 +1,13 @@
 <x-dashboard-layout title="Plan de Estudios" headerText="Visualización del Plan Curricular">
     
     <style>
-        /* Custom styled scrollbar for study plan */
+        /* Hide scrollbar for Figma-like canvas */
         #graph-container::-webkit-scrollbar {
-            height: 8px;
+            display: none;
         }
-        #graph-container::-webkit-scrollbar-track {
-            background: rgba(24, 24, 27, 0.4);
-            border-radius: 8px;
-        }
-        #graph-container::-webkit-scrollbar-thumb {
-            background: rgba(221, 183, 255, 0.2);
-            border-radius: 8px;
-        }
-        #graph-container::-webkit-scrollbar-thumb:hover {
-            background: rgba(221, 183, 255, 0.4);
+        #graph-container {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
 
         /* Neural network floating node effect */
@@ -108,24 +101,40 @@
                 <span class="ml-auto italic hidden lg:inline">Consejo: Haz clic en una materia para fijar sus conexiones.</span>
             </div>
 
-            <!-- Scroll Top Wrapper & Container -->
-            <!-- We rotate container 180deg to place scrollbar on top, and rotate canvas back 180deg to look normal -->
-            <div id="graph-container" class="overflow-x-auto w-full relative min-h-[600px] h-[800px] pb-6" style="transform: rotateX(180deg); -webkit-transform: rotateX(180deg);">
-                
-                @php
-                    $maxSemestre = max(10, $materiasBySemestre->keys()->max() ?? 10);
-                    $colWidth = 460; // Increased spacing between semesters to make lines stand out
-                    $cardWidth = 220; // Slightly narrower cards to give more lane breathing room
-                    $canvasHeight = 1100; // Taller canvas to prevent vertical overlap
-                    $yMin = 100; // Start below the lane header
-                    $yMax = 980; // Spread all the way down
-                @endphp
+            <!-- Interactive Board Wrapper -->
+            <div class="relative w-full border border-outline-variant/30 rounded-xl bg-surface-container/20 overflow-hidden select-none">
+                <!-- Figma-like HUD Controls -->
+                <div class="absolute bottom-4 left-4 z-30 flex items-center gap-2 bg-surface-container-high/90 border border-outline-variant/50 backdrop-blur-md px-3 py-2 rounded-xl shadow-lg">
+                    <button id="zoom-out-btn" class="w-8 h-8 rounded-lg hover:bg-surface-variant flex items-center justify-center text-on-surface transition-colors cursor-pointer" title="Alejar (Zoom Out)">
+                        <span class="material-symbols-outlined text-[20px]">remove</span>
+                    </button>
+                    <span id="zoom-badge" class="font-label-mono text-xs font-bold text-primary min-w-[48px] text-center">100%</span>
+                    <button id="zoom-in-btn" class="w-8 h-8 rounded-lg hover:bg-surface-variant flex items-center justify-center text-on-surface transition-colors cursor-pointer" title="Acercar (Zoom In)">
+                        <span class="material-symbols-outlined text-[20px]">add</span>
+                    </button>
+                    <div class="w-px h-5 bg-outline-variant/40 mx-1"></div>
+                    <button id="zoom-reset-btn" class="w-8 h-8 rounded-lg hover:bg-surface-variant flex items-center justify-center text-on-surface transition-colors cursor-pointer" title="Centrar / Restablecer vista">
+                        <span class="material-symbols-outlined text-[20px]">fullscreen</span>
+                    </button>
+                </div>
 
-                <!-- Graph Canvas -->
-                <div id="graph-canvas" class="relative" style="width: {{ $maxSemestre * $colWidth }}px; height: {{ $canvasHeight }}px; transform: rotateX(180deg); -webkit-transform: rotateX(180deg);">
+                <!-- Canvas Viewport -->
+                <div id="graph-container" class="w-full relative min-h-[600px] h-[750px] overflow-hidden cursor-grab active:cursor-grabbing" style="user-select: none; -webkit-user-select: none;">
                     
-                    <!-- SVG connector overlay -->
-                    <svg id="connector-svg" class="absolute top-0 left-0 w-full h-full pointer-events-none z-10 overflow-visible"></svg>
+                    @php
+                        $maxSemestre = max(10, $materiasBySemestre->keys()->max() ?? 10);
+                        $colWidth = 460;
+                        $cardWidth = 220;
+                        $canvasHeight = 1100;
+                        $yMin = 100;
+                        $yMax = 980;
+                    @endphp
+
+                    <!-- Graph Canvas (Transformed via JS) -->
+                    <div id="graph-canvas" class="relative origin-top-left" style="width: {{ $maxSemestre * $colWidth }}px; height: {{ $canvasHeight }}px;">
+                        
+                        <!-- SVG connector overlay -->
+                        <svg id="connector-svg" class="absolute top-0 left-0 w-full h-full pointer-events-none z-10 overflow-visible"></svg>
 
                     <!-- Semester Lanes (Background) -->
                     @for($sem = 1; $sem <= $maxSemestre; $sem++)
@@ -235,6 +244,7 @@
                 </div>
 
             </div>
+            </div> <!-- Close Interactive Board Wrapper -->
         </div>
 
         @push('scripts')
@@ -243,9 +253,21 @@
                 let animationFrameId = null;
                 let selectedNode = null; // Locked selection node code
 
+                // Pan and Zoom states
+                let scale = 0.75;
+                let panX = 40;
+                let panY = 40;
+                let isDragging = false;
+                let startX = 0;
+                let startY = 0;
+                let hasMoved = false;
+
                 document.addEventListener('DOMContentLoaded', () => {
                     const canvas = document.getElementById('graph-canvas');
                     if (!canvas) return;
+
+                    // Initialize Pan & Zoom
+                    setupPanAndZoom();
 
                     // Modern ResizeObserver to set up connections as soon as the element renders
                     const observer = new ResizeObserver(() => {
@@ -266,6 +288,166 @@
                         cancelAnimationFrame(animationFrameId);
                     }
                 });
+
+                function applyTransform() {
+                    const canvas = document.getElementById('graph-canvas');
+                    const badge = document.getElementById('zoom-badge');
+                    if (!canvas) return;
+                    
+                    canvas.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+                    if (badge) {
+                        badge.innerText = `${Math.round(scale * 100)}%`;
+                    }
+                }
+
+                function setupPanAndZoom() {
+                    const container = document.getElementById('graph-container');
+                    const canvas = document.getElementById('graph-canvas');
+                    if (!container || !canvas) return;
+
+                    // Centering calculation on initial load
+                    const containerWidth = container.clientWidth;
+                    const canvasWidth = canvas.clientWidth;
+                    
+                    scale = Math.min(1.0, containerWidth / 1400); // Scale down slightly to fit initial semesters
+                    if (scale < 0.5) scale = 0.5;
+                    panX = 30;
+                    panY = 30;
+                    
+                    applyTransform();
+
+                    // Mouse Wheel Zooming
+                    container.addEventListener('wheel', (e) => {
+                        e.preventDefault();
+
+                        const rect = container.getBoundingClientRect();
+                        const mouseX = e.clientX - rect.left;
+                        const mouseY = e.clientY - rect.top;
+
+                        // Canvas coordinate under the mouse before zoom
+                        const canvasX = (mouseX - panX) / scale;
+                        const canvasY = (mouseY - panY) / scale;
+
+                        // Zoom factor
+                        const zoomFactor = e.deltaY < 0 ? 1.08 : 0.92;
+                        let newScale = scale * zoomFactor;
+
+                        // Bounds
+                        newScale = Math.min(Math.max(newScale, 0.25), 2.0);
+
+                        // Adjust pan to zoom towards mouse position
+                        panX = mouseX - canvasX * newScale;
+                        panY = mouseY - canvasY * newScale;
+                        scale = newScale;
+
+                        applyTransform();
+                    }, { passive: false });
+
+                    // Panning Event Listeners (Mouse)
+                    container.addEventListener('mousedown', (e) => {
+                        // Only drag with left click
+                        if (e.button !== 0) return;
+                        
+                        isDragging = true;
+                        hasMoved = false;
+                        startX = e.clientX - panX;
+                        startY = e.clientY - panY;
+                        
+                        container.classList.remove('cursor-grab');
+                        container.classList.add('cursor-grabbing');
+                    });
+
+                    window.addEventListener('mousemove', (e) => {
+                        if (!isDragging) return;
+                        
+                        const newX = e.clientX - startX;
+                        const newY = e.clientY - startY;
+                        
+                        // Check if mouse actually moved
+                        if (Math.abs(newX - panX) > 4 || Math.abs(newY - panY) > 4) {
+                            hasMoved = true;
+                        }
+                        
+                        panX = newX;
+                        panY = newY;
+                        applyTransform();
+                    });
+
+                    window.addEventListener('mouseup', () => {
+                        if (!isDragging) return;
+                        isDragging = false;
+                        container.classList.remove('cursor-grabbing');
+                        container.classList.add('cursor-grab');
+                    });
+
+                    // Touch support for mobile panning
+                    let touchStartX = 0;
+                    let touchStartY = 0;
+                    container.addEventListener('touchstart', (e) => {
+                        if (e.touches.length === 1) {
+                            isDragging = true;
+                            touchStartX = e.touches[0].clientX - panX;
+                            touchStartY = e.touches[0].clientY - panY;
+                        }
+                    }, { passive: true });
+
+                    container.addEventListener('touchmove', (e) => {
+                        if (!isDragging || e.touches.length !== 1) return;
+                        panX = e.touches[0].clientX - touchStartX;
+                        panY = e.touches[0].clientY - touchStartY;
+                        applyTransform();
+                    }, { passive: true });
+
+                    container.addEventListener('touchend', () => {
+                        isDragging = false;
+                    }, { passive: true });
+
+                    // Prevent click actions if drag occurred
+                    const nodes = document.querySelectorAll('.materia-node');
+                    nodes.forEach(node => {
+                        node.addEventListener('click', (e) => {
+                            if (hasMoved) {
+                                e.stopImmediatePropagation();
+                                e.preventDefault();
+                            }
+                        }, true);
+                    });
+
+                    // HUD Buttons
+                    document.getElementById('zoom-in-btn').addEventListener('click', () => {
+                        zoomAtCenter(1.15);
+                    });
+
+                    document.getElementById('zoom-out-btn').addEventListener('click', () => {
+                        zoomAtCenter(0.85);
+                    });
+
+                    document.getElementById('zoom-reset-btn').addEventListener('click', () => {
+                        scale = 0.75;
+                        panX = 40;
+                        panY = 40;
+                        applyTransform();
+                    });
+
+                    function zoomAtCenter(factor) {
+                        const containerWidth = container.clientWidth;
+                        const containerHeight = container.clientHeight;
+                        const centerX = containerWidth / 2;
+                        const centerY = containerHeight / 2;
+
+                        const canvasX = (centerX - panX) / scale;
+                        const canvasY = (centerY - panY) / scale;
+
+                        let newScale = scale * factor;
+                        newScale = Math.min(Math.max(newScale, 0.25), 2.0);
+
+                        panX = centerX - canvasX * newScale;
+                        panY = centerY - canvasY * newScale;
+                        scale = newScale;
+
+                        applyTransform();
+                    }
+                }
 
                 function initConnections() {
                     const svg = document.getElementById('connector-svg');
@@ -330,12 +512,12 @@
                         const fromRect = conn.fromNode.getBoundingClientRect();
                         const toRect = conn.toNode.getBoundingClientRect();
 
-                        // Coordinates relative to canvas (scroll-invariant!)
-                        const startX = fromRect.right - canvasRect.left;
-                        const startY = fromRect.top + fromRect.height / 2 - canvasRect.top;
+                        // Coordinates relative to canvas, adjusted by the scale factor
+                        const startX = (fromRect.right - canvasRect.left) / scale;
+                        const startY = (fromRect.top + fromRect.height / 2 - canvasRect.top) / scale;
 
-                        const endX = toRect.left - canvasRect.left;
-                        const endY = toRect.top + toRect.height / 2 - canvasRect.top;
+                        const endX = (toRect.left - canvasRect.left) / scale;
+                        const endY = (toRect.top + toRect.height / 2 - canvasRect.top) / scale;
 
                         // Cubic bezier curves
                         const dx = Math.abs(endX - startX);
