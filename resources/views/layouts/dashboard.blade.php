@@ -156,8 +156,37 @@
                     <span>Ayudita</span>
                 </div>
                 @isset($headerText)
-                    <div class="font-display font-bold text-on-surface tracking-wide hidden md:block pl-4">
-                        {{ $headerText }}
+                    @php
+                        $parts = explode(' / ', $headerText);
+                        $secondPart = $parts[1] ?? '';
+                        $secondIcon = 'bookmark';
+                        if (str_contains(strtolower($secondPart), 'plan') || str_contains(strtolower($headerText), 'plan')) {
+                            $secondIcon = 'map';
+                        } elseif (str_contains(strtolower($secondPart), 'docente') || str_contains(strtolower($secondPart), 'perfil')) {
+                            $secondIcon = 'shield_person';
+                        } elseif (str_contains(strtolower($secondPart), 'asignatura') || str_contains(strtolower($secondPart), 'materia')) {
+                            $secondIcon = 'auto_stories';
+                        } elseif (str_contains(strtolower($secondPart), 'ecosistema')) {
+                            $secondIcon = 'psychology';
+                        }
+                    @endphp
+                    <div class="flex items-center gap-2 font-display text-body-sm hidden md:flex pl-4 select-none">
+                        @if(count($parts) > 1)
+                            <span class="flex items-center gap-1.5 text-on-surface-variant/80 hover:text-primary transition-colors font-medium">
+                                <span class="material-symbols-outlined text-[16px] text-primary">account_balance</span>
+                                {{ $parts[0] }}
+                            </span>
+                            <span class="material-symbols-outlined text-outline-variant text-[14px] leading-none">chevron_right</span>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-container/20 border border-primary-container/30 text-primary font-bold text-xs shadow-xs">
+                                <span class="material-symbols-outlined text-[14px] fill-icon">{{ $secondIcon }}</span>
+                                {{ $secondPart }}
+                            </span>
+                        @else
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-container/20 border border-primary-container/30 text-primary font-bold text-xs shadow-xs">
+                                <span class="material-symbols-outlined text-[14px] fill-icon">{{ $secondIcon }}</span>
+                                {{ $headerText }}
+                            </span>
+                        @endif
                     </div>
                 @endisset
             </div>
